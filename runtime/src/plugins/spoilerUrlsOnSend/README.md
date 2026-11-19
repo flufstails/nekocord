@@ -1,6 +1,6 @@
 ---
 name: SpoilerUrlsOnSend
-description: Wraps outgoing HTTP/HTTPS URLs inside `||...||` spoiler tags before sending.
+description: Wraps links you send in ||spoiler|| tags automatically.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # SpoilerUrlsOnSend
 
-Surrounds external links outside code spans with Discord `||spoiler||` delimiters automatically.
+Wraps links you send in ||spoiler|| tags automatically.

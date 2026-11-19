@@ -1,6 +1,6 @@
 ---
 name: TrimBlankLinesOnSend
-description: Strips leading and trailing blank lines on outgoing chat messages.
+description: Removes extra blank lines at the top and bottom before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # TrimBlankLinesOnSend
 
-Removes empty leading or trailing newlines from pasted messages before sending.
+Removes extra blank lines at the top and bottom before sending.

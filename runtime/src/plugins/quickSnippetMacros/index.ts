@@ -7,14 +7,14 @@ const settings = definePluginSettings({
   snippet1: {
     type: OptionType.STRING,
     label: 'Snippet 1 (\\s1)',
-    description: 'Text substituted whenever you type \\s1 in a message.',
+    description: 'Saved message replaced automatically whenever you type \\s1.',
     placeholder: 'Thank you!',
     default: 'On my way!',
   },
   snippet2: {
     type: OptionType.STRING,
     label: 'Snippet 2 (\\s2)',
-    description: 'Text substituted whenever you type \\s2 in a message.',
+    description: 'Saved message replaced automatically whenever you type \\s2.',
     placeholder: 'Check this out!',
     default: 'Checking this now.',
   },

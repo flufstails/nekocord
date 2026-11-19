@@ -82,14 +82,17 @@ function slugifyPluginName(name: string): string {
 function transformPluginSource(rawCode: string): string {
   return rawCode
     .replace(/\r\n/g, '\n')
-    .replace(/^\s*import\s+[^;\n]+[;\n]?/gm, '')
+    .replace(/^\s*import\s+(?:[\s\S]*?\s+from\s+)?['"][^'"]+['"]\s*;?[ \t]*$/gm, '')
     .replace(/^\s*export\s+default\s+/gm, 'module.exports = ');
 }
 
 /**
  * Evaluates a stored custom JS plugin and hydrates it into a live {@link NekocordPlugin}.
  */
-export function compileCustomPlugin(stored: StoredCustomPlugin): {
+export function compileCustomPlugin(
+  stored: StoredCustomPlugin,
+  fallbackName?: string,
+): {
   ok: boolean;
   plugin?: NekocordPlugin;
   error?: string;
@@ -131,7 +134,8 @@ export function compileCustomPlugin(stored: StoredCustomPlugin): {
     }
 
     const impl = resolved as PluginImplementation;
-    const name = stored.name || impl.name;
+    const rawName = (stored.name || impl.name || fallbackName || '').trim();
+    const name = rawName.replace(/\s+/g, '');
     if (!name) {
       return { ok: false, error: 'Plugin must declare a name (e.g. "// @name MyPlugin").' };
     }
@@ -183,12 +187,14 @@ export function buildStoredCustomPluginFromCode(
         .split('/')
         .pop()
         ?.replace(/\.m?[jt]s$/i, '')
+        ?.replace(/\s+/g, '')
     : undefined;
+  const explicitName = (options?.name?.trim() || header.name || '').replace(/\s+/g, '');
 
   const tempStored: StoredCustomPlugin = {
     id: `custom-${Date.now().toString(36)}`,
-    slug: slugifyPluginName(options?.name?.trim() || header.name || urlStem || 'CustomPlugin'),
-    name: (options?.name?.trim() || header.name || urlStem || 'CustomPlugin').replace(/\s+/g, ''),
+    slug: explicitName ? slugifyPluginName(explicitName) : '',
+    name: explicitName,
     description: header.description || 'User-imported custom plugin.',
     authors: [
       {
@@ -202,12 +208,12 @@ export function buildStoredCustomPluginFromCode(
     code: trimmed,
     tags: header.tags?.length ? header.tags : ['custom'],
     readme: header.description
-      ? `# ${options?.name?.trim() || header.name || 'CustomPlugin'}\n\n${header.description}`
+      ? `# ${explicitName || 'CustomPlugin'}\n\n${header.description}`
       : undefined,
     installedAt: Date.now(),
   };
 
-  const compiled = compileCustomPlugin(tempStored);
+  const compiled = compileCustomPlugin(tempStored, urlStem);
   if (!compiled.ok || !compiled.plugin) {
     return { ok: false, error: compiled.error };
   }
@@ -219,12 +225,18 @@ export function buildStoredCustomPluginFromCode(
     };
   }
 
+  const finalSlug = slugifyPluginName(compiled.plugin.name);
+  compiled.plugin.slug = finalSlug;
   tempStored.name = compiled.plugin.name;
+  tempStored.slug = finalSlug;
   tempStored.description = compiled.plugin.description;
   tempStored.authors = compiled.plugin.authors;
   tempStored.authorIcon = compiled.plugin.authorIcon;
   tempStored.category = compiled.plugin.category;
-  tempStored.id = `custom-${tempStored.slug}`;
+  tempStored.id = `custom-${finalSlug}`;
+  if (!tempStored.readme) {
+    tempStored.readme = `# ${compiled.plugin.name}\n\n${compiled.plugin.description}`;
+  }
 
   return { ok: true, stored: tempStored, plugin: compiled.plugin };
 }

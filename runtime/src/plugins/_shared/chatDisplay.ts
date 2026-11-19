@@ -116,7 +116,7 @@ export function appendMessageText(msg: Record<string, any>, note: string): boole
     msg.content.push({ type: 'text', content: `${prefix}${note}` });
     return true;
   }
-  const base = typeof msg.content === 'string' ? msg.content.trimEnd() : '';
+  const base = typeof msg.content === 'string' ? msg.content.replace(/\s+$/, '') : '';
   msg.content = base ? `${base} ${note}` : note;
   return true;
 }

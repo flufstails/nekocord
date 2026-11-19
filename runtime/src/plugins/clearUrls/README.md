@@ -1,6 +1,6 @@
 ---
 name: ClearURLs
-description: "Strips tracking query parameters such as utm_*, fbclid, igsh, and si from outgoing links."
+description: Removes hidden tracking tags from links you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # ClearURLs
 
-Strips tracking query parameters such as utm_*, fbclid, igsh, and si from outgoing links.
+Removes hidden tracking tags from links you send.

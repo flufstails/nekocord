@@ -1,6 +1,6 @@
 ---
 name: NoClanTags
-description: Hides server clan tags and badges displayed beside usernames in chat.
+description: Hides server tag badges beside usernames in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # NoClanTags
 
-Hides server clan tags and badges displayed beside usernames in chat.
+Hides server tag badges beside usernames in chat.

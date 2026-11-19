@@ -1,6 +1,6 @@
 ---
 name: HideInviteCards
-description: Clears Discord server invite rich cards from rendered message embeds.
+description: Hides server invite preview boxes inside chat messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HideInviteCards
 
-Removes rendered invite metadata cards from chat rows while leaving message text intact.
+Hides server invite preview boxes inside chat messages.

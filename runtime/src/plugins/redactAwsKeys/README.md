@@ -1,6 +1,6 @@
 ---
 name: RedactAwsKeys
-description: Redacts AWS access key IDs (`AKIA...`, `ASIA...`) before sending.
+description: Automatically hides pasted AWS access keys before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # RedactAwsKeys
 
-Masks outgoing 20-character AWS access key identifiers outside code blocks before send.
+Automatically hides pasted AWS access keys before sending.

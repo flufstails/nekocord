@@ -1,6 +1,6 @@
 ---
 name: ReplyTimestamp
-description: "Displays the original message timestamp alongside inline reply previews."
+description: Shows the original message timestamp on reply previews.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ReplyTimestamp
 
-Decodes the referenced message snowflake ID and appends its `[HH:MM]` send time to reply headers.
+Shows the original message timestamp on reply previews.

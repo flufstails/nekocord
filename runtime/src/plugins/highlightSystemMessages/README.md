@@ -1,6 +1,6 @@
 ---
 name: HighlightSystemMessages
-description: Highlights system event rows cleanly with a soft purple accent.
+description: Highlights system announcements with a soft purple accent.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HighlightSystemMessages
 
-Marks non-standard Discord system messages (`type !== 0 && type !== 19`) with a purple highlight gutter.
+Highlights system announcements with a soft purple accent.

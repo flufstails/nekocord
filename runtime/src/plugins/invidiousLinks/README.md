@@ -1,6 +1,6 @@
 ---
 name: InvidiousLinks
-description: Rewrites YouTube watch links to the privacy-friendly yewtu.be Invidious instance.
+description: Rewrites YouTube links to privacy-friendly yewtu.be viewing links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # InvidiousLinks
 
-Rewrites YouTube watch links to the privacy-friendly yewtu.be Invidious instance.
+Rewrites YouTube links to privacy-friendly yewtu.be viewing links.

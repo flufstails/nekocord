@@ -1,6 +1,6 @@
 ---
 name: HideEmbeds
-description: Hides all link and rich embed cards rendered beneath messages.
+description: Hides all link and card preview boxes under messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # HideEmbeds
 
-Hides all link and rich embed cards rendered beneath messages.
+Hides all link and card preview boxes under messages.

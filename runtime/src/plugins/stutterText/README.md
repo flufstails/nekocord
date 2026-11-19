@@ -1,6 +1,6 @@
 ---
 name: StutterText
-description: Adds subtle initial-letter stutter phrasing to opening words.
+description: Adds light stutter phrasing to opening words you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # StutterText
 
-Adds subtle initial-letter stutter phrasing to opening words.
+Adds light stutter phrasing to opening words you send.

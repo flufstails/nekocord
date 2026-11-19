@@ -1,6 +1,6 @@
 ---
 name: NoReplyMention
-description: Automatically disables ping mentions when starting a message reply.
+description: Turns off @mention pings automatically when you start a reply.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # NoReplyMention
 
-Automatically disables ping mentions when starting a message reply.
+Turns off @mention pings automatically when you start a reply.

@@ -1,6 +1,6 @@
 ---
 name: FakeDeafen
-description: Spoofs self-deafen and self-mute to Discord voice gateway while keeping audio active.
+description: Makes you look muted and deafened in voice calls while still hearing audio.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # FakeDeafen
 
-Spoofs self-deafen and self-mute to Discord voice gateway while keeping audio active.
+Makes you look muted and deafened in voice calls while still hearing audio.

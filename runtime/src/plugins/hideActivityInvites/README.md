@@ -1,6 +1,6 @@
 ---
 name: HideActivityInvites
-description: Hides Rich Presence game and Spotify party invite cards in chat.
+description: Hides game and Spotify party invite boxes in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HideActivityInvites
 
-Hides Rich Presence game and Spotify party invite cards in chat.
+Hides game and Spotify party invite boxes in chat.

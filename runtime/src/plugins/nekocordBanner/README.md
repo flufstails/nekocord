@@ -1,6 +1,6 @@
 ---
 name: NekocordBanner
-description: Logs Nekocord startup diagnostics and verifies Metro module discovery.
+description: Runs Nekocord startup checks and logs loaded modules.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # NekocordBanner
 
-Logs startup diagnostics for Nekocord, including Metro hook status, core stores, and chat bridge readiness.
+Runs Nekocord startup checks and logs loaded modules.

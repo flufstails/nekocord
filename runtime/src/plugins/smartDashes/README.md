@@ -1,6 +1,6 @@
 ---
 name: SmartDashes
-description: Converts double hyphens (-- ) and ellipses (...) into clean Unicode dashes.
+description: Turns -- and ... into smooth dashes and ellipsis characters.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # SmartDashes
 
-Converts double hyphens (-- ) and ellipses (...) into clean Unicode dashes.
+Turns -- and ... into smooth dashes and ellipsis characters.

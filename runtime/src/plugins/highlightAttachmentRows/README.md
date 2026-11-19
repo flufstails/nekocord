@@ -1,6 +1,6 @@
 ---
 name: HighlightAttachmentRows
-description: Adds a cool cyan gutter accent on messages with attached files or media.
+description: Highlights messages that include files or media with a blue accent.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # HighlightAttachmentRows
 
-Adds a cool cyan gutter accent on messages with attached files or media.
+Highlights messages that include files or media with a blue accent.

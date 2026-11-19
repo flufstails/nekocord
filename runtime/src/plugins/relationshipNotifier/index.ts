@@ -1,5 +1,6 @@
 import {
   getChannelStore,
+  getRelationshipStore,
   getStore,
   getUserStore,
   onFluxDispatcher,
@@ -45,9 +46,15 @@ function handleDispatchBefore(action: any): void {
 
   if (action.type === 'RELATIONSHIP_REMOVE') {
     const userId = String(action.relationship?.id ?? action.user?.id ?? action.id ?? '');
+    const relType =
+      action.relationship?.type ??
+      (userId ? getRelationshipStore<any>()?.getRelationshipType?.(userId) : undefined);
+    if (relType !== undefined && relType !== 1 && relType !== 3) {
+      return;
+    }
     const user = userId ? getUserStore()?.getUser?.(userId) : null;
     const label = user?.username ? `@${user.username}` : userId || 'Unknown user';
-    recordEvent(`Relationship removed: ${label}`);
+    recordEvent(relType === 3 ? `Friend request removed: ${label}` : `Friend removed: ${label}`);
     return;
   }
 

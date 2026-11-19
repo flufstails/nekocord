@@ -1,6 +1,6 @@
 ---
 name: CatgirlSpeak
-description: Sprinkles gentle nya and mrrp catgirl flair onto non-code messages.
+description: Adds cute nya and mrrp catgirl flair to everyday messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # CatgirlSpeak
 
-Sprinkles gentle nya and mrrp catgirl flair onto non-code messages.
+Adds cute nya and mrrp catgirl flair to everyday messages.

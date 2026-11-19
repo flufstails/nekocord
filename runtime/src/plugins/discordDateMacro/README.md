@@ -1,6 +1,6 @@
 ---
 name: DiscordDateMacro
-description: Expands `\\today` into current `<t:UNIX:D>` localized Discord date tag.
+description: Turns \today into a Discord date tag that adjusts to every timezone.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # DiscordDateMacro
 
-Replaces `\\today` with `<t:UNIX:D>` so readers see today’s date in their local timezone.
+Turns \today into a Discord date tag that adjusts to every timezone.

@@ -1,6 +1,6 @@
 ---
 name: HideEmbedFooters
-description: Removes verbose footer text lines from rendered rich embeds.
+description: Hides extra footer lines at the bottom of link preview boxes.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HideEmbedFooters
 
-Clears `embed.footer` from rendered chat embeds for cleaner message density.
+Hides extra footer lines at the bottom of link preview boxes.

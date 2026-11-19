@@ -5,14 +5,14 @@ import { definePlugin } from '../types.js';
 const settings = definePluginSettings({
   stripQueryParams: {
     type: OptionType.BOOLEAN,
-    label: 'Strip URL Query Parameters',
-    description: 'Remove query strings (?key=value) from outgoing HTTP/HTTPS links.',
+    label: 'Remove Link Tracking Tags',
+    description: 'Strip tracking tags at the end of links you send.',
     default: true,
   },
   redirectPrefix: {
     type: OptionType.STRING,
-    label: 'Optional Redirect Proxy Prefix',
-    description: 'Optional HTTPS proxy prefix prepended to outgoing links (leave empty for none).',
+    label: 'Optional Redirect Prefix',
+    description: 'Optional privacy redirect link added before each URL (leave blank for none).',
     placeholder: 'https://href.li/?',
     default: '',
   },

@@ -1,6 +1,6 @@
 ---
 name: HideBotCommandsHeader
-description: Hides slash-command usage headers above bot response messages.
+description: "Hides \"used /command\" headers above bot replies."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HideBotCommandsHeader
 
-Removes `interaction` and `interactionMetadata` headers from rendered chat rows for cleaner bot replies.
+Hides "used /command" headers above bot replies.

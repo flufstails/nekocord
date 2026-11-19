@@ -1,6 +1,6 @@
 ---
 name: ShowHiddenThings
-description: "Exposes hidden client debug sections, badges, and internal settings predicates."
+description: Shows hidden developer settings and badges inside Discord.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ShowHiddenThings
 
-Unlocks client-side hidden settings predicates and internal metadata views without modifying server permissions.
+Shows hidden developer settings and badges inside Discord.

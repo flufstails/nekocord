@@ -1,6 +1,6 @@
 ---
 name: CleanFigmaLinks
-description: Removes transient `&t=` tokens from Figma file URLs while keeping `node-id`.
+description: Cleans temporary share tokens from Figma file links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # CleanFigmaLinks
 
-Preserves `node-id` deep links inside Figma URLs while removing transient `&t=` share tokens.
+Cleans temporary share tokens from Figma file links.

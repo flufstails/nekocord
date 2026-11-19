@@ -1,6 +1,6 @@
 ---
 name: LoadingQuotes
-description: "Replaces Discord splash loading hints with cozy Nekocord quips."
+description: Replaces Discord loading screen tips with cozy Nekocord quotes.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # LoadingQuotes
 
-Overrides Discord loading tip helpers with custom Nekocord client quotes.
+Replaces Discord loading screen tips with cozy Nekocord quotes.

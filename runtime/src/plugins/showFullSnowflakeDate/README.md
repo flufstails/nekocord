@@ -1,6 +1,6 @@
 ---
 name: ShowFullSnowflakeDate
-description: Appends the decoded `(YYYY-MM-DD)` date beside short timestamps.
+description: Shows the (YYYY-MM-DD) date next to short chat timestamps.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ShowFullSnowflakeDate
 
-Decodes each message snowflake ID and appends its `(YYYY-MM-DD)` calendar date when not already displayed.
+Shows the (YYYY-MM-DD) date next to short chat timestamps.

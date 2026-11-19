@@ -1,6 +1,6 @@
 ---
 name: UnlockClientThemes
-description: Unlocks preview access to Nitro client themes and custom background checks.
+description: Unlocks client theme previews in Appearance settings without Nitro.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,6 +14,6 @@ tags:
 
 # UnlockClientThemes
 
-Unlocks preview access to Nitro client themes and custom background checks.
+Unlocks client theme previews in Appearance settings without Nitro.
 
 Requires a client restart after toggling so Discord initializes cleanly with the updated hooks.

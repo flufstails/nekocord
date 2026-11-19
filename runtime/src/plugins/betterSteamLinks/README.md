@@ -1,6 +1,6 @@
 ---
 name: BetterSteamLinks
-description: Cleans storefront referral parameters (`?snr=`) from Steam store URLs.
+description: Removes extra referral junk from Steam store links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # BetterSteamLinks
 
-Strips storefront tracking `?snr=` suffixes from `store.steampowered.com` URLs on send.
+Removes extra referral junk from Steam store links.

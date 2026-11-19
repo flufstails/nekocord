@@ -1,6 +1,6 @@
 ---
 name: CompactTimestamps
-description: "Formats message header timestamps to concise 24-hour HH:MM values."
+description: "Shows message times in a short 24-hour HH:MM format."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CompactTimestamps
 
-Formats message header timestamps to concise 24-hour HH:MM values.
+Shows message times in a short 24-hour HH:MM format.

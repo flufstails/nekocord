@@ -1,6 +1,6 @@
 ---
 name: BlockTypingDispatch
-description: Blocks local TYPING_START_LOCAL and channel typing broadcast actions.
+description: Stops Discord from sending typing status updates from your device.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # BlockTypingDispatch
 
-Blocks local TYPING_START_LOCAL and channel typing broadcast actions.
+Stops Discord from sending typing status updates from your device.

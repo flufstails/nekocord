@@ -1,6 +1,6 @@
 ---
 name: EnableDefaultReplyPing
-description: Forces initial reply mention toggle ON whenever replying to any user.
+description: Turns reply pings on by default whenever you reply to someone.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # EnableDefaultReplyPing
 
-Forces initial reply mention toggle ON whenever replying to any user.
+Turns reply pings on by default whenever you reply to someone.

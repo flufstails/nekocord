@@ -1,6 +1,6 @@
 ---
 name: HideEmptyEmbeds
-description: Filters blank placeholder embeds from chat message rows.
+description: Hides blank preview boxes on chat messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HideEmptyEmbeds
 
-Removes empty embeds without a title, description, media, or fields from rendered chat rows.
+Hides blank preview boxes on chat messages.

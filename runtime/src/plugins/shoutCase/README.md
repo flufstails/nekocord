@@ -1,6 +1,6 @@
 ---
 name: ShoutCase
-description: Converts outgoing chat words to UPPERCASE outside code and mentions.
+description: Converts words in your message to ALL CAPS.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ShoutCase
 
-Converts outgoing chat words to UPPERCASE outside code and mentions.
+Converts words in your message to ALL CAPS.

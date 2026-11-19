@@ -1,6 +1,6 @@
 ---
 name: FixCodeblockGap
-description: "Removes excessive blank lines around fenced Markdown code blocks when sending messages."
+description: Removes extra blank lines around code blocks before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # FixCodeblockGap
 
-Normalizes spacing around triple-backtick code fences before Discord transmits outgoing messages.
+Removes extra blank lines around code blocks before sending.

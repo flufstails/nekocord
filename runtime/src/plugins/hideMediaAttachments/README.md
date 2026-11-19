@@ -1,6 +1,6 @@
 ---
 name: HideMediaAttachments
-description: Hides inline file and media attachment boxes from the chat timeline.
+description: Hides uploaded media and file boxes in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # HideMediaAttachments
 
-Hides inline file and media attachment boxes from the chat timeline.
+Hides uploaded media and file boxes in chat.

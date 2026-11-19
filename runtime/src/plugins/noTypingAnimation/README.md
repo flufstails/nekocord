@@ -1,6 +1,6 @@
 ---
 name: NoTypingAnimation
-description: "Disables animated bouncing typing dots to reduce UI motion and battery usage."
+description: Stops typing indicator dots from bouncing in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # NoTypingAnimation
 
-Overrides typing animation helpers so typing indicators stay static without continuous bounce keyframes.
+Stops typing indicator dots from bouncing in chat.

@@ -1,6 +1,6 @@
 ---
 name: NumberedListFix
-description: Converts `1)` style numbered list prefixes into Markdown `1. ` lists.
+description: Turns 1) list items into standard 1. numbered lists when sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # NumberedListFix
 
-Replaces `1) Item` at the start of lines outside code blocks with valid Markdown `1. Item` formatting.
+Turns 1) list items into standard 1. numbered lists when sending.

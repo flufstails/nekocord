@@ -1,6 +1,6 @@
 ---
 name: HeadingPrefix
-description: "Adds a clean H3 (### ) header prefix to non-code outgoing lines."
+description: "Adds a medium ### heading prefix to lines you send."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # HeadingPrefix
 
-Adds a clean H3 (### ) header prefix to non-code outgoing lines.
+Adds a medium ### heading prefix to lines you send.

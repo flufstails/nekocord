@@ -8,6 +8,7 @@ let cancelDispatcherWait: (() => void) | null = null;
 let cancelWatch: (() => void) | null = null;
 let activeDispatcher: FluxDispatcher | null = null;
 let toggleSelfMuteFn: (() => unknown) | null = null;
+let pendingMuteTimer: ReturnType<typeof setTimeout> | null = null;
 let lastChannelId: string | null = null;
 let mutedOnJoinCount = 0;
 
@@ -31,16 +32,25 @@ function handleVoiceChannelSelect(action: any): void {
     return;
   }
 
-  try {
-    const mediaEngine = getStore<{ isSelfMute?: () => boolean }>('MediaEngineStore');
-    const alreadyMuted = Boolean(mediaEngine?.isSelfMute?.());
-    if (!alreadyMuted) {
-      toggleSelfMuteFn();
-      mutedOnJoinCount += 1;
-    }
-  } catch (err) {
-    console.error('[Nekocord/VoiceMuteOnJoin] Failed to mute on join:', err);
+  if (pendingMuteTimer) {
+    clearTimeout(pendingMuteTimer);
   }
+  pendingMuteTimer = setTimeout(() => {
+    pendingMuteTimer = null;
+    if (!activeDispatcher || !toggleSelfMuteFn) {
+      return;
+    }
+    try {
+      const mediaEngine = getStore<{ isSelfMute?: () => boolean }>('MediaEngineStore');
+      const alreadyMuted = Boolean(mediaEngine?.isSelfMute?.());
+      if (!alreadyMuted) {
+        toggleSelfMuteFn();
+        mutedOnJoinCount += 1;
+      }
+    } catch (err) {
+      console.error('[Nekocord/VoiceMuteOnJoin] Failed to mute on join:', err);
+    }
+  }, 0);
 }
 
 export default definePlugin({
@@ -67,6 +77,10 @@ export default definePlugin({
   },
 
   stop() {
+    if (pendingMuteTimer) {
+      clearTimeout(pendingMuteTimer);
+      pendingMuteTimer = null;
+    }
     if (cancelDispatcherWait) {
       cancelDispatcherWait();
       cancelDispatcherWait = null;

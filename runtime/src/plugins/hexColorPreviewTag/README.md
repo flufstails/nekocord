@@ -1,6 +1,6 @@
 ---
 name: HexColorPreviewTag
-description: Expands `\\hex:#RRGGBB` macros into hex + RGB color values on send.
+description: "Turns \\hex:#RRGGBB into both hex and RGB color info when sending."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HexColorPreviewTag
 
-Replaces `\\hex:#5865F2` macros in outgoing messages with `#5865F2 (rgb(88, 101, 242))`.
+Turns \hex:#RRGGBB into both hex and RGB color info when sending.

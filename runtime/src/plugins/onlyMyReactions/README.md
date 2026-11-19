@@ -1,6 +1,6 @@
 ---
 name: OnlyMyReactions
-description: Shows only reactions that you have reacted with in chat rows.
+description: Shows only emoji reactions that you added yourself.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # OnlyMyReactions
 
-Shows only reactions that you have reacted with in chat rows.
+Shows only emoji reactions that you added yourself.

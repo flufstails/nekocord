@@ -1,6 +1,6 @@
 ---
 name: HighlightVoiceMessages
-description: Highlights voice note messages with a warm amber gutter accent.
+description: Highlights voice note messages with an amber side accent.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HighlightVoiceMessages
 
-Applies an amber row highlight to Discord voice messages identified by message flags or audio waveform attachments.
+Highlights voice note messages with an amber side accent.

@@ -1,6 +1,6 @@
 ---
 name: CharacterCountTag
-description: Appends a subtle character count footer to outgoing messages over 20 chars.
+description: Adds a small character count note to longer messages you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # CharacterCountTag
 
-Appends a subtle character count footer to outgoing messages over 20 chars.
+Adds a small character count note to longer messages you send.

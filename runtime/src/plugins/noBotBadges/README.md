@@ -1,6 +1,6 @@
 ---
 name: NoBotBadges
-description: Hides BOT, APP, and webhook tag pills next to author names.
+description: Hides BOT, APP, and webhook labels beside usernames.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # NoBotBadges
 
-Hides BOT, APP, and webhook tag pills next to author names.
+Hides BOT, APP, and webhook labels beside usernames.

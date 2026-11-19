@@ -1,6 +1,6 @@
 ---
 name: AutoSpoilerAttachments
-description: Automatically marks outgoing uploaded files as spoilers based on configurable media types.
+description: Marks uploaded images, videos, or files as spoilers automatically.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # AutoSpoilerAttachments
 
-Prefixes outgoing upload filenames with `SPOILER_` before upload for enabled categories (`images`, `videos`, or `other files`).
+Marks uploaded images, videos, or files as spoilers automatically.

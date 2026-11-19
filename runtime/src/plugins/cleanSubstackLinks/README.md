@@ -1,6 +1,6 @@
 ---
 name: CleanSubstackLinks
-description: Removes Substack share and publication tracking parameters on send.
+description: Removes newsletter tracking tags from Substack links you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CleanSubstackLinks
 
-Strips Substack query-string share trackers (`utm_*`, `r=`, `triedRedirect=`) from outgoing article links.
+Removes newsletter tracking tags from Substack links you send.

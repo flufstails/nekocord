@@ -1,6 +1,6 @@
 ---
 name: ForceOwnerCrown
-description: "Marks guild owners clearly in chat rows even in servers that hide the owner crown."
+description: Always shows the crown icon next to server owners even if hidden.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ForceOwnerCrown
 
-Checks `GuildStore` owner IDs for active guild channels and appends a subtle `[Owner]` indicator to the guild owner username.
+Always shows the crown icon next to server owners even if hidden.

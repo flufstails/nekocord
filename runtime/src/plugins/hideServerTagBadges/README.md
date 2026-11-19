@@ -1,6 +1,6 @@
 ---
 name: HideServerTagBadges
-description: Removes server identity tag pills next to author usernames in chat rows.
+description: Hides server tag pills next to usernames in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HideServerTagBadges
 
-Clears `clanTag`, `clan`, and `primaryGuild` server tag badges from rendered chat rows.
+Hides server tag pills next to usernames in chat.

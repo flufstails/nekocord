@@ -1,6 +1,6 @@
 ---
 name: AnonymiseLinks
-description: Strips URL query parameters and optionally prepends a privacy redirect prefix on send.
+description: Removes tracking info from links you send, with an optional privacy prefix.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # AnonymiseLinks
 
-Cleans outgoing links outside Markdown code spans by removing URL query strings and optionally routing links through a configured HTTPS redirect prefix.
+Removes tracking info from links you send, with an optional privacy prefix.

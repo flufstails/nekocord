@@ -1,6 +1,6 @@
 ---
 name: NoPresenceTelemetry
-description: Drops rich presence tracking and activity launch metric actions.
+description: Stops Discord from tracking your active games and presence.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # NoPresenceTelemetry
 
-Drops rich presence tracking and activity launch metric actions.
+Stops Discord from tracking your active games and presence.

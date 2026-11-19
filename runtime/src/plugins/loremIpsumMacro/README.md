@@ -1,6 +1,6 @@
 ---
 name: LoremIpsumMacro
-description: Expands /lorem into standard placeholder text for UI or chat layout tests.
+description: Turns /lorem into sample placeholder text.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,6 +15,6 @@ tags:
 
 # LoremIpsumMacro
 
-Expands /lorem into standard placeholder text for UI or chat layout tests.
+Turns /lorem into sample placeholder text.
 
 Type `/lorem` in any chat composer box and send to expand inline.

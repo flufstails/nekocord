@@ -1,6 +1,6 @@
 ---
 name: HideCallBanners
-description: Hides missed/started voice call metadata banners inside DM message rows.
+description: Hides missed and started call boxes inside DM chats.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HideCallBanners
 
-Clears call metadata objects from rendered DM chat rows.
+Hides missed and started call boxes inside DM chats.

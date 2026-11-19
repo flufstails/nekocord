@@ -1,6 +1,6 @@
 ---
 name: RedactPrivateKeys
-description: Redacts accidental PEM private key blocks before sending chat messages.
+description: Automatically hides pasted private keys before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # RedactPrivateKeys
 
-Replaces pasted PEM `-----BEGIN ... PRIVATE KEY-----` blocks outside code spans with `[redacted-private-key]`.
+Automatically hides pasted private keys before sending.

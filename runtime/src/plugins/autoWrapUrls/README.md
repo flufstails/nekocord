@@ -1,6 +1,6 @@
 ---
 name: AutoWrapUrls
-description: "Wraps outgoing links in <...> angle brackets to suppress Discord link embeds."
+description: Wraps links you send in <...> so Discord does not show link preview boxes.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # AutoWrapUrls
 
-Wraps outgoing links in <...> angle brackets to suppress Discord link embeds.
+Wraps links you send in <...> so Discord does not show link preview boxes.

@@ -1,6 +1,6 @@
 ---
 name: RedactIpv4Addresses
-description: Masks public IPv4 addresses in outgoing chat text to prevent accidental leaks.
+description: Automatically hides public IP addresses before sending messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # RedactIpv4Addresses
 
-Masks public IPv4 addresses in outgoing chat text to prevent accidental leaks.
+Automatically hides public IP addresses before sending messages.

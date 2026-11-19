@@ -1,6 +1,6 @@
 ---
 name: FixImagesQuality
-description: "Rewrites Discord CDN image attachment and embed URLs to request lossless quality."
+description: Loads Discord images in full lossless quality.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # FixImagesQuality
 
-Updates `cdn.discordapp.com` and `media.discordapp.net` attachment and embed image URLs to include `quality=lossless`.
+Loads Discord images in full lossless quality.

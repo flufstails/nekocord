@@ -1,6 +1,6 @@
 ---
 name: StreamerModeOnStream
-description: "Automatically toggles Discord Streamer Mode when starting or ending a stream."
+description: Turns Streamer Mode on automatically while you are screen sharing.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # StreamerModeOnStream
 
-Subscribes to `STREAM_CREATE` and `STREAM_DELETE` dispatches to enable Streamer Mode during broadcasts.
+Turns Streamer Mode on automatically while you are screen sharing.

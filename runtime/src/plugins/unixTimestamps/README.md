@@ -1,6 +1,6 @@
 ---
 name: UnixTimestamps
-description: Appends exact Unix epoch seconds to chat message timestamps.
+description: Shows Unix epoch timestamps next to chat messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # UnixTimestamps
 
-Appends exact Unix epoch seconds to chat message timestamps.
+Shows Unix epoch timestamps next to chat messages.

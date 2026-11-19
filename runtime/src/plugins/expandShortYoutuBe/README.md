@@ -1,6 +1,6 @@
 ---
 name: ExpandShortYoutuBe
-description: Expands youtu.be shortlinks to full youtube.com/watch?v= URLs.
+description: Expands short youtu.be links into full youtube.com watch links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ExpandShortYoutuBe
 
-Expands youtu.be shortlinks to full youtube.com/watch?v= URLs.
+Expands short youtu.be links into full youtube.com watch links.

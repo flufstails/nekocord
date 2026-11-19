@@ -1,6 +1,6 @@
 ---
 name: JsonFormatMacro
-description: Expands `\\json:{...}` macros into formatted JSON code blocks on send.
+description: "Formats \\json:{...} text into a clean code block when sending."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # JsonFormatMacro
 
-Detects outgoing messages prefixed with `\\json:` and formats valid JSON into a syntax-highlighted fenced code block.
+Formats \json:{...} text into a clean code block when sending.

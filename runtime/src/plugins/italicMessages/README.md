@@ -1,6 +1,6 @@
 ---
 name: ItalicMessages
-description: "Automatically wraps outgoing chat text in *italic* Markdown formatting."
+description: Makes all text you send italic using *italic* formatting.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ItalicMessages
 
-Automatically wraps outgoing chat text in *italic* Markdown formatting.
+Makes all text you send italic using *italic* formatting.

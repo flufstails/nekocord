@@ -1,6 +1,6 @@
 ---
 name: HidePremiumUpsells
-description: Suppresses client Nitro upsell prompts across pickers and settings menus.
+description: Hides Nitro upgrade prompts and popups across pickers and settings.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,6 +13,6 @@ tags:
 
 # HidePremiumUpsells
 
-Suppresses client Nitro upsell prompts across pickers and settings menus.
+Hides Nitro upgrade prompts and popups across pickers and settings.
 
 Requires a client restart after toggling so Discord initializes cleanly with the updated hooks.

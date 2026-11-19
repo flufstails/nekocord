@@ -1,6 +1,6 @@
 ---
 name: NoServerEmojis
-description: "Renders custom guild emojis as plain `:name:` shortcodes in incoming chat messages."
+description: "Shows custom server emojis as plain :name: text in chat."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # NoServerEmojis
 
-Replaces custom emoji AST nodes and markup inside chat rows with readable `:emoji_name:` text tokens.
+Shows custom server emojis as plain :name: text in chat.

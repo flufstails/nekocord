@@ -1,6 +1,6 @@
 ---
 name: NitterLinks
-description: Rewrites Twitter and X links to an anonymous Nitter mirror before sending.
+description: Rewrites Twitter and X links to an anonymous Nitter mirror.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # NitterLinks
 
-Rewrites Twitter and X links to an anonymous Nitter mirror before sending.
+Rewrites Twitter and X links to an anonymous Nitter mirror.

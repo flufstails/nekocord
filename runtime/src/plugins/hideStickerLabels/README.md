@@ -1,6 +1,6 @@
 ---
 name: HideStickerLabels
-description: Strips alt-text description labels attached to chat stickers.
+description: Hides sticker description labels below chat stickers.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HideStickerLabels
 
-Clears sticker description alt labels inside rendered message rows.
+Hides sticker description labels below chat stickers.

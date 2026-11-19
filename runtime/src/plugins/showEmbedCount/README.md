@@ -1,6 +1,6 @@
 ---
 name: ShowEmbedCount
-description: Displays `[N embeds]` beside timestamps on messages carrying 2 or more embeds.
+description: Shows [N embeds] next to timestamps when a message has multiple previews.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ShowEmbedCount
 
-Appends an embed count badge beside message timestamps when multi-embed cards render.
+Shows [N embeds] next to timestamps when a message has multiple previews.

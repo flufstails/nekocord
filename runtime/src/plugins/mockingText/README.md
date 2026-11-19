@@ -1,6 +1,6 @@
 ---
 name: MockingText
-description: Converts outgoing prose into alternating mocking case outside links and code blocks.
+description: Converts text you send into alternating uppercase and lowercase.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # MockingText
 
-Converts outgoing prose into alternating mocking case outside links and code blocks.
+Converts text you send into alternating uppercase and lowercase.

@@ -1,6 +1,6 @@
 ---
 name: PermissionFreeWill
-description: "Bypasses client-side UI lockouts when inspecting guild channel and member permission settings."
+description: Lets you view locked channel and member permission screens.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # PermissionFreeWill
 
-Overrides client-side `canManageUser` checks on read-only settings sheets while keeping server enforcement intact.
+Lets you view locked channel and member permission screens.

@@ -1,6 +1,6 @@
 ---
 name: SmallCapsText
-description: Converts lowercase text into clean Unicode small-caps letters.
+description: Converts lowercase letters into small capital lettering.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # SmallCapsText
 
-Converts lowercase text into clean Unicode small-caps letters.
+Converts lowercase letters into small capital lettering.

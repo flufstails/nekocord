@@ -1,6 +1,6 @@
 ---
 name: IrcColors
-description: "Applies deterministic IRC-style pastel colors to usernames without a custom role color."
+description: Gives each username a distinct pastel color when they have no role color.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # IrcColors
 
-Hashes each author ID into a consistent readable pastel hue when `usernameColor` is unset on a chat row.
+Gives each username a distinct pastel color when they have no role color.

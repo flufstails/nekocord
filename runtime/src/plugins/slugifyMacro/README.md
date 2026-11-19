@@ -1,6 +1,6 @@
 ---
 name: SlugifyMacro
-description: Expands `\\slug:<text>` into kebab-case `my-slug-text` slugs on send.
+description: "Turns \\slug:<text> into clean hyphenated text (like my-slug-text)."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # SlugifyMacro
 
-Converts `\\slug:My Feature Name` to `my-feature-name` cleanly before sending.
+Turns \slug:<text> into clean hyphenated text (like my-slug-text).

@@ -1,6 +1,6 @@
 ---
 name: AlternatingWordCase
-description: Alternates consecutive words between UPPERCASE and lowercase cadence.
+description: Alternates words between UPPERCASE and lowercase in messages you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # AlternatingWordCase
 
-Alternates consecutive words between UPPERCASE and lowercase cadence.
+Alternates words between UPPERCASE and lowercase in messages you send.

@@ -68,7 +68,7 @@ function compareVersions(a: string, b: string): number {
 }
 
 function getCurrentVersion(): string {
-  return globalThis.Nekocord?.version ?? '1.4.0';
+  return globalThis.Nekocord?.version ?? '1.5.0';
 }
 
 /**
@@ -235,7 +235,7 @@ export async function applyRuntimeUpdate(
       return { ok: false, message: `Bundle download failed (HTTP ${bundleRes.status}).` };
     }
     const bundleText = await bundleRes.text();
-    if (!bundleText || bundleText.length < 500 || bundleText.trimStart().startsWith('<')) {
+    if (!bundleText || bundleText.length < 500 || bundleText.replace(/^\s+/, '').startsWith('<')) {
       return { ok: false, message: 'Downloaded bundle file looks invalid.' };
     }
 
@@ -245,7 +245,11 @@ export async function applyRuntimeUpdate(
       const preloadRes = await fetchFn(result.preloadUrl);
       if (preloadRes.ok) {
         const preloadText = await preloadRes.text();
-        if (preloadText && preloadText.length >= 200 && !preloadText.trimStart().startsWith('<')) {
+        if (
+          preloadText &&
+          preloadText.length >= 200 &&
+          !preloadText.replace(/^\s+/, '').startsWith('<')
+        ) {
           await fileMod.writeFile('documents', 'nekocord/nekocord-preload.dev.js', preloadText, 'utf8');
         }
       }

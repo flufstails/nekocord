@@ -1,6 +1,6 @@
 ---
 name: FxEmbedsBluesky
-description: Rewrites `bsky.app` links to `fxbsky.app` for enhanced rich post embeds.
+description: Converts bsky.app links to fxbsky.app for better rich previews.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # FxEmbedsBluesky
 
-Rewrites `https://bsky.app/...` URLs outside code blocks into `https://fxbsky.app/...` mirrors before sending.
+Converts bsky.app links to fxbsky.app for better rich previews.

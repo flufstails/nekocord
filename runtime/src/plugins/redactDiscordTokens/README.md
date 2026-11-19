@@ -1,6 +1,6 @@
 ---
 name: RedactDiscordTokens
-description: Redacts accidental Discord authentication tokens before sending messages.
+description: Automatically hides pasted Discord account tokens before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # RedactDiscordTokens
 
-Detects 3-part Discord token patterns outside code blocks and replaces them with `[redacted-token]` on send.
+Automatically hides pasted Discord account tokens before sending.

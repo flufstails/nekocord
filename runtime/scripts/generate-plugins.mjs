@@ -17,6 +17,8 @@ const PRIORITY_NAMES = [
   'NoReplyMention',
   'ClearURLs',
   'DeveloperMode',
+  'AudioToVoiceMessage',
+  'CustomRPC',
   'SilentTyping',
   'SilentMessages',
   'FixEmbeds',

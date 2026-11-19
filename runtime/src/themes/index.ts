@@ -895,7 +895,7 @@ function collectPreviewSwatches(
 }
 
 const CSS_COLOR_VALUE_RE =
-  /^(?:#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})|rgba?\([^)]+\)|hsla?\([^)]+\))$/i;
+  /^(?:#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})|rgba?\([^)]+\)|hsla?\([^)]+\)|black|white|transparent)$/i;
 
 const CSS_VAR_TO_SEMANTIC: Record<string, string[]> = {
   'background-primary': ['BACKGROUND_PRIMARY', 'BG_BASE_PRIMARY', 'CHAT_BACKGROUND', 'BACKGROUND_MOBILE_PRIMARY', 'BACKGROUND_BASE_LOW'],
@@ -909,9 +909,17 @@ const CSS_VAR_TO_SEMANTIC: Record<string, string[]> = {
   'background-mobile-primary': ['BACKGROUND_MOBILE_PRIMARY', 'BACKGROUND_PRIMARY'],
   'background-mobile-secondary': ['BACKGROUND_MOBILE_SECONDARY', 'BACKGROUND_SECONDARY'],
   'chat-background': ['CHAT_BACKGROUND', 'BACKGROUND_PRIMARY'],
+  'bg-overlay-chat': ['CHAT_BACKGROUND', 'BACKGROUND_PRIMARY'],
+  'bg-overlay-app-frame': ['BACKGROUND_TERTIARY', 'BG_BASE_TERTIARY'],
   'background-floating': ['BACKGROUND_FLOATING', 'CARD_PRIMARY_BG', 'BACKGROUND_SURFACE_HIGH'],
   'card-primary-bg': ['CARD_PRIMARY_BG', 'BACKGROUND_SURFACE_HIGH'],
   'background-surface-high': ['BACKGROUND_SURFACE_HIGH', 'CARD_PRIMARY_BG'],
+  'background-accent': ['BACKGROUND_MOD_STRONG', 'CARD_PRIMARY_BG'],
+  'background-modifier-hover': ['BACKGROUND_MOD_SUBTLE', 'BACKGROUND_SURFACE_HIGH'],
+  'background-modifier-active': ['BACKGROUND_MOD_MUTED', 'BACKGROUND_SURFACE_HIGH'],
+  'background-modifier-selected': ['BACKGROUND_MOD_NORMAL', 'BACKGROUND_SURFACE_HIGH'],
+  'channeltextarea-background': ['BACKGROUND_SECONDARY_ALT', 'CARD_SECONDARY_BG', 'BACKGROUND_TERTIARY'],
+  'channels-default': ['CHANNEL_ICON', 'INTERACTIVE_NORMAL', 'TEXT_MUTED'],
   'text-normal': ['TEXT_NORMAL', 'TEXT_DEFAULT', 'TEXT_PRIMARY'],
   'text-default': ['TEXT_DEFAULT', 'TEXT_NORMAL', 'TEXT_PRIMARY'],
   'text-muted': ['TEXT_MUTED', 'TEXT_SUBTLE', 'TEXT_SECONDARY'],
@@ -920,6 +928,8 @@ const CSS_VAR_TO_SEMANTIC: Record<string, string[]> = {
   'header-secondary': ['HEADER_SECONDARY', 'TEXT_MUTED'],
   'brand-500': ['BRAND_500', 'BG_BRAND', 'BACKGROUND_BRAND'],
   'brand-experiment': ['BRAND_500', 'BG_BRAND', 'BACKGROUND_BRAND'],
+  'brand-experiment-500': ['BRAND_500', 'BG_BRAND', 'BACKGROUND_BRAND'],
+  'brand-experiment-560': ['BRAND_500', 'BG_BRAND', 'BACKGROUND_BRAND'],
   'accent-color': ['BRAND_500', 'BG_BRAND'],
   'control-brand-foreground': ['CONTROL_BRAND_FOREGROUND', 'BRAND_500'],
   'interactive-normal': ['INTERACTIVE_NORMAL', 'ICON_MUTED'],
@@ -1100,6 +1110,9 @@ export function installThemeFromCss(
   }
   invalidateThemeCache();
   addCustomTheme(parsed.theme);
+  if (getActiveThemeId() === parsed.theme.id) {
+    applyActiveTheme();
+  }
   pushNotification({
     title: 'Custom CSS Theme Installed',
     body: `Saved "${parsed.theme.name}". Toggle it on and restart to apply.`,
@@ -1186,6 +1199,9 @@ export async function installThemeFromUrl(
 
     invalidateThemeCache();
     addCustomTheme(theme);
+    if (getActiveThemeId() === theme.id) {
+      applyActiveTheme();
+    }
     pushNotification({
       title: 'Theme Installed',
       body: `Installed "${theme.name}" from URL.`,

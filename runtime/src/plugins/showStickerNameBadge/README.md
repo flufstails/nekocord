@@ -1,6 +1,6 @@
 ---
 name: ShowStickerNameBadge
-description: Shows `[sticker: Name]` next to the timestamp when a message contains a sticker.
+description: Shows sticker names next to timestamps on sticker messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ShowStickerNameBadge
 
-Reveals the sticker’s display name beside the timestamp header cleanly.
+Shows sticker names next to timestamps on sticker messages.

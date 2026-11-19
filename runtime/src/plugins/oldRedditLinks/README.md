@@ -1,6 +1,6 @@
 ---
 name: OldRedditLinks
-description: Converts outgoing reddit.com links to classic old.reddit.com.
+description: Rewrites reddit.com links to classic old.reddit.com.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # OldRedditLinks
 
-Converts outgoing reddit.com links to classic old.reddit.com.
+Rewrites reddit.com links to classic old.reddit.com.

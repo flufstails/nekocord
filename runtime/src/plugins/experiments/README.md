@@ -1,6 +1,6 @@
 ---
 name: Experiments
-description: Unlocks Discord internal Experiments and Staff developer settings tabs.
+description: Unlocks Discord hidden Experiments and Staff developer menus in Settings.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # Experiments
 
-Reveals Discord's internal **Experiments** and Staff developer panels inside User Settings. Requires a client restart after toggling so settings navigation rebuilds cleanly.
+Unlocks Discord hidden Experiments and Staff developer menus in Settings.

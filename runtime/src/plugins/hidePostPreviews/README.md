@@ -1,6 +1,6 @@
 ---
 name: HidePostPreviews
-description: Removes forum post preview embeds inside message rows.
+description: Hides forum post preview cards inside messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HidePostPreviews
 
-Removes forum post preview embeds inside message rows.
+Hides forum post preview cards inside messages.

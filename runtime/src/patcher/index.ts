@@ -4,6 +4,7 @@ export type Unpatch = () => void;
 
 interface PatchRecord {
   original: AnyFn;
+  wrapper: AnyFn;
   originalDescriptor?: PropertyDescriptor;
   before: Set<(...args: any[]) => void>;
   after: Set<(args: any[], res: any) => any>;
@@ -15,6 +16,7 @@ interface PatchRecord {
 
 const PATCH_META = new WeakMap<AnyFn, PatchRecord>();
 const activeUnpatches = new Set<Unpatch>();
+const SKIPPED_FN_PROPS = new Set(['prototype', 'length', 'name', 'arguments', 'caller']);
 
 function assignPatchedMethod<T extends object, K extends keyof T>(
   target: T,
@@ -53,16 +55,6 @@ function ensurePatched<T extends object, K extends keyof T>(target: T, method: K
 
   const desc = Object.getOwnPropertyDescriptor(target, method);
   const original = current as AnyFn;
-  const record: PatchRecord = {
-    original,
-    originalDescriptor: desc && !('value' in desc) ? desc : undefined,
-    before: new Set(),
-    after: new Set(),
-    instead: new Set(),
-    beforeList: [],
-    afterList: [],
-    insteadList: [],
-  };
 
   const wrapper = function nekocordPatchWrapper(this: unknown, ...args: any[]) {
     const beforeList = record.beforeList;
@@ -110,7 +102,34 @@ function ensurePatched<T extends object, K extends keyof T>(target: T, method: K
     return result;
   };
 
-  Object.defineProperties(wrapper, Object.getOwnPropertyDescriptors(original));
+  const record: PatchRecord = {
+    original,
+    wrapper,
+    originalDescriptor: desc && !('value' in desc) ? desc : undefined,
+    before: new Set(),
+    after: new Set(),
+    instead: new Set(),
+    beforeList: [],
+    afterList: [],
+    insteadList: [],
+  };
+
+  try {
+    const descriptors = Object.getOwnPropertyDescriptors(original);
+    for (const [propKey, propDesc] of Object.entries(descriptors)) {
+      if (SKIPPED_FN_PROPS.has(propKey)) {
+        continue;
+      }
+      try {
+        Object.defineProperty(wrapper, propKey, propDesc);
+      } catch {
+        // Ignore locked or non-configurable properties on wrapped functions.
+      }
+    }
+  } catch {
+    // Ignore descriptor enumeration failures on host functions.
+  }
+
   PATCH_META.set(wrapper, record);
   assignPatchedMethod(target, method, wrapper);
   return record;
@@ -127,7 +146,12 @@ function registerHook<T extends object, K extends keyof T, C>(
   bucket.add(callback);
   syncRecordLists(record);
 
+  let active = true;
   const unpatch: Unpatch = () => {
+    if (!active) {
+      return;
+    }
+    active = false;
     bucket.delete(callback);
     syncRecordLists(record);
     activeUnpatches.delete(unpatch);
@@ -135,7 +159,7 @@ function registerHook<T extends object, K extends keyof T, C>(
       record.before.size === 0 &&
       record.after.size === 0 &&
       record.instead.size === 0 &&
-      PATCH_META.has(target[method] as AnyFn)
+      target[method] === (record.wrapper as unknown)
     ) {
       if (record.originalDescriptor) {
         Object.defineProperty(target, method, record.originalDescriptor);

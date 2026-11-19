@@ -1,6 +1,6 @@
 ---
 name: NoMosaic
-description: Disables Discord multi-image mosaic cropping so attachments render cleanly.
+description: Shows multiple image attachments at full size instead of cropping them into a grid.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # NoMosaic
 
-Disables Discord multi-image mosaic cropping so attachments render cleanly.
+Shows multiple image attachments at full size instead of cropping them into a grid.

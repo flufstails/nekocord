@@ -1,6 +1,6 @@
 ---
 name: MarkdownTableMacro
-description: Expands `\\table2` into a formatted 2-column Markdown comparison block.
+description: Turns \table2 into a clean two-column comparison table.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # MarkdownTableMacro
 
-Quickly inserts a clean 2-column code-aligned table template when typing `\\table2`.
+Turns \table2 into a clean two-column comparison table.

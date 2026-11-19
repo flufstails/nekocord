@@ -1,6 +1,6 @@
 ---
 name: GuildLeaveAudit
-description: Tracks guild kick/leave dispatches so unexpected removals are visible.
+description: Tracks when you leave or get removed from a server.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # GuildLeaveAudit
 
-Tracks guild kick/leave dispatches so unexpected removals are visible.
+Tracks when you leave or get removed from a server.

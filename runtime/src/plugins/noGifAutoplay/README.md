@@ -1,6 +1,6 @@
 ---
 name: NoGifAutoplay
-description: Stops animated GIFs in chat from auto-playing until tapped.
+description: Stops GIFs in chat from auto-playing until you tap them.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # NoGifAutoplay
 
-Stops animated GIFs in chat from auto-playing until tapped.
+Stops GIFs in chat from auto-playing until you tap them.

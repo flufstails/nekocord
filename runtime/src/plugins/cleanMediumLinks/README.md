@@ -1,6 +1,6 @@
 ---
 name: CleanMediumLinks
-description: Removes `source=` referral parameters from Medium article links.
+description: Removes referral tags from Medium article links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CleanMediumLinks
 
-Strips referral query strings from outgoing Medium article URLs.
+Removes referral tags from Medium article links.

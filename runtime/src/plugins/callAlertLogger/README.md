@@ -1,6 +1,6 @@
 ---
 name: CallAlertLogger
-description: Logs incoming DM and group voice call rings to the Nekocord Notification Log.
+description: Saves incoming call alerts in the Nekocord Notification Log.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CallAlertLogger
 
-Records `CALL_CREATE` incoming call events cleanly with channel metadata.
+Saves incoming call alerts in the Nekocord Notification Log.

@@ -1,6 +1,6 @@
 ---
 name: WordCountMacro
-description: Replaces trailing `\\wc` macro with `[N words]` computed from your message.
+description: Turns \wc into [N words] counted from your message.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # WordCountMacro
 
-Include `\\wc` in a message to automatically insert the exact word count on send.
+Turns \wc into [N words] counted from your message.

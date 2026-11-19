@@ -1,6 +1,6 @@
 ---
 name: BlockActivityStatus
-description: Prevents local game and app activity updates from being broadcast.
+description: Stops Discord from sharing your running games and app activity.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # BlockActivityStatus
 
-Suppresses `LOCAL_ACTIVITY_UPDATE` and `RUNNING_GAMES_CHANGE` dispatches so running apps stay private.
+Stops Discord from sharing your running games and app activity.

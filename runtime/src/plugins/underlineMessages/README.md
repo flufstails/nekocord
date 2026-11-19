@@ -1,6 +1,6 @@
 ---
 name: UnderlineMessages
-description: Automatically wraps outgoing chat text in __underline__ Markdown formatting.
+description: Underlines text you send using __underline__ formatting.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # UnderlineMessages
 
-Automatically wraps outgoing chat text in __underline__ Markdown formatting.
+Underlines text you send using __underline__ formatting.

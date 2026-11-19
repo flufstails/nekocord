@@ -1,6 +1,6 @@
 ---
 name: BreezeWikiLinks
-description: Rewrites ad-heavy fandom.com wiki links to clean breezewiki.com reader URLs.
+description: Converts ad-heavy Fandom wiki links into clean BreezeWiki reading links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # BreezeWikiLinks
 
-Rewrites ad-heavy fandom.com wiki links to clean breezewiki.com reader URLs.
+Converts ad-heavy Fandom wiki links into clean BreezeWiki reading links.

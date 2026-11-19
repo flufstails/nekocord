@@ -1,6 +1,6 @@
 ---
 name: RedactPhoneNumbers
-description: Masks accidental international or local phone numbers in outgoing chat.
+description: Automatically hides phone numbers in messages you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # RedactPhoneNumbers
 
-Masks accidental international or local phone numbers in outgoing chat.
+Automatically hides phone numbers in messages you send.

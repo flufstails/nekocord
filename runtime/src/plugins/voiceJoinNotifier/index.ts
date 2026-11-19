@@ -24,9 +24,59 @@ const settings = definePluginSettings({
   },
 });
 
+const MAX_TRACKED_USERS = 2000;
 const prevChannels = new Map<string, string | null>();
 let dispatcherRef: FluxDispatcher | null = null;
 let cancelWait: (() => void) | null = null;
+
+function rememberUserChannel(uid: string, chId: string | null): void {
+  if (!prevChannels.has(uid) && prevChannels.size >= MAX_TRACKED_USERS) {
+    const oldest = prevChannels.keys().next().value;
+    if (oldest !== undefined) {
+      prevChannels.delete(oldest);
+    }
+  }
+  prevChannels.set(uid, chId);
+}
+
+function resolveMyVoiceChannelId(selfId: string): string | null {
+  const selected = getStore<{ getVoiceChannelId?: () => string | null }>(
+    'SelectedChannelStore',
+  )?.getVoiceChannelId?.();
+  if (selected) return String(selected);
+
+  const vsStore = getStore<any>('VoiceStateStore');
+  const viaState = selfId ? vsStore?.getVoiceStateForUser?.(selfId)?.channelId : null;
+  if (viaState) return String(viaState);
+
+  const viaChannel = selfId ? vsStore?.getVoiceChannelId?.(selfId) : null;
+  return viaChannel ? String(viaChannel) : null;
+}
+
+function seedChannelRoster(channelId: string | null, selfId: string): void {
+  if (!channelId) return;
+  const vsStore = getStore<any>('VoiceStateStore');
+  const states = vsStore?.getVoiceStatesForChannel?.(channelId);
+  if (!states || typeof states !== 'object') return;
+  const list = Array.isArray(states) ? states : Object.values(states);
+  for (let i = 0; i < list.length; i += 1) {
+    const st = list[i] as any;
+    const uid = st?.userId ? String(st.userId) : '';
+    if (uid && uid !== selfId && !prevChannels.has(uid)) {
+      rememberUserChannel(uid, channelId);
+    }
+  }
+}
+
+const onVoiceChannelSelect = (action: Record<string, any>) => {
+  const selfId = getUserStore()?.getCurrentUser?.()?.id
+    ? String(getUserStore()!.getCurrentUser().id)
+    : '';
+  const chId = action?.channelId ? String(action.channelId) : null;
+  if (chId) {
+    seedChannelRoster(chId, selfId);
+  }
+};
 
 const onVoiceStateUpdates = (action: Record<string, any>) => {
   const updates = Array.isArray(action.voiceStates) ? action.voiceStates : [];
@@ -34,8 +84,7 @@ const onVoiceStateUpdates = (action: Record<string, any>) => {
 
   const userStore = getUserStore();
   const selfId = userStore?.getCurrentUser?.()?.id ? String(userStore.getCurrentUser().id) : '';
-  const vsStore = getStore<{ getVoiceChannelId?: (userId?: string) => string | null }>('VoiceStateStore');
-  const myChannelId = selfId ? vsStore?.getVoiceChannelId?.(selfId) ?? null : null;
+  const myChannelId = resolveMyVoiceChannelId(selfId);
 
   for (let i = 0; i < updates.length; i += 1) {
     const st = updates[i];
@@ -44,8 +93,11 @@ const onVoiceStateUpdates = (action: Record<string, any>) => {
     if (!uid || (selfId && uid === selfId)) continue;
 
     const nextChannel = st.channelId ? String(st.channelId) : null;
-    const prevChannel = prevChannels.get(uid) ?? null;
-    prevChannels.set(uid, nextChannel);
+    const prevChannel =
+      st.oldChannelId !== undefined
+        ? (st.oldChannelId ? String(st.oldChannelId) : null)
+        : (prevChannels.get(uid) ?? null);
+    rememberUserChannel(uid, nextChannel);
 
     if (!myChannelId || nextChannel === prevChannel) continue;
 
@@ -77,10 +129,16 @@ const onVoiceStateUpdates = (action: Record<string, any>) => {
 export default definePlugin({
   settings,
   start() {
+    const selfId = getUserStore()?.getCurrentUser?.()?.id
+      ? String(getUserStore()!.getCurrentUser().id)
+      : '';
+    seedChannelRoster(resolveMyVoiceChannelId(selfId), selfId);
+
     cancelWait = onFluxDispatcher((dispatcher) => {
       if (!dispatcherRef) {
         dispatcherRef = dispatcher;
         dispatcher.subscribe('VOICE_STATE_UPDATES', onVoiceStateUpdates);
+        dispatcher.subscribe('VOICE_CHANNEL_SELECT', onVoiceChannelSelect);
       }
     });
   },
@@ -89,6 +147,7 @@ export default definePlugin({
     cancelWait = null;
     if (dispatcherRef) {
       dispatcherRef.unsubscribe('VOICE_STATE_UPDATES', onVoiceStateUpdates);
+      dispatcherRef.unsubscribe('VOICE_CHANNEL_SELECT', onVoiceChannelSelect);
       dispatcherRef = null;
     }
     prevChannels.clear();

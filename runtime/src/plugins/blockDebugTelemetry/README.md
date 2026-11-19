@@ -1,6 +1,6 @@
 ---
 name: BlockDebugTelemetry
-description: Drops internal debug and performance trace Flux dispatches locally.
+description: Stops Discord from sending background debug and speed logs.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # BlockDebugTelemetry
 
-Blocks `DEBUG_LOG`, `DIAGNOSTIC_LOG`, and `PERFORMANCE_TRACE` Flux events.
+Stops Discord from sending background debug and speed logs.

@@ -36,6 +36,7 @@ const settings = definePluginSettings({
 let dispatcherRef: FluxDispatcher | null = null;
 let cancelWait: (() => void) | null = null;
 const lastRepliedAt = new Map<string, number>();
+const pendingReplyTimers = new Set<ReturnType<typeof setTimeout>>();
 
 const onMessageCreate = (action: Record<string, any>) => {
   const msg = action.message;
@@ -66,15 +67,26 @@ const onMessageCreate = (action: Record<string, any>) => {
   const actions = getMessageActions();
   if (typeof actions?.sendMessage === 'function') {
     lastRepliedAt.set(channelId, now);
-    actions.sendMessage(channelId, { content: text });
-    pushNotification({
-      title: 'AutoReplyAway Sent',
-      body: `Replied to ${msg.author?.username || 'user'} in channel ${channelId}.`,
-      source: 'AutoReplyAway',
-      kind: 'info',
-      showToast: false,
-      channelId,
-    });
+    const authorName = msg.author?.username || 'user';
+    const t = setTimeout(() => {
+      pendingReplyTimers.delete(t);
+      if (!dispatcherRef) return;
+      getMessageActions()?.sendMessage?.(channelId, {
+        content: text,
+        tts: false,
+        invalidEmojis: [],
+        validNonShortcutEmojis: [],
+      });
+      pushNotification({
+        title: 'AutoReplyAway Sent',
+        body: `Replied to ${authorName} in channel ${channelId}.`,
+        source: 'AutoReplyAway',
+        kind: 'info',
+        showToast: false,
+        channelId,
+      });
+    }, 0);
+    pendingReplyTimers.add(t);
   }
 };
 
@@ -91,6 +103,8 @@ export default definePlugin({
   stop() {
     cancelWait?.();
     cancelWait = null;
+    pendingReplyTimers.forEach((t) => clearTimeout(t));
+    pendingReplyTimers.clear();
     if (dispatcherRef) {
       dispatcherRef.unsubscribe('MESSAGE_CREATE', onMessageCreate);
       dispatcherRef = null;

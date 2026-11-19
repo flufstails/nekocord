@@ -1,6 +1,6 @@
 ---
 name: BlockCallTelemetry
-description: Suppresses outgoing voice quality metrics and media connection stats dispatches.
+description: Stops Discord from collecting call quality stats and metrics.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # BlockCallTelemetry
 
-Suppresses outgoing voice quality metrics and media connection stats dispatches.
+Stops Discord from collecting call quality stats and metrics.

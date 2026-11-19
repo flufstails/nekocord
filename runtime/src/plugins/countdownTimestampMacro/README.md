@@ -1,6 +1,6 @@
 ---
 name: CountdownTimestampMacro
-description: Expands `\\in10m`, `\\in2h`, or `\\in3d` into live Discord countdown tags `<t:UNIX:R>`.
+description: Turns \in10m, \in2h, or \in3d into live Discord countdown timers.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CountdownTimestampMacro
 
-Converts relative offsets such as `\\in15m`, `\\in2h`, or `\\in1d` into native Discord relative timestamps.
+Turns \in10m, \in2h, or \in3d into live Discord countdown timers.

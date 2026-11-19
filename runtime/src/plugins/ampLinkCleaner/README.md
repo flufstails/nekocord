@@ -1,6 +1,6 @@
 ---
 name: AmpLinkCleaner
-description: Strips trailing `/amp` segments and `?amp=1` flags from shared article URLs.
+description: Removes AMP mobile formatting parts from shared article links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # AmpLinkCleaner
 
-Normalizes mobile Google AMP article links back to canonical article URLs before send.
+Removes AMP mobile formatting parts from shared article links.

@@ -1,6 +1,6 @@
 ---
 name: SuppressEmbedsOnSend
-description: Marks outgoing messages containing URLs with the suppress-embeds flag.
+description: Hides automatic link preview boxes on links you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -16,4 +16,4 @@ tags:
 
 # SuppressEmbedsOnSend
 
-Marks outgoing messages containing URLs with the suppress-embeds flag.
+Hides automatic link preview boxes on links you send.

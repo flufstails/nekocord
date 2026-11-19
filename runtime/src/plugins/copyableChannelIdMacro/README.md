@@ -1,6 +1,6 @@
 ---
 name: CopyableChannelIdMacro
-description: Expands `\\cid` macros into the current Discord channel snowflake ID on send.
+description: Turns \cid into the current chat channel ID when sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CopyableChannelIdMacro
 
-Replaces `\\cid` inside outgoing messages with the numeric `channelId` passed to `sendMessage`.
+Turns \cid into the current chat channel ID when sending.

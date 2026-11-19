@@ -1,6 +1,6 @@
 ---
 name: ShakespeareSpeak
-description: Lightly adapts pronouns and greetings into Early Modern English phrasing.
+description: Turns everyday greetings and pronouns into Shakespearean English.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # ShakespeareSpeak
 
-Lightly adapts pronouns and greetings into Early Modern English phrasing.
+Turns everyday greetings and pronouns into Shakespearean English.

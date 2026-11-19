@@ -1,6 +1,6 @@
 ---
 name: NoMassMentions
-description: Safely disarms accidental `@everyone` and `@here` mentions on send.
+description: Disarms accidental @everyone and @here pings before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # NoMassMentions
 
-Inserts a zero-width joiner after `@` on `@everyone` and `@here` outside code spans so pings are not triggered accidentally.
+Disarms accidental @everyone and @here pings before sending.

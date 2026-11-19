@@ -1,6 +1,6 @@
 ---
 name: FixBilibiliEmbeds
-description: Rewrites `bilibili.com` links to `vxbilibili.com` for inline video previews.
+description: Converts bilibili.com links so videos play directly inside Discord chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # FixBilibiliEmbeds
 
-Rewrites outgoing `bilibili.com/video/...` links into `vxbilibili.com/video/...` embeds cleanly.
+Converts bilibili.com links so videos play directly inside Discord chat.

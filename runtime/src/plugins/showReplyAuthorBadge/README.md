@@ -1,6 +1,6 @@
 ---
 name: ShowReplyAuthorBadge
-description: Shows `[-> @username]` beside row timestamps when replying to a message.
+description: Shows [-> @user] next to timestamps on message replies.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ShowReplyAuthorBadge
 
-Appends the target author handle next to the timestamp on inline replies.
+Shows [-> @user] next to timestamps on message replies.

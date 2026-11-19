@@ -1,6 +1,6 @@
 ---
 name: DefaultUserAvatars
-description: Replaces custom user avatars with Discord monochrome default icons in chat.
+description: Replaces custom profile pictures with simple default Discord avatars.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # DefaultUserAvatars
 
-Replaces custom user avatars with Discord monochrome default icons in chat.
+Replaces custom profile pictures with simple default Discord avatars.

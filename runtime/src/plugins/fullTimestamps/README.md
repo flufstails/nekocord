@@ -1,6 +1,6 @@
 ---
 name: FullTimestamps
-description: "Displays exact date and second-level timestamps (YYYY-MM-DD HH:MM:SS) on chat messages."
+description: Shows full date and seconds next to chat messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # FullTimestamps
 
-Displays exact date and second-level timestamps (YYYY-MM-DD HH:MM:SS) on chat messages.
+Shows full date and seconds next to chat messages.

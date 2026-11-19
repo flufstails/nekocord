@@ -63,7 +63,7 @@ export default definePlugin({
       if (count < minWords || /\[\d+\s*words\]$/.test(content.trim())) {
         return content;
       }
-      return `${content.trimEnd()} [${count} words]`;
+      return `${content.replace(/\s+$/, '')} [${count} words]`;
     });
   },
   stop() {

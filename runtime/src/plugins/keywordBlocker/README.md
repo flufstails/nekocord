@@ -1,6 +1,6 @@
 ---
 name: KeywordBlocker
-description: Masks incoming chat messages containing any word from a configurable blocklist.
+description: Hides incoming messages containing words from your blocklist.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # KeywordBlocker
 
-Hides or replaces the text body of incoming chat rows whenever the message contains a configured blocked keyword.
+Hides incoming messages containing words from your blocklist.

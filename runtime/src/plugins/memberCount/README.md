@@ -1,6 +1,6 @@
 ---
 name: MemberCount
-description: "Tracks live online and total guild member counts across server list updates."
+description: Shows live online and total member counts in servers.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # MemberCount
 
-Caches `GUILD_MEMBER_LIST_UPDATE` and `GUILD_CREATE` member totals for instant lookup without redundant API fetches.
+Shows live online and total member counts in servers.

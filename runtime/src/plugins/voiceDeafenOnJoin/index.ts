@@ -1,3 +1,3 @@
 import { createVoiceActionOnSelectPlugin } from '../_shared/fluxAndPrivacy.js';
 
-export default createVoiceActionOnSelectPlugin(true, 'toggleSelfDeaf', 'isSelfDeaf');
+export default createVoiceActionOnSelectPlugin(true, 'toggleSelfDeaf', 'isSelfDeaf', true);

@@ -1,6 +1,6 @@
 ---
 name: RedactEnvSecrets
-description: Redacts pasted `.env` secret values (`API_KEY=`, `SECRET_KEY=`, `PASSWORD=`).
+description: Automatically hides pasted .env secrets and passwords before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # RedactEnvSecrets
 
-Masks values of common environment secret variables pasted outside code blocks before send.
+Automatically hides pasted .env secrets and passwords before sending.

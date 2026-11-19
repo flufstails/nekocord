@@ -1,6 +1,6 @@
 ---
 name: ImgurDirectCleanLinks
-description: Strips query noise from Imgur album and image URLs on send.
+description: Removes tracking noise from Imgur image and album links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ImgurDirectCleanLinks
 
-Removes trailing query parameters from outgoing `imgur.com` links.
+Removes tracking noise from Imgur image and album links.

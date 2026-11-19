@@ -1,6 +1,6 @@
 ---
 name: ReverseSentences
-description: Reverses the sequence of sentences inside multi-sentence messages.
+description: Reverses the order of sentences in multi-sentence messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # ReverseSentences
 
-Reverses the sequence of sentences inside multi-sentence messages.
+Reverses the order of sentences in multi-sentence messages.

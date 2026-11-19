@@ -1,6 +1,6 @@
 ---
 name: ExpandDiscordInvites
-description: Normalizes short `discord.gg/` invite links into full `https://discord.com/invite/` URLs.
+description: Expands short discord.gg/ invites into full discord.com/invite/ links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ExpandDiscordInvites
 
-Expands short `discord.gg/<code>` URLs into explicit `https://discord.com/invite/<code>` links before sending.
+Expands short discord.gg/ invites into full discord.com/invite/ links.

@@ -1,6 +1,6 @@
 ---
 name: ZalgoLite
-description: Adds light glitch diacritics to regular words outside links and code.
+description: Adds light glitch accents to words you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # ZalgoLite
 
-Adds light glitch diacritics to regular words outside links and code.
+Adds light glitch accents to words you send.

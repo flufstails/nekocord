@@ -1,6 +1,6 @@
 ---
 name: CircledText
-description: Stylizes outgoing ASCII letters into circled Unicode characters.
+description: Converts letters in your message into circled characters.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CircledText
 
-Stylizes outgoing ASCII letters into circled Unicode characters.
+Converts letters in your message into circled characters.

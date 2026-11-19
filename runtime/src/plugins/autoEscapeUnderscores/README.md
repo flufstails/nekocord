@@ -1,6 +1,6 @@
 ---
 name: AutoEscapeUnderscores
-description: Escapes `snake_case_identifiers` outside code spans so Discord stops italicizing them.
+description: Keeps underscores in words like snake_case instead of turning them italic.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # AutoEscapeUnderscores
 
-Escapes underscores inside multi-underscore snake_case tokens (`my_var_name`) so Markdown italics are not triggered accidentally.
+Keeps underscores in words like snake_case instead of turning them italic.

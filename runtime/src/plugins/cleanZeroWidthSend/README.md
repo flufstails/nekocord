@@ -1,6 +1,6 @@
 ---
 name: CleanZeroWidthSend
-description: Strips invisible zero-width joiners and BOM bytes from outgoing messages.
+description: Removes hidden invisible characters from messages you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # CleanZeroWidthSend
 
-Strips invisible zero-width joiners and BOM bytes from outgoing messages.
+Removes hidden invisible characters from messages you send.

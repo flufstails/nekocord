@@ -1,6 +1,6 @@
 ---
 name: FixBlueskyLinks
-description: Rewrites Bluesky bsky.app post links to bskx.app for rich video embeds.
+description: Converts bsky.app links to bskx.app so videos play smoothly in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # FixBlueskyLinks
 
-Rewrites Bluesky bsky.app post links to bskx.app for rich video embeds.
+Converts bsky.app links to bskx.app so videos play smoothly in chat.

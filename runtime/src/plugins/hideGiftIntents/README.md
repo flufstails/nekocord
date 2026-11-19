@@ -1,6 +1,6 @@
 ---
 name: HideGiftIntents
-description: Removes birthday and Nitro gift prompt banners inside message rows.
+description: Hides birthday and Nitro gift prompt banners in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # HideGiftIntents
 
-Removes birthday and Nitro gift prompt banners inside message rows.
+Hides birthday and Nitro gift prompt banners in chat.

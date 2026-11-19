@@ -1,6 +1,6 @@
 ---
 name: MobileTwitterToX
-description: Converts `mobile.twitter.com` links to canonical `x.com` URLs on send.
+description: Converts mobile.twitter.com links into standard x.com links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # MobileTwitterToX
 
-Rewrites `https://mobile.twitter.com/...` URLs into clean `https://x.com/...` URLs before sending.
+Converts mobile.twitter.com links into standard x.com links.

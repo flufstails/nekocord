@@ -1,6 +1,6 @@
 ---
 name: EpochDecodeMacro
-description: Expands `\\epoch:<unix>` macros into ISO-8601 UTC date strings on send.
+description: "Turns \\epoch:<seconds> into a readable UTC date and time."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # EpochDecodeMacro
 
-Converts `\\epoch:1735689600` (seconds or milliseconds) into an ISO-8601 UTC timestamp string.
+Turns \epoch:<seconds> into a readable UTC date and time.

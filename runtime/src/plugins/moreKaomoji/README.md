@@ -1,6 +1,6 @@
 ---
 name: MoreKaomoji
-description: "Expands shortcodes such as :shrug:, :tableflip:, :lenny:, and :cat: into kaomoji on send."
+description: "Turns shortcuts like :shrug:, :tableflip:, :lenny:, and :cat: into text faces."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # MoreKaomoji
 
-Expands shortcodes such as :shrug:, :tableflip:, :lenny:, and :cat: into kaomoji on send.
+Turns shortcuts like :shrug:, :tableflip:, :lenny:, and :cat: into text faces.

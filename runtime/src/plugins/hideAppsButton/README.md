@@ -1,6 +1,6 @@
 ---
 name: HideAppsButton
-description: Hides the Apps and Commands launcher button from the chat composer.
+description: Hides the Apps and Commands button next to the message bar.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,6 +14,6 @@ tags:
 
 # HideAppsButton
 
-Hides the Apps and Commands launcher button from the chat composer.
+Hides the Apps and Commands button next to the message bar.
 
 Requires a client restart after toggling so Discord initializes cleanly with the updated hooks.

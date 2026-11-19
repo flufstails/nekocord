@@ -1,6 +1,6 @@
 ---
 name: ChecklistMacro
-description: Converts `[ ] ` and `[x] ` prefixes into Unicode checkbox bullets on send.
+description: Turns [ ] and [x] items into clean checklist boxes when sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ChecklistMacro
 
-Transforms task-list syntax `[ ]` and `[x]` outside code blocks into neat `☐` and `☑` checkmarks.
+Turns [ ] and [x] items into clean checklist boxes when sending.

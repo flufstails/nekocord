@@ -1,6 +1,6 @@
 ---
 name: FixupXLinks
-description: Rewrites outgoing x.com and twitter.com links to fixupx.com embeds.
+description: Converts x.com and twitter.com links to fixupx.com for reliable previews.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # FixupXLinks
 
-Rewrites outgoing x.com and twitter.com links to fixupx.com embeds.
+Converts x.com and twitter.com links to fixupx.com for reliable previews.

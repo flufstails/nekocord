@@ -1,6 +1,6 @@
 ---
 name: VoiceDeafenOnLeave
-description: Automatically self-deafens whenever disconnecting from a voice channel.
+description: Automatically deafens yourself when you disconnect from voice.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # VoiceDeafenOnLeave
 
-Clears self-deafen state safely when leaving voice calls by syncing voice action toggles on disconnect.
+Automatically deafens yourself when you disconnect from voice.

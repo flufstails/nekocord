@@ -1,6 +1,6 @@
 ---
 name: VxTikTokLinks
-description: Rewrites outgoing tiktok.com links to vxtiktok.com for reliable video previews.
+description: Rewrites TikTok links to vxtiktok.com so videos play reliably in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # VxTikTokLinks
 
-Rewrites outgoing tiktok.com links to vxtiktok.com for reliable video previews.
+Rewrites TikTok links to vxtiktok.com so videos play reliably in chat.

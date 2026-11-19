@@ -1,6 +1,6 @@
 ---
 name: VoiceUnmuteOnLeave
-description: Clears local self-mute automatically when leaving a voice call.
+description: Automatically unmutes your mic when you leave a voice call.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # VoiceUnmuteOnLeave
 
-Clears local self-mute automatically when leaving a voice call.
+Automatically unmutes your mic when you leave a voice call.

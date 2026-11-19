@@ -1,6 +1,6 @@
 ---
 name: HighlightQuestions
-description: Highlights incoming question messages ending in `?` with a cyan accent.
+description: Highlights incoming question messages ending with a question mark.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HighlightQuestions
 
-Marks question messages so questions stay easy to spot inside busy group chats.
+Highlights incoming question messages ending with a question mark.

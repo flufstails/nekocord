@@ -1,6 +1,6 @@
 ---
 name: CleanTokopediaLinks
-description: Removes `extParam` and tracking query strings from Tokopedia product URLs.
+description: Removes tracking junk from Tokopedia product links you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # CleanTokopediaLinks
 
-Strips Tokopedia recommendation and campaign tracking query parameters from shared URLs.
+Removes tracking junk from Tokopedia product links you send.

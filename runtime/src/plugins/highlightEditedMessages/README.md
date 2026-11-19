@@ -1,6 +1,6 @@
 ---
 name: HighlightEditedMessages
-description: Adds a mint gutter stripe to edited messages for quick scanning.
+description: Adds a green side accent to edited messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # HighlightEditedMessages
 
-Adds a mint gutter stripe to edited messages for quick scanning.
+Adds a green side accent to edited messages.

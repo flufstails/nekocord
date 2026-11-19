@@ -1,6 +1,6 @@
 ---
 name: CleanEbayLinks
-description: Shortens eBay item URLs to canonical `/itm/<id>` links without tracking parameters.
+description: Shortens eBay item links without extra tracking junk.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CleanEbayLinks
 
-Cleans outgoing `ebay.com/itm/...` product URLs outside code blocks down to minimal canonical `/itm/<id>` links.
+Shortens eBay item links without extra tracking junk.

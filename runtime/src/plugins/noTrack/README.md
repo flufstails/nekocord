@@ -1,6 +1,6 @@
 ---
 name: NoTrack
-description: Drops Discord analytics and telemetry Flux dispatches before they are recorded.
+description: Stops Discord from tracking your activity and collecting analytics.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # NoTrack
 
-Drops Discord analytics and telemetry Flux dispatches before they are recorded.
+Stops Discord from tracking your activity and collecting analytics.

@@ -1,6 +1,6 @@
 ---
 name: HideChannelPrompts
-description: Suppresses wave-to-say-hi and conversation starter prompt cards.
+description: Hides wave-to-say-hi and conversation starter prompt boxes.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # HideChannelPrompts
 
-Suppresses wave-to-say-hi and conversation starter prompt cards.
+Hides wave-to-say-hi and conversation starter prompt boxes.

@@ -1,6 +1,6 @@
 ---
 name: HidePolls
-description: Hides interactive poll cards from the chat timeline.
+description: Hides poll cards from chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # HidePolls
 
-Hides interactive poll cards from the chat timeline.
+Hides poll cards from chat.

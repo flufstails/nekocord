@@ -1,6 +1,6 @@
 ---
 name: NoSuperReactions
-description: Flattens animated Nitro super reactions into standard message reactions.
+description: Shows animated super reactions as regular reactions.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # NoSuperReactions
 
-Flattens animated Nitro super reactions into standard message reactions.
+Shows animated super reactions as regular reactions.

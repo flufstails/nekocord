@@ -1,6 +1,6 @@
 ---
 name: VxTwitterLinks
-description: Rewrites outgoing x.com and twitter.com links to vxtwitter.com embeds.
+description: Rewrites x.com and twitter.com links to vxtwitter.com for smooth video previews.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # VxTwitterLinks
 
-Rewrites outgoing x.com and twitter.com links to vxtwitter.com embeds.
+Rewrites x.com and twitter.com links to vxtwitter.com for smooth video previews.

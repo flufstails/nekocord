@@ -1,6 +1,6 @@
 ---
 name: NoDiscordAutoEmoji
-description: "Escapes colon :shortcode: tokens with a backslash to preserve literal text."
+description: "Keeps :shortcode: text as plain text instead of turning into emojis."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # NoDiscordAutoEmoji
 
-Escapes colon :shortcode: tokens with a backslash to preserve literal text.
+Keeps :shortcode: text as plain text instead of turning into emojis.

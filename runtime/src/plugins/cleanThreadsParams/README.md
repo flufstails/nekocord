@@ -1,6 +1,6 @@
 ---
 name: CleanThreadsParams
-description: Strips `?xmt=` and `igshid=` tracking params from Threads URLs.
+description: Removes share tracking tags from Threads links you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CleanThreadsParams
 
-Removes `xmt` and `igshid` share tracking tokens from outgoing Threads post URLs.
+Removes share tracking tags from Threads links you send.

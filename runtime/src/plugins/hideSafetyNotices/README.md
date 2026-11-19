@@ -1,6 +1,6 @@
 ---
 name: HideSafetyNotices
-description: Hides Discord safety system alert banners inserted into chat rows.
+description: Hides Discord safety warning banners inside chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HideSafetyNotices
 
-Hides Discord safety system alert banners inserted into chat rows.
+Hides Discord safety warning banners inside chat.

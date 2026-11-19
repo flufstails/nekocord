@@ -1,6 +1,6 @@
 ---
 name: ReverseText
-description: Reverses outgoing message prose while keeping links, mentions, emojis, and code intact.
+description: Reverses your message text while keeping links and mentions intact.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -16,4 +16,4 @@ tags:
 
 # ReverseText
 
-Reverses outgoing message prose while keeping links, mentions, emojis, and code intact.
+Reverses your message text while keeping links and mentions intact.

@@ -1,6 +1,6 @@
 ---
 name: FullTimestampMacro
-description: Expands `\\fulltime` into current `<t:UNIX:F>` localized Discord timestamp.
+description: Turns \fulltime into a full localized Discord date and time tag.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # FullTimestampMacro
 
-Replaces `\\fulltime` with a Discord native `<t:UNIX:F>` full date-and-time mention.
+Turns \fulltime into a full localized Discord date and time tag.

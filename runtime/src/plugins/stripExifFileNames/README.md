@@ -1,6 +1,6 @@
 ---
 name: StripExifFileNames
-description: Replaces camera date-stamped filenames (`IMG_`, `PXL_`, `DSC_`) with neutral names.
+description: Replaces camera-stamped filenames (IMG_, PXL_, DSC_) with generic names.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # StripExifFileNames
 
-Sanitizes outgoing camera photo filenames (`IMG_YYYYMMDD_...`, `PXL_...`, `DSC_...`) before upload so timestamps are not leaked in filenames.
+Replaces camera-stamped filenames (IMG_, PXL_, DSC_) with generic names.

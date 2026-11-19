@@ -1,6 +1,6 @@
 ---
 name: HighlightEveryonePings
-description: Adds a clear amber accent highlight to messages pinging everyone.
+description: Highlights messages pinging everyone in warm amber.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # HighlightEveryonePings
 
-Adds a clear amber accent highlight to messages pinging everyone.
+Highlights messages pinging everyone in warm amber.

@@ -4,6 +4,7 @@ import {
   getReactNative,
   getUserStore,
   onFluxDispatcher,
+  onReactAndNative,
 } from '../metro/common.js';
 import { findByProps } from '../metro/index.js';
 import { getNotificationSettings } from '../storage/index.js';
@@ -36,6 +37,7 @@ export interface PushNotificationInput {
 }
 
 let initialized = false;
+let hydratedFromCache = false;
 let seq = 0;
 let entries: NekocordNotificationEntry[] = [];
 const logListeners = new Set<() => void>();
@@ -63,6 +65,9 @@ function resolveCacheApi(): { getItem: (k: string) => Promise<string | null>; se
 }
 
 function persistNotifications(): void {
+  if (!hydratedFromCache) {
+    return;
+  }
   try {
     const cache = resolveCacheApi();
     cache?.setItem?.(NOTIF_STORAGE_KEY, JSON.stringify(entries.slice(0, MAX_NOTIFICATIONS)));
@@ -264,6 +269,9 @@ function handleRelationshipEvent(action: Record<string, any>): void {
       showToast: false,
     });
   } else if (action.type === 'RELATIONSHIP_REMOVE' && rel.type === 1) {
+    if (globalThis.Nekocord?.getActivePlugins().has('RelationshipNotifier')) {
+      return;
+    }
     pushNotification({
       title: 'Friend Removed',
       body: `${userName} is no longer on your friends list.`,
@@ -272,6 +280,51 @@ function handleRelationshipEvent(action: Record<string, any>): void {
       showToast: true,
     });
   }
+}
+
+function attemptHydrateNotifications(): boolean {
+  const cache = resolveCacheApi();
+  if (!cache?.getItem) {
+    return false;
+  }
+  cache
+    .getItem(NOTIF_STORAGE_KEY)
+    .then((raw) => {
+      hydratedFromCache = true;
+      const hadEarlyEntries = entries.length > 0;
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          const loaded = parsed.filter(
+            (item): item is NekocordNotificationEntry =>
+              Boolean(
+                item &&
+                  typeof item === 'object' &&
+                  typeof item.id === 'string' &&
+                  typeof item.title === 'string' &&
+                  typeof item.timestamp === 'number',
+              ),
+          );
+          if (loaded.length > 0) {
+            const existingIds = new Set(entries.map((e) => e.id));
+            entries = [...entries, ...loaded.filter((e) => !existingIds.has(e.id))]
+              .sort((a, b) => b.timestamp - a.timestamp)
+              .slice(0, MAX_NOTIFICATIONS);
+            notifyLogListeners();
+          }
+        }
+      }
+      if (hadEarlyEntries) {
+        persistNotifications();
+      }
+    })
+    .catch(() => {
+      hydratedFromCache = true;
+      if (entries.length > 0) {
+        persistNotifications();
+      }
+    });
+  return true;
 }
 
 /**
@@ -283,34 +336,27 @@ export function initNotificationLog(): void {
   }
   initialized = true;
 
-  const cache = resolveCacheApi();
-  cache
-    ?.getItem(NOTIF_STORAGE_KEY)
-    .then((raw) => {
-      if (!raw) return;
-      const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed)) return;
-      const loaded = parsed.filter(
-        (item): item is NekocordNotificationEntry =>
-          Boolean(
-            item &&
-              typeof item === 'object' &&
-              typeof item.id === 'string' &&
-              typeof item.title === 'string' &&
-              typeof item.timestamp === 'number',
-          ),
-      );
-      if (loaded.length > 0) {
-        const existingIds = new Set(entries.map((e) => e.id));
-        entries = [...entries, ...loaded.filter((e) => !existingIds.has(e.id))]
-          .sort((a, b) => b.timestamp - a.timestamp)
-          .slice(0, MAX_NOTIFICATIONS);
-        notifyLogListeners();
+  if (!attemptHydrateNotifications()) {
+    let attempts = 0;
+    const maxAttempts = 20;
+    const retry = () => {
+      if (hydratedFromCache || attemptHydrateNotifications()) {
+        return;
       }
-    })
-    .catch(() => {
-      // Ignore notification hydration errors.
+      attempts += 1;
+      if (attempts < maxAttempts) {
+        setTimeout(retry, 250);
+      } else {
+        hydratedFromCache = true;
+        if (entries.length > 0) {
+          persistNotifications();
+        }
+      }
+    };
+    onReactAndNative(() => {
+      setTimeout(retry, 0);
     });
+  }
 
   onFluxDispatcher((dispatcher) => {
     dispatcher.subscribe('MESSAGE_CREATE', handleMessageCreate);

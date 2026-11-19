@@ -223,23 +223,31 @@ function attemptHydrate(onHydrated?: (settings: NekocordSettings) => void): bool
       .getItem(STORAGE_KEY)
       .then(async (raw) => {
         if (raw) {
-          console.log('[Nekocord/Storage] Hydrated settings from nekocord:settings:v1');
-          const parsed = JSON.parse(raw) as Partial<NekocordSettings> | null;
-          applyParsedSettings(parsed, false);
-          notifyListeners();
-          onHydrated?.(state);
-          return;
+          try {
+            console.log('[Nekocord/Storage] Hydrated settings from nekocord:settings:v1');
+            const parsed = JSON.parse(raw) as Partial<NekocordSettings> | null;
+            applyParsedSettings(parsed, false);
+            notifyListeners();
+            onHydrated?.(state);
+            return;
+          } catch (err) {
+            console.error('[Nekocord/Storage] Corrupt settings JSON; keeping active defaults:', err);
+          }
         }
 
         const legacyRaw = await cache.getItem(LEGACY_STORAGE_KEY).catch(() => null);
         if (legacyRaw) {
-          console.log('[Nekocord/Storage] Migrating legacy settings from purrcord:settings:v1');
-          const legacyParsed = JSON.parse(legacyRaw) as Partial<NekocordSettings> | null;
-          applyParsedSettings(legacyParsed, true);
-          persist();
-          notifyListeners();
-          onHydrated?.(state);
-          return;
+          try {
+            console.log('[Nekocord/Storage] Migrating legacy settings from purrcord:settings:v1');
+            const legacyParsed = JSON.parse(legacyRaw) as Partial<NekocordSettings> | null;
+            applyParsedSettings(legacyParsed, true);
+            persist();
+            notifyListeners();
+            onHydrated?.(state);
+            return;
+          } catch (err) {
+            console.error('[Nekocord/Storage] Corrupt legacy settings JSON; using defaults:', err);
+          }
         }
 
         console.log('[Nekocord/Storage] Initialized fresh settings');
@@ -247,6 +255,7 @@ function attemptHydrate(onHydrated?: (settings: NekocordSettings) => void): bool
       })
       .catch((err) => {
         console.error('[Nekocord/Storage] Failed to load settings:', err);
+        onHydrated?.(state);
       });
     return true;
   } catch (err) {
@@ -387,7 +396,37 @@ export function addCustomPlugin(plugin: StoredCustomPlugin): void {
 export function removeCustomPlugin(nameOrId: string): void {
   dirtyCustomPlugins = true;
   const current = state.customPlugins ?? [];
-  state.customPlugins = current.filter((item) => item.name !== nameOrId && item.id !== nameOrId);
+  const removedNames = new Set<string>();
+  const kept: StoredCustomPlugin[] = [];
+  for (let i = 0; i < current.length; i += 1) {
+    const item = current[i];
+    if (item.name === nameOrId || item.id === nameOrId) {
+      removedNames.add(item.name);
+    } else {
+      kept.push(item);
+    }
+  }
+  removedNames.add(nameOrId);
+  state.customPlugins = kept;
+
+  removedNames.forEach((removedName) => {
+    if (removedName in state.plugins) {
+      dirtyPlugins.add(removedName);
+      delete state.plugins[removedName];
+    }
+    if (state.pluginSettings && removedName in state.pluginSettings) {
+      dirtyPluginSettings.add(removedName);
+      delete state.pluginSettings[removedName];
+    }
+  });
+  if (Array.isArray(state.favoritePlugins)) {
+    const nextFavs = state.favoritePlugins.filter((fav) => !removedNames.has(fav));
+    if (nextFavs.length !== state.favoritePlugins.length) {
+      dirtyFavorites = true;
+      state.favoritePlugins = nextFavs;
+    }
+  }
+
   persist();
   notifyListeners();
 }
@@ -465,6 +504,15 @@ export function updateSettings(partial: Partial<NekocordSettings>): void {
       state.plugins[name] = { enabled: Boolean(entry?.enabled) };
     }
   }
+  if (partial.pluginSettings) {
+    state.pluginSettings ??= {};
+    for (const [name, cfg] of Object.entries(partial.pluginSettings)) {
+      if (cfg && typeof cfg === 'object' && !Array.isArray(cfg)) {
+        dirtyPluginSettings.add(name);
+        state.pluginSettings[name] = { ...cfg };
+      }
+    }
+  }
   if (partial.favoritePlugins !== undefined) {
     dirtyFavorites = true;
     state.favoritePlugins = [...partial.favoritePlugins];
@@ -476,6 +524,20 @@ export function updateSettings(partial: Partial<NekocordSettings>): void {
   if (partial.customThemes !== undefined) {
     dirtyCustomThemes = true;
     state.customThemes = [...partial.customThemes];
+  }
+  if (partial.customPlugins !== undefined) {
+    dirtyCustomPlugins = true;
+    state.customPlugins = [...partial.customPlugins];
+  }
+  if (partial.notificationSettings !== undefined) {
+    dirtyNotificationSettings = true;
+    const ns = partial.notificationSettings;
+    state.notificationSettings = {
+      enabled: ns.enabled !== false,
+      showToasts: ns.showToasts !== false,
+      captureMentions: ns.captureMentions !== false,
+      captureRelationships: ns.captureRelationships !== false,
+    };
   }
   if (partial.updateSource !== undefined) {
     dirtyUpdateSource = true;
@@ -491,7 +553,7 @@ export function updateSettings(partial: Partial<NekocordSettings>): void {
 export function exportSettingsJson(): string {
   return JSON.stringify(
     {
-      nekocordVersion: globalThis.Nekocord?.version ?? '1.4.0',
+      nekocordVersion: globalThis.Nekocord?.version ?? '1.5.0',
       exportedAt: new Date().toISOString(),
       settings: {
         plugins: state.plugins,
@@ -644,6 +706,9 @@ export function importSettingsJson(rawJson: string): {
       ? source.updateSource.trim()
       : DEFAULT_UPDATE_SOURCE;
 
+  for (const oldName of Object.keys(state.pluginSettings ?? {})) {
+    dirtyPluginSettings.add(oldName);
+  }
   for (const k of Object.keys(state.plugins)) {
     dirtyPlugins.add(k);
   }

@@ -1,6 +1,6 @@
 ---
 name: ImageFilename
-description: "Appends attachment filenames and sizes inline under chat messages with media."
+description: Shows attachment filenames and file sizes beneath images in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ImageFilename
 
-Displays the filename and formatted size of image and media attachments inline inside chat rows.
+Shows attachment filenames and file sizes beneath images in chat.

@@ -1,6 +1,6 @@
 ---
 name: BlockCrashReports
-description: Drops client crash telemetry and Sentry dispatch payloads locally.
+description: Stops Discord from sending automatic crash reports.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # BlockCrashReports
 
-Blocks crash-reporting and error telemetry dispatches before transmission.
+Stops Discord from sending automatic crash reports.

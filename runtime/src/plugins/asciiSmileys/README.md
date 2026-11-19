@@ -1,6 +1,6 @@
 ---
 name: AsciiSmileys
-description: "Escapes ASCII emoticons like :) and :D so Discord does not auto-convert them."
+description: "Keeps typed smileys like :) and :D as plain text instead of Discord emojis."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # AsciiSmileys
 
-Escapes ASCII emoticons like :) and :D so Discord does not auto-convert them.
+Keeps typed smileys like :) and :D as plain text instead of Discord emojis.

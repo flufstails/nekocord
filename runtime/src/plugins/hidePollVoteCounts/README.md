@@ -1,6 +1,6 @@
 ---
 name: HidePollVoteCounts
-description: Hides live poll vote counts inside chat rows so results do not bias reading.
+description: Hides poll vote counts while voting is open.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HidePollVoteCounts
 
-Clears `poll.results` tallies from rendered chat rows locally.
+Hides poll vote counts while voting is open.

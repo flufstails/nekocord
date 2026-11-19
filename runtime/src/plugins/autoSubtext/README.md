@@ -1,6 +1,6 @@
 ---
 name: AutoSubtext
-description: "Prefixes outgoing lines with Discord small muted subtext (-# ) markup."
+description: "Turns lines you send into small muted fine-print notes (-# )."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # AutoSubtext
 
-Prefixes outgoing lines with Discord small muted subtext (-# ) markup.
+Turns lines you send into small muted subtext notes (-# ).

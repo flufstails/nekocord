@@ -1,6 +1,6 @@
 ---
 name: SnowflakeAgeBadge
-description: Displays relative message age (`2h ago`, `3d ago`) next to chat timestamps.
+description: Shows how old a message is (like 2h ago) beside its timestamp.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # SnowflakeAgeBadge
 
-Decodes each message’s snowflake timestamp and appends a compact relative age indicator.
+Shows how old a message is (like 2h ago) beside its timestamp.

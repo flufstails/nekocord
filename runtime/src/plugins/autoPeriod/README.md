@@ -1,6 +1,6 @@
 ---
 name: AutoPeriod
-description: Appends a period when an outgoing sentence ends with an alphanumeric character.
+description: Adds a period to the end of sentences you send if missing.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # AutoPeriod
 
-Appends a period when an outgoing sentence ends with an alphanumeric character.
+Adds a period to the end of sentences you send if missing.

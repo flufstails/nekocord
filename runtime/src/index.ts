@@ -17,7 +17,7 @@ import * as updater from './updater/index.js';
 
 import type { NekocordTab } from './ui/NekocordModal.js';
 
-export const NEKOCORD_VERSION = '1.4.0';
+export const NEKOCORD_VERSION = '1.5.0';
 export const NEKOCORD_TAGLINE = 'Your cutest Discord client on mobile';
 
 export interface NekocordApi {
@@ -61,7 +61,9 @@ declare global {
 
 const pluginRegistry = new Map<string, NekocordPlugin>();
 const activePlugins = new Set<string>();
+const builtinPluginByName = new Map(builtinPlugins.map((p) => [p.name, p]));
 const corePluginNames = new Set(builtinPlugins.filter((p) => p.core).map((p) => p.name));
+const importedCodeByName = new Map<string, string>();
 const pluginRegistryListeners = new Set<() => void>();
 let activeSnapshot: ReadonlySet<string> = new Set<string>();
 
@@ -148,6 +150,7 @@ function registerAndStartImportedPlugin(
     stopPlugin(plugin.name);
   }
   storage.addCustomPlugin(stored);
+  importedCodeByName.set(plugin.name, stored.code);
   pluginRegistry.set(plugin.name, plugin);
   storage.setPluginEnabled(plugin.name, true);
   startPlugin(plugin.name);
@@ -190,8 +193,14 @@ function uninstallCustomPlugin(name: string): boolean {
   if (activePlugins.has(name)) {
     stopPlugin(name);
   }
-  pluginRegistry.delete(name);
+  importedCodeByName.delete(name);
   storage.removeCustomPlugin(name);
+  const builtinFallback = builtinPluginByName.get(name);
+  if (builtinFallback) {
+    pluginRegistry.set(name, builtinFallback);
+  } else {
+    pluginRegistry.delete(name);
+  }
   notifyPluginRegistryListeners();
   notifications.pushNotification({
     title: 'Custom Plugin Removed',
@@ -211,9 +220,15 @@ function syncCustomPluginsFromStorage(): boolean {
     const item = saved[i];
     if (corePluginNames.has(item.name)) continue;
     savedNames.add(item.name);
-    if (!pluginRegistry.has(item.name)) {
+    const codeChanged =
+      !pluginRegistry.has(item.name) || importedCodeByName.get(item.name) !== item.code;
+    if (codeChanged) {
+      if (activePlugins.has(item.name)) {
+        stopPlugin(item.name);
+      }
       const compiled = compileCustomPlugin(item);
       if (compiled.ok && compiled.plugin) {
+        importedCodeByName.set(compiled.plugin.name, item.code);
         pluginRegistry.set(compiled.plugin.name, compiled.plugin);
         listChanged = true;
       }
@@ -225,7 +240,13 @@ function syncCustomPluginsFromStorage(): boolean {
       if (activePlugins.has(name)) {
         stopPlugin(name);
       }
-      pluginRegistry.delete(name);
+      importedCodeByName.delete(name);
+      const builtinFallback = builtinPluginByName.get(name);
+      if (builtinFallback) {
+        pluginRegistry.set(name, builtinFallback);
+      } else {
+        pluginRegistry.delete(name);
+      }
       listChanged = true;
     }
   }
@@ -243,21 +264,13 @@ function reconcilePluginsWithStorage(): void {
     const desired = storage.isPluginEnabled(plugin.name, plugin.enabledByDefault !== false);
     const active = activePlugins.has(plugin.name);
     if (desired && !active) {
-      try {
-        plugin.start?.();
-        activePlugins.add(plugin.name);
+      if (startPlugin(plugin.name)) {
         changed = true;
-      } catch (err) {
-        console.error(`[Nekocord] Failed to start plugin "${plugin.name}":`, err);
       }
     } else if (!desired && active) {
-      try {
-        plugin.stop?.();
-      } catch (err) {
-        console.error(`[Nekocord] Failed to stop plugin "${plugin.name}":`, err);
+      if (stopPlugin(plugin.name)) {
+        changed = true;
       }
-      activePlugins.delete(plugin.name);
-      changed = true;
     }
   }
   if (changed) {
@@ -325,12 +338,7 @@ function bootstrap(): void {
 
   for (const plugin of builtinPlugins) {
     if (plugin.core || plugin.enabledByDefault !== false) {
-      try {
-        plugin.start?.();
-        activePlugins.add(plugin.name);
-      } catch (err) {
-        console.error(`[Nekocord] Failed to start plugin "${plugin.name}":`, err);
-      }
+      startPlugin(plugin.name);
     }
   }
   refreshActiveSnapshot();

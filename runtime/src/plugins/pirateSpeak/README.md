@@ -1,6 +1,6 @@
 ---
 name: PirateSpeak
-description: Adds classic pirate dialect flavor to everyday words before sending.
+description: Adds classic pirate phrasing to everyday words before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # PirateSpeak
 
-Adds classic pirate dialect flavor to everyday words before sending.
+Adds classic pirate phrasing to everyday words before sending.

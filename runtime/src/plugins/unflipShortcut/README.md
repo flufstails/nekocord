@@ -1,6 +1,6 @@
 ---
 name: UnflipShortcut
-description: Expands /unflip into the upright table restore emoticon.
+description: Turns /unflip into the upright table emoticon.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,6 +13,6 @@ tags:
 
 # UnflipShortcut
 
-Expands /unflip into the upright table restore emoticon.
+Turns /unflip into the upright table emoticon.
 
 Type `/unflip` in any chat composer box and send to expand inline.

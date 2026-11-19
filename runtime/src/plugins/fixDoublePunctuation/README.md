@@ -1,6 +1,6 @@
 ---
 name: FixDoublePunctuation
-description: Removes accidental spaces before commas and periods outside code blocks.
+description: Removes accidental spaces before commas and periods before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # FixDoublePunctuation
 
-Cleans common mobile keyboard spacing slips such as `hello , world` to `hello, world`.
+Removes accidental spaces before commas and periods before sending.

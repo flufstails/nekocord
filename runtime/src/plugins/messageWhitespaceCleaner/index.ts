@@ -5,16 +5,16 @@ import { definePlugin } from '../types.js';
 const settings = definePluginSettings({
   maxBlankLines: {
     type: OptionType.NUMBER,
-    label: 'Max Consecutive Blank Lines',
-    description: 'Collapse runs of extra newlines down to this maximum.',
+    label: 'Max Blank Lines',
+    description: 'Shorten extra empty lines down to this limit before sending.',
     min: 1,
     max: 5,
     default: 2,
   },
   trimLineEnds: {
     type: OptionType.BOOLEAN,
-    label: 'Trim Line Trailing Spaces',
-    description: 'Strip invisible spaces at the end of every line before sending.',
+    label: 'Remove Trailing Spaces',
+    description: 'Clean extra spaces off the end of each line before sending.',
     default: true,
   },
 });

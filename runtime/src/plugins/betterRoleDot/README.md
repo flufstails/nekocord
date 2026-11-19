@@ -1,6 +1,6 @@
 ---
 name: BetterRoleDot
-description: Forces role color dots and username role colors to show on chat messages.
+description: Always shows role color dots and colored names on chat messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # BetterRoleDot
 
-Forces role color dots and username role colors to show on chat messages.
+Always shows role color dots and colored names on chat messages.

@@ -1,6 +1,6 @@
 ---
 name: NormalizeUsernames
-description: Strips zero-width control characters and excess spacing from usernames.
+description: Removes invisible characters and extra spaces from usernames.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # NormalizeUsernames
 
-Strips zero-width control characters and excess spacing from usernames.
+Removes invisible characters and extra spaces from usernames.

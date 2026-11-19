@@ -1,6 +1,6 @@
 ---
 name: HideForwardHeaders
-description: Removes the Forwarded message source header above forwarded content.
+description: "Hides the \"Forwarded\" banner above forwarded messages."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # HideForwardHeaders
 
-Removes the Forwarded message source header above forwarded content.
+Hides the "Forwarded" banner above forwarded messages.

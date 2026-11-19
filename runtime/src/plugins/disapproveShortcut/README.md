@@ -1,6 +1,6 @@
 ---
 name: DisapproveShortcut
-description: Expands /lod into the classic look of disapproval.
+description: Turns /lod into the classic look of disapproval.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,6 +13,6 @@ tags:
 
 # DisapproveShortcut
 
-Expands /lod into the classic look of disapproval.
+Turns /lod into the classic look of disapproval.
 
 Type `/lod` in any chat composer box and send to expand inline.

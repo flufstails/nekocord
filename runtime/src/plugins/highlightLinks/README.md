@@ -1,6 +1,6 @@
 ---
 name: HighlightLinks
-description: Highlights incoming messages that contain external HTTP or HTTPS URLs.
+description: Highlights incoming messages that include web links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HighlightLinks
 
-Adds a subtle mint accent to chat messages containing an external link.
+Highlights incoming messages that include web links.

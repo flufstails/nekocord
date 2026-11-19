@@ -1,6 +1,6 @@
 ---
 name: AnonymiseFileNames
-description: Randomizes uploaded attachment filenames to 8-character hex names.
+description: Renames files you upload to random 8-character names for privacy.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # AnonymiseFileNames
 
-Randomizes uploaded attachment filenames to 8-character hex names.
+Renames files you upload to random 8-character names for privacy.

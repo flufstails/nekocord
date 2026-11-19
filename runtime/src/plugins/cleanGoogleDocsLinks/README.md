@@ -1,6 +1,6 @@
 ---
 name: CleanGoogleDocsLinks
-description: Strips `?usp=sharing` and Drive share-source noise from Google Docs/Drive URLs.
+description: Removes extra sharing tags from Google Docs and Drive links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CleanGoogleDocsLinks
 
-Removes `usp=` sharing parameters from `docs.google.com` and `drive.google.com` URLs.
+Removes extra sharing tags from Google Docs and Drive links.

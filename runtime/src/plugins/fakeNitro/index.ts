@@ -23,19 +23,19 @@ const settings = definePluginSettings({
   enableEmojiBypass: {
     type: OptionType.BOOLEAN,
     label: 'Enable Emoji Bypass',
-    description: 'Unlock external and animated emojis in the picker and rewrite locked sends to CDN links.',
+    description: 'Send animated and other server emojis in any chat as clean image links.',
     default: true,
   },
   enableStickerBypass: {
     type: OptionType.BOOLEAN,
     label: 'Enable Sticker Bypass',
-    description: 'Unlock Nitro stickers in the picker and convert locked sticker sends cleanly.',
+    description: 'Unlock all stickers in the picker and send them in any server or DM.',
     default: true,
   },
   emojiSize: {
     type: OptionType.SELECT,
     label: 'Emoji Size',
-    description: 'Image size parameter appended to bypassed custom emoji URLs.',
+    description: 'Display size for sent custom emojis.',
     default: 48,
     options: [
       { label: '32px', value: 32 },
@@ -47,7 +47,7 @@ const settings = definePluginSettings({
   stickerSize: {
     type: OptionType.SELECT,
     label: 'Sticker Size',
-    description: 'Image dimension used when sending and rendering bypassed stickers.',
+    description: 'Display size for sent stickers.',
     default: 160,
     options: [
       { label: '128px', value: 128 },

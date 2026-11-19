@@ -1,6 +1,6 @@
 ---
 name: CompactReactionRow
-description: Caps visible reaction chips per message at six to stop reaction walls.
+description: Limits visible reactions per message to six so chat stays tidy.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # CompactReactionRow
 
-Caps visible reaction chips per message at six to stop reaction walls.
+Limits visible reactions per message to six so chat stays tidy.

@@ -1,6 +1,6 @@
 ---
 name: FixThreadsLinks
-description: Rewrites Threads post links to vxthreads.net so media embeds properly in chat.
+description: Converts Threads links so posts and videos preview in Discord chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # FixThreadsLinks
 
-Rewrites Threads post links to vxthreads.net so media embeds properly in chat.
+Converts Threads links so posts and videos preview in Discord chat.

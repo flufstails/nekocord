@@ -13,26 +13,26 @@ import { definePlugin } from '../types.js';
 const settings = definePluginSettings({
   logDeletes: {
     type: OptionType.BOOLEAN,
-    label: 'Log Deleted Messages',
-    description: 'Retain deleted messages inline with a deleted status badge.',
+    label: 'Keep Deleted Messages',
+    description: 'Keep deleted messages visible in chat marked as deleted.',
     default: true,
   },
   logEdits: {
     type: OptionType.BOOLEAN,
-    label: 'Log Edited Messages',
-    description: 'Preserve previous message content revisions above edited messages.',
+    label: 'Keep Message Edits',
+    description: 'Show older versions of messages above edited text.',
     default: true,
   },
   ignoreBots: {
     type: OptionType.BOOLEAN,
     label: 'Ignore Bots',
-    description: 'Do not track deletions or edits from bot and webhook accounts.',
+    description: 'Do not save edits or deleted messages from bots.',
     default: false,
   },
   ignoreSelf: {
     type: OptionType.BOOLEAN,
     label: 'Ignore Own Messages',
-    description: 'Do not retain edits or deletions for messages sent by your own account.',
+    description: 'Do not save edits or deletions for your own messages.',
     default: false,
   },
 });

@@ -1,6 +1,6 @@
 ---
 name: HideThreadCreatedRows
-description: Suppresses incoming "User started a thread" system rows in chat.
+description: "Hides \"started a thread\" system messages in chat."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HideThreadCreatedRows
 
-Drops live `THREAD_CREATED` system message dispatches (`type === 18`).
+Hides "started a thread" system messages in chat.

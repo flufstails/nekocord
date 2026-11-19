@@ -1,6 +1,6 @@
 ---
 name: SilentChannelSelect
-description: Drops client channel navigation and thread view metric dispatches.
+description: Stops Discord from tracking which channels and threads you visit.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # SilentChannelSelect
 
-Drops client channel navigation and thread view metric dispatches.
+Stops Discord from tracking which channels and threads you visit.

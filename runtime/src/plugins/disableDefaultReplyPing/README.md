@@ -1,6 +1,6 @@
 ---
 name: DisableDefaultReplyPing
-description: Sets initial reply mention toggle to OFF whenever starting a new reply.
+description: Turns off reply pings by default whenever you start a reply.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # DisableDefaultReplyPing
 
-Sets initial reply mention toggle to OFF whenever starting a new reply.
+Turns off reply pings by default whenever you start a reply.

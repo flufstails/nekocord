@@ -1,6 +1,6 @@
 ---
 name: ShowTimeoutDuration
-description: "Displays remaining communication timeout duration beside timed-out members in chat."
+description: Shows remaining timeout duration beside timed-out members in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ShowTimeoutDuration
 
-Checks `GuildMemberStore` timeout expiry timestamps and annotates `[timed out Xm]` cleanly on chat rows.
+Shows remaining timeout duration beside timed-out members in chat.

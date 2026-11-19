@@ -1,6 +1,6 @@
 ---
 name: EmptyEditDeletes
-description: Deletes a message automatically if you edit its text down to nothing.
+description: Deletes a message automatically if you edit it to be empty.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # EmptyEditDeletes
 
-Deletes a message automatically if you edit its text down to nothing.
+Deletes a message automatically if you edit it to be empty.

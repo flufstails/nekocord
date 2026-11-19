@@ -1,6 +1,6 @@
 ---
 name: HideUserBios
-description: Hides custom About Me bios on opened Discord profile sheets.
+description: Hides custom About Me bios on opened user profiles.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,6 +14,6 @@ tags:
 
 # HideUserBios
 
-Hides custom About Me bios on opened Discord profile sheets.
+Hides custom About Me bios on opened user profiles.
 
 Requires a client restart after toggling so Discord initializes cleanly with the updated hooks.

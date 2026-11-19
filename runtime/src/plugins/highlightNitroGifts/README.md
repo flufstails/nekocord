@@ -1,6 +1,6 @@
 ---
 name: HighlightNitroGifts
-description: Highlights messages containing `discord.gift/` codes cleanly in mint green.
+description: Highlights messages containing Nitro gift links in green.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HighlightNitroGifts
 
-Adds a bright mint highlight to chat messages carrying `discord.gift/` gift links.
+Highlights messages containing Nitro gift links in green.

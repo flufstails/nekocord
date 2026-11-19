@@ -1,6 +1,6 @@
 ---
 name: UrlEncodeMacro
-description: "Percent-encodes /urlencode <text> values safely before sending."
+description: Safely encodes /urlencode <text> into web-link format before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -16,6 +16,6 @@ tags:
 
 # UrlEncodeMacro
 
-Percent-encodes /urlencode <text> values safely before sending.
+Safely encodes /urlencode <text> into web-link format before sending.
 
 Type `/urlencode <text>` in any chat composer box and send to expand inline.

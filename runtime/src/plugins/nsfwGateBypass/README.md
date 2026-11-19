@@ -1,6 +1,6 @@
 ---
 name: NSFWGateBypass
-description: Bypasses client-side NSFW channel and age-gate prompts.
+description: Bypasses age-gate confirmation screens on your device.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,6 +13,6 @@ tags:
 
 # NSFWGateBypass
 
-Bypasses client-side NSFW channel and age-gate prompts.
+Bypasses age-gate confirmation screens on your device.
 
 Requires a client restart after toggling so Discord initializes cleanly with the updated hooks.

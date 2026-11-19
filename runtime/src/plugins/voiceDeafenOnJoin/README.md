@@ -1,6 +1,6 @@
 ---
 name: VoiceDeafenOnJoin
-description: Automatically self-deafens whenever you connect into a voice channel.
+description: Automatically deafens yourself whenever you join a voice channel.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # VoiceDeafenOnJoin
 
-Automatically self-deafens whenever you connect into a voice channel.
+Automatically deafens yourself whenever you join a voice channel.

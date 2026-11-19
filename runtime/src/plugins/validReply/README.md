@@ -1,6 +1,6 @@
 ---
 name: ValidReply
-description: "Labels replies whose referenced message target is unavailable or deleted."
+description: Marks replies whose original message was deleted or cannot be loaded.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ValidReply
 
-Inspects inline `referencedMessage` blocks and adds a clear `[reply unavailable]` note when Discord cannot load the parent message.
+Marks replies whose original message was deleted or cannot be loaded.

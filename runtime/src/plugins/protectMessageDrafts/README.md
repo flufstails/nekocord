@@ -1,6 +1,6 @@
 ---
 name: ProtectMessageDrafts
-description: Blocks unexpected DRAFT_CLEAR dispatches so unsent drafts stay intact.
+description: Keeps your unsent typed message drafts from disappearing unexpectedly.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # ProtectMessageDrafts
 
-Blocks unexpected DRAFT_CLEAR dispatches so unsent drafts stay intact.
+Keeps your unsent typed message drafts from disappearing unexpectedly.

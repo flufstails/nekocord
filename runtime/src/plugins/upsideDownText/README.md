@@ -1,6 +1,6 @@
 ---
 name: UpsideDownText
-description: Flips outgoing chat sentences upside down outside links and code blocks.
+description: Flips text you send upside down outside links and code blocks.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -16,4 +16,4 @@ tags:
 
 # UpsideDownText
 
-Flips outgoing chat sentences upside down outside links and code blocks.
+Flips text you send upside down outside links and code blocks.

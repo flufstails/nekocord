@@ -1,6 +1,6 @@
 ---
 name: TextReplace
-description: "Expands classic text macros (`:shrug:`, `:tableflip:`, `:unflip:`, `:lenny:`, `:tm:`) on send."
+description: "Expands classic text faces like :shrug:, :tableflip:, and :lenny:."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # TextReplace
 
-Replaces common shorthand tokens outside code spans before outgoing messages are dispatched.
+Expands classic text faces like :shrug:, :tableflip:, and :lenny:.

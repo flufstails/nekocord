@@ -1,6 +1,6 @@
 ---
 name: PlainFolderIcon
-description: "Replaces crowded server folder mini-icon previews with clean uniform folder icons."
+description: Shows simple folder icons instead of miniature server grids.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # PlainFolderIcon
 
-Suppresses the 2x2 miniature guild icon grid inside sidebar server folders.
+Shows simple folder icons instead of miniature server grids.

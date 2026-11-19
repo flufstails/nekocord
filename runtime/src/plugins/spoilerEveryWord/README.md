@@ -1,6 +1,6 @@
 ---
 name: SpoilerEveryWord
-description: "Wraps every non-code word in ||spoiler|| tags individually."
+description: Wraps every word you send in individual ||spoiler|| tags.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # SpoilerEveryWord
 
-Wraps every non-code word in ||spoiler|| tags individually.
+Wraps every word you send in individual ||spoiler|| tags.

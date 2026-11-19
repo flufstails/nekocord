@@ -1,6 +1,6 @@
 ---
 name: ShowMeYourName
-description: "Displays each message author @username next to their display name in chat."
+description: Shows each user’s @username alongside their server nickname in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # ShowMeYourName
 
-Displays each message author @username next to their display name in chat.
+Shows each user’s @username alongside their server nickname in chat.

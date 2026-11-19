@@ -1,6 +1,6 @@
 ---
 name: MathSymbolsShortcut
-description: Replaces `!=`, `<=`, `>=`, `+-`, and `~=` with Unicode math operators on send.
+description: Turns !=, <=, >=, +-, and ~= into clean math symbols.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # MathSymbolsShortcut
 
-Converts ASCII comparison and operator pairs outside code blocks into `≠`, `≤`, `≥`, `±`, and `≈`.
+Turns !=, <=, >=, +-, and ~= into clean math symbols.

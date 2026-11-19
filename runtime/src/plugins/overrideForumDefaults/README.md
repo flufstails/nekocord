@@ -1,6 +1,6 @@
 ---
 name: OverrideForumDefaults
-description: "Sets forum channels to sort threads by Latest Activity by default."
+description: Sorts forum channels by latest activity by default.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # OverrideForumDefaults
 
-Patches `ChannelStore.getChannel` on forum channels (`type === 15`) so threads open sorted by latest activity.
+Sorts forum channels by latest activity by default.

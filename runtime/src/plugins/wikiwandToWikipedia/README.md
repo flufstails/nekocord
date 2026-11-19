@@ -1,6 +1,6 @@
 ---
 name: WikiwandToWikipedia
-description: Converts `wikiwand.com` article URLs into canonical Wikipedia links.
+description: Converts Wikiwand links back into standard Wikipedia links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # WikiwandToWikipedia
 
-Rewrites `https://www.wikiwand.com/<lang>/<article>` links into `https://<lang>.wikipedia.org/wiki/<article>`.
+Converts Wikiwand links back into standard Wikipedia links.

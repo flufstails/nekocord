@@ -1,6 +1,6 @@
 ---
 name: VoiceMuteOnDeafen
-description: Automatically ensures self-mute toggles on whenever self-deafening.
+description: Automatically mutes your mic whenever you deafen yourself.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # VoiceMuteOnDeafen
 
-Listens to `AUDIO_TOGGLE_SELF_DEAF` and syncs self-mute state automatically.
+Automatically mutes your mic whenever you deafen yourself.

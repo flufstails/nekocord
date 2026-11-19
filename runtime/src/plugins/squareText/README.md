@@ -1,6 +1,6 @@
 ---
 name: SquareText
-description: Converts letters into enclosed squared Unicode block letters.
+description: Converts letters in your message into squared block characters.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # SquareText
 
-Converts letters into enclosed squared Unicode block letters.
+Converts letters in your message into squared block characters.

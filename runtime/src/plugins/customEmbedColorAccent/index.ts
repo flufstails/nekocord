@@ -6,19 +6,19 @@ const settings = definePluginSettings({
   highlightPinned: {
     type: OptionType.BOOLEAN,
     label: 'Highlight Pinned Messages',
-    description: 'Accent pinned messages directly in the chat stream.',
+    description: 'Highlight pinned messages right in chat.',
     default: true,
   },
   highlightBots: {
     type: OptionType.BOOLEAN,
     label: 'Highlight Bot / App Messages',
-    description: 'Accent messages posted by bots or webhooks.',
+    description: 'Highlight messages sent by bots or apps.',
     default: false,
   },
   accentColor: {
     type: OptionType.SELECT,
-    label: 'Accent Style',
-    description: 'Choose the gutter accent tint used for highlighted rows.',
+    label: 'Accent Color',
+    description: 'Choose the side stripe color used for highlighted messages.',
     options: [
       { label: 'Blurple', value: 'blurple' },
       { label: 'Amber', value: 'amber' },

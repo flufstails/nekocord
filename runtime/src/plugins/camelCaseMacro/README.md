@@ -1,6 +1,6 @@
 ---
 name: CamelCaseMacro
-description: Expands `\\camel:<words>` into camelCase identifiers on send.
+description: "Converts \\camel:<words> shortcuts into camelCase text when sending."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CamelCaseMacro
 
-Transforms `\\camel:user profile icon` into `userProfileIcon` on send.
+Converts \camel:<words> shortcuts into camelCase text when sending.

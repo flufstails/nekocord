@@ -1,6 +1,6 @@
 ---
 name: DisableReducedMotionLock
-description: Prevents reduced-motion flags from freezing animated Nitro assets.
+description: Keeps animated Nitro effects moving even when Reduced Motion is on.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,6 +13,6 @@ tags:
 
 # DisableReducedMotionLock
 
-Prevents reduced-motion flags from freezing animated Nitro assets.
+Keeps animated Nitro effects moving even when Reduced Motion is on.
 
 Requires a client restart after toggling so Discord initializes cleanly with the updated hooks.

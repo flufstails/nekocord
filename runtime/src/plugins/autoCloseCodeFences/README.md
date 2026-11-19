@@ -1,6 +1,6 @@
 ---
 name: AutoCloseCodeFences
-description: Automatically closes unclosed triple-backtick code blocks before sending.
+description: Closes unclosed triple-backtick code blocks automatically before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # AutoCloseCodeFences
 
-Appends a closing ```` ``` ```` fence when an odd number of triple-backtick code block markers are present on send.
+Closes unclosed triple-backtick code blocks automatically before sending.

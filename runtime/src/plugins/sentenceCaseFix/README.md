@@ -1,6 +1,6 @@
 ---
 name: SentenceCaseFix
-description: Automatically capitalizes the opening letter of each sentence.
+description: Capitalizes the first letter of every sentence automatically.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # SentenceCaseFix
 
-Automatically capitalizes the opening letter of each sentence.
+Capitalizes the first letter of every sentence automatically.

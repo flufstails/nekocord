@@ -1,6 +1,6 @@
 ---
 name: FrakturText
-description: Converts ASCII letters into Gothic Fraktur Unicode glyphs before send.
+description: Converts letters in your message into Gothic Fraktur style.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # FrakturText
 
-Converts ASCII letters into Gothic Fraktur Unicode glyphs before send.
+Converts letters in your message into Gothic Fraktur style.

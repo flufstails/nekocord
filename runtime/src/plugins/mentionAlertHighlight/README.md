@@ -1,6 +1,6 @@
 ---
 name: MentionAlertHighlight
-description: Highlights incoming messages matching custom comma-separated alert keywords.
+description: Highlights incoming messages matching your chosen alert words.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,6 +15,6 @@ tags:
 
 # MentionAlertHighlight
 
-Applies a configurable colored row highlight and gutter accent whenever a message matches any keyword in your alert list.
+Highlights incoming messages matching your chosen alert words.
 
 Configure keywords, case sensitivity, and highlight color directly from the plugin settings modal.

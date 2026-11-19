@@ -1,6 +1,6 @@
 ---
 name: CleanAliExpressLinks
-description: Strips tracking query junk from outgoing AliExpress item links.
+description: Removes tracking tags from AliExpress item links you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # CleanAliExpressLinks
 
-Strips tracking query junk from outgoing AliExpress item links.
+Removes tracking tags from AliExpress item links you send.

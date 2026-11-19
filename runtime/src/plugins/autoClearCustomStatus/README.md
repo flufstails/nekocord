@@ -1,6 +1,6 @@
 ---
 name: AutoClearCustomStatus
-description: Clears stale custom status text whenever enabled on startup.
+description: Clears leftover custom status text when turned on at startup.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # AutoClearCustomStatus
 
-Dispatches an empty custom status clearing payload on startup so old statuses do not linger.
+Clears leftover custom status text when turned on at startup.

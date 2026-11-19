@@ -1,6 +1,6 @@
 ---
 name: JsonMinifyMacro
-description: Compresses `\\jmin:{...}` JSON payloads into compact single-line strings on send.
+description: "Compresses \\jmin:{...} text onto a single compact line when sending."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # JsonMinifyMacro
 
-Minifies valid JSON payloads prefixed with `\\jmin:` cleanly before sending.
+Compresses \jmin:{...} text onto a single compact line when sending.

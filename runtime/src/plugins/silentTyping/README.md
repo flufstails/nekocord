@@ -1,6 +1,6 @@
 ---
 name: SilentTyping
-description: Prevents Discord from broadcasting your typing indicator to channels.
+description: Hides your typing status from everyone on Discord.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # SilentTyping
 
-Prevents Discord from broadcasting your typing indicator to channels.
+Hides your typing status from everyone on Discord.

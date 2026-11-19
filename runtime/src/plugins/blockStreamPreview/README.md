@@ -1,6 +1,6 @@
 ---
 name: BlockStreamPreview
-description: Stops Discord from uploading live Go Live stream preview thumbnails.
+description: Stops Discord from uploading preview screenshots of your screen share.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # BlockStreamPreview
 
-Intercepts and drops `STREAM_PREVIEW_UPDATE` and `STREAM_UPDATE_THUMBNAIL` dispatches.
+Stops Discord from uploading preview screenshots of your screen share.

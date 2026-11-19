@@ -1,6 +1,6 @@
 ---
 name: CleanNotionLinks
-description: Removes `?pvs=` session tracking parameters from Notion page URLs.
+description: Removes session tracking tags from Notion page links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CleanNotionLinks
 
-Strips Notion workspace `?pvs=` navigation params from outgoing links.
+Removes session tracking tags from Notion page links.

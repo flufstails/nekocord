@@ -1,6 +1,6 @@
 ---
 name: HighlightPinnedIndicator
-description: Adds a `[pinned]` badge beside timestamps on pinned chat messages.
+description: Adds a [pinned] label next to timestamps on pinned messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HighlightPinnedIndicator
 
-Appends `[pinned]` beside message timestamps whenever `msg.pinned` is true.
+Adds a [pinned] label next to timestamps on pinned messages.

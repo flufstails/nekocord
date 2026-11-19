@@ -1,6 +1,6 @@
 ---
 name: CleanDuckDuckGoLinks
-description: Unwraps `duckduckgo.com/l/?uddg=...` outbound redirect wrappers directly to target URLs.
+description: Unwraps DuckDuckGo redirect links into direct website links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CleanDuckDuckGoLinks
 
-Decodes `uddg=` parameters on outgoing DuckDuckGo outbound links cleanly.
+Unwraps DuckDuckGo redirect links into direct website links.

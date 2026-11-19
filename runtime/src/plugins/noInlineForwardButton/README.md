@@ -1,6 +1,6 @@
 ---
 name: NoInlineForwardButton
-description: Hides inline quick-forward buttons rendered next to chat media and messages.
+description: Hides the quick forward button shown next to chat messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # NoInlineForwardButton
 
-Hides inline quick-forward buttons rendered next to chat media and messages.
+Hides the quick forward button shown next to chat messages.

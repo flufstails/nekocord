@@ -1,6 +1,6 @@
 ---
 name: NoLinkDecorations
-description: Removes extra decorative icons next to links in chat messages.
+description: Hides extra link icons beside links in chat messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # NoLinkDecorations
 
-Removes extra decorative icons next to links in chat messages.
+Hides extra link icons beside links in chat messages.

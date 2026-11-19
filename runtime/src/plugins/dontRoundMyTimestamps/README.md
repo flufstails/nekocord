@@ -1,6 +1,6 @@
 ---
 name: DontRoundMyTimestamps
-description: "Preserves exact minute and second precision on message timestamps instead of rounded phrasing."
+description: Shows exact minutes and seconds on timestamps instead of rounded times.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # DontRoundMyTimestamps
 
-Extracts exact `HH:MM:SS` timing from message snowflakes when Discord displays relative timestamps.
+Shows exact minutes and seconds on timestamps instead of rounded times.

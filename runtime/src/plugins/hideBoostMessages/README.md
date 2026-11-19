@@ -1,6 +1,6 @@
 ---
 name: HideBoostMessages
-description: Suppresses incoming server boost announcement system messages in chat.
+description: Hides server boost system announcements in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HideBoostMessages
 
-Drops guild boost system message dispatches (types 8–11) so chat channels stay focused.
+Hides server boost system announcements in chat.

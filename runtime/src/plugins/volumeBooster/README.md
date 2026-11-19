@@ -1,6 +1,6 @@
 ---
 name: VolumeBooster
-description: "Allows boosting voice participant volumes up to 400% beyond standard sliders."
+description: Boosts voice call participant volume up to 400%.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # VolumeBooster
 
-Hooks `MediaEngineStore.getLocalVolume` to support per-user voice volume gains up to 400%.
+Boosts voice call participant volume up to 400%.

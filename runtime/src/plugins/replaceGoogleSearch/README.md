@@ -1,6 +1,6 @@
 ---
 name: ReplaceGoogleSearch
-description: "Rewrites outgoing Google Search URLs to privacy-friendly DuckDuckGo links."
+description: Rewrites Google Search links to DuckDuckGo privacy search links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ReplaceGoogleSearch
 
-Replaces `https://www.google.com/search?` links in outgoing messages with `https://duckduckgo.com/?`.
+Rewrites Google Search links to DuckDuckGo privacy search links.

@@ -1,6 +1,6 @@
 ---
 name: RedactJwtTokens
-description: Intercepts and redacts leaked JWTs or token-like strings before upload.
+description: Automatically hides secret login tokens before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # RedactJwtTokens
 
-Intercepts and redacts leaked JWTs or token-like strings before upload.
+Automatically hides secret login tokens before sending.

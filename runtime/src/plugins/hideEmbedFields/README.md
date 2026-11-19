@@ -1,6 +1,6 @@
 ---
 name: HideEmbedFields
-description: Removes multi-row embed fields from rendered bot cards.
+description: Hides extra detail columns inside bot preview cards.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HideEmbedFields
 
-Clears long `fields` arrays inside chat embeds while keeping embed titles, descriptions, and media intact.
+Hides extra detail columns inside bot preview cards.

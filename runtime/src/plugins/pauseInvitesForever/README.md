@@ -1,6 +1,6 @@
 ---
 name: PauseInvitesForever
-description: "Extends server invite pause actions beyond default temporary timeouts."
+description: Keeps server invite pauses active without short timers.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # PauseInvitesForever
 
-Strips short-lived invite pause expiry timestamps during guild feature updates.
+Keeps server invite pauses active without short timers.

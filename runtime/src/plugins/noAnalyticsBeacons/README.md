@@ -1,6 +1,6 @@
 ---
 name: NoAnalyticsBeacons
-description: Drops internal Discord impression, exposure, and heartbeat metric beacons.
+description: Stops Discord from sending view counts and background tracking signals.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,6 +13,6 @@ tags:
 
 # NoAnalyticsBeacons
 
-Drops internal Discord impression, exposure, and heartbeat metric beacons.
+Stops Discord from sending view counts and background tracking signals.
 
 Requires a client restart after toggling so Discord initializes cleanly with the updated hooks.

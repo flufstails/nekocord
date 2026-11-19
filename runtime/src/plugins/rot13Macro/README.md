@@ -1,6 +1,6 @@
 ---
 name: Rot13Macro
-description: "Transforms /rot13 <text> payloads using classic ROT13 letter rotation."
+description: Scrambles /rot13 <text> messages using ROT13 letter shifting.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,6 +14,6 @@ tags:
 
 # Rot13Macro
 
-Transforms /rot13 <text> payloads using classic ROT13 letter rotation.
+Scrambles /rot13 <text> messages using ROT13 letter shifting.
 
 Type `/rot13 <text>` in any chat composer box and send to expand inline.

@@ -1,6 +1,6 @@
 ---
 name: CallTimer
-description: "Measures active voice call session duration and logs exact elapsed time on leave."
+description: Shows how long your voice call lasted when you leave.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CallTimer
 
-Monitors `VOICE_CHANNEL_SELECT` events to track how long each voice session lasts.
+Shows how long your voice call lasted when you leave.

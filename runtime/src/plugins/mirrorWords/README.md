@@ -1,6 +1,6 @@
 ---
 name: MirrorWords
-description: Reverses word order inside outgoing text while keeping words readable.
+description: Reverses the order of words in your message before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # MirrorWords
 
-Reverses word order inside outgoing text while keeping words readable.
+Reverses the order of words in your message before sending.

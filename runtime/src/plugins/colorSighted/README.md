@@ -1,6 +1,6 @@
 ---
 name: ColorSighted
-description: "Restores clean circular status dots instead of accessibility geometric shape overlays."
+description: Shows regular round status circles instead of accessibility shapes.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ColorSighted
 
-Overrides forced status shape accessibility flags so online, idle, and DND icons render as simple circles.
+Shows regular round status circles instead of accessibility shapes.

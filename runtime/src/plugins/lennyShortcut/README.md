@@ -1,6 +1,6 @@
 ---
 name: LennyShortcut
-description: Expands /lenny in outgoing chat messages.
+description: Turns /lenny into the classic Lenny emoticon before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,6 +14,6 @@ tags:
 
 # LennyShortcut
 
-Expands /lenny in outgoing chat messages.
+Turns /lenny into the classic Lenny emoticon before sending.
 
 Type `/lenny` in any chat composer box and send to expand inline.

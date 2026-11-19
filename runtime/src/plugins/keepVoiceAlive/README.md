@@ -1,6 +1,6 @@
 ---
 name: KeepVoiceAlive
-description: Prevents automatic idle voice call disconnect timeouts locally.
+description: Stops Discord from disconnecting you from quiet voice calls.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # KeepVoiceAlive
 
-Blocks `CALL_IDLE_DISCONNECT` and `AFK_MOVE` local idle trigger dispatches.
+Stops Discord from disconnecting you from quiet voice calls.

@@ -3,17 +3,20 @@ import {
   onFluxDispatcher,
   type FluxDispatcher,
 } from '../../metro/common.js';
+import { findByProps } from '../../metro/index.js';
 import { subscribeSettings } from '../../storage/index.js';
 import { definePluginSettings, OptionType } from '../settings.js';
 import { definePlugin } from '../types.js';
 
 const RPC_SOCKET_ID = 'NekocordCustomRPC';
+const DEFAULT_APP_ID = '1300000000000000000';
+const SNOWFLAKE_RE = /^\d{17,20}$/;
 
 const settings = definePluginSettings({
   activityType: {
     type: OptionType.SELECT,
     label: 'Activity Type',
-    description: 'Presence verb shown above your activity card on your Discord profile.',
+    description: 'Verb shown above your activity card on your profile.',
     options: [
       { label: 'Playing', value: 0 },
       { label: 'Streaming', value: 1 },
@@ -26,48 +29,55 @@ const settings = definePluginSettings({
   name: {
     type: OptionType.STRING,
     label: 'Activity Name',
-    description: 'Main application or activity title displayed on your profile.',
+    description: 'Main title displayed on your activity card.',
     placeholder: 'Nekocord Mobile',
     default: 'Nekocord Mobile',
   },
   details: {
     type: OptionType.STRING,
     label: 'Details Line',
-    description: 'First descriptive line below the activity name.',
+    description: 'First line shown below the activity title.',
     placeholder: 'Your cutest Discord client',
     default: 'Your cutest Discord client',
   },
   state: {
     type: OptionType.STRING,
     label: 'State Line',
-    description: 'Second descriptive line below details.',
+    description: 'Second line shown below details.',
     placeholder: 'Active on Android',
     default: 'Active on Android',
+  },
+  applicationId: {
+    type: OptionType.STRING,
+    label: 'Application ID (Optional)',
+    description: 'Optional custom Discord Application ID if you want custom assets.',
+    placeholder: 'Leave blank for default',
+    default: '',
   },
   streamUrl: {
     type: OptionType.STRING,
     label: 'Stream URL (Streaming Type Only)',
-    description: 'Twitch or YouTube URL required when Activity Type is Streaming.',
+    description: 'Twitch or YouTube link used when Activity Type is set to Streaming.',
     placeholder: 'https://twitch.tv/flufstails',
     default: '',
   },
   largeImageText: {
     type: OptionType.STRING,
     label: 'Hover Image Caption',
-    description: 'Tooltip text for the activity card emblem.',
-    placeholder: 'Nekocord v1.4.0',
+    description: 'Caption text shown on the activity card emblem.',
+    placeholder: 'Nekocord v1.5.0',
     default: 'Nekocord',
   },
   showTimestamp: {
     type: OptionType.BOOLEAN,
     label: 'Show Elapsed Timer',
-    description: 'Display live elapsed session time since CustomRPC started.',
+    description: 'Show a running timer counting how long this activity has been active.',
     default: true,
   },
   status: {
     type: OptionType.SELECT,
     label: 'Online Status Override',
-    description: 'Optionally set Discord presence status alongside Rich Presence.',
+    description: 'Optionally set your online status while CustomRPC is active.',
     options: [
       { label: 'Keep Current', value: 'keep' },
       { label: 'Online', value: 'online' },
@@ -84,6 +94,7 @@ let sessionStartedAt = 0;
 let subscribedDispatcher: FluxDispatcher | null = null;
 let cancelDispatcherWait: (() => void) | null = null;
 let unsubscribeStorage: (() => void) | null = null;
+let pendingConnectTimer: ReturnType<typeof setTimeout> | null = null;
 let lastSignature = '';
 
 function buildActivityPayload(): Record<string, any> | null {
@@ -96,9 +107,15 @@ function buildActivityPayload(): Record<string, any> | null {
   const state = String(settings.store.state || '').trim();
   const streamUrl = String(settings.store.streamUrl || '').trim();
   const largeText = String(settings.store.largeImageText || '').trim();
+  const rawAppId = String(settings.store.applicationId || '').trim();
+  const appId = SNOWFLAKE_RE.test(rawAppId)
+    ? rawAppId
+    : largeText
+      ? DEFAULT_APP_ID
+      : undefined;
 
   const activity: Record<string, any> = {
-    application_id: '1300000000000000000',
+    ...(appId ? { application_id: appId } : {}),
     name,
     type,
     ...(details ? { details } : {}),
@@ -111,6 +128,27 @@ function buildActivityPayload(): Record<string, any> | null {
   };
 
   return activity;
+}
+
+function applySafeOnlineStatus(nextStatus: string): void {
+  try {
+    const holder =
+      findByProps<any>('PreloadedUserSettingsActionCreators')?.PreloadedUserSettingsActionCreators ??
+      findByProps<any>('updateAsync', 'scheduleSave');
+    if (typeof holder?.updateAsync === 'function') {
+      holder.updateAsync(
+        'status',
+        (data: any) => {
+          if (data && typeof data === 'object') {
+            data.status = { value: nextStatus };
+          }
+        },
+        0,
+      );
+    }
+  } catch {
+    // Skip status override if preloaded user settings action creator differs.
+  }
 }
 
 function broadcastPresence(force = false): void {
@@ -132,16 +170,20 @@ function broadcastPresence(force = false): void {
   });
 
   if (settings.store.status && settings.store.status !== 'keep') {
-    dispatcher.dispatch({
-      type: 'USER_SETTINGS_PROTO_UPDATE',
-      settings: { status: settings.store.status },
-      local: true,
-    });
+    applySafeOnlineStatus(String(settings.store.status));
   }
 }
 
 const onConnectionOpen = () => {
-  broadcastPresence(true);
+  if (pendingConnectTimer) {
+    clearTimeout(pendingConnectTimer);
+  }
+  pendingConnectTimer = setTimeout(() => {
+    pendingConnectTimer = null;
+    if (running) {
+      broadcastPresence(true);
+    }
+  }, 0);
 };
 
 export default definePlugin({
@@ -168,6 +210,10 @@ export default definePlugin({
   stop() {
     running = false;
     lastSignature = '';
+    if (pendingConnectTimer) {
+      clearTimeout(pendingConnectTimer);
+      pendingConnectTimer = null;
+    }
     cancelDispatcherWait?.();
     cancelDispatcherWait = null;
     unsubscribeStorage?.();

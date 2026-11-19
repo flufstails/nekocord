@@ -1,6 +1,6 @@
 ---
 name: MonospaceNumbers
-description: Converts ASCII digits in outgoing text into Unicode monospace numerals.
+description: Converts numbers in your message into fixed-width digits.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # MonospaceNumbers
 
-Converts ASCII digits in outgoing text into Unicode monospace numerals.
+Converts numbers in your message into fixed-width digits.

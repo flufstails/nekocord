@@ -1,6 +1,6 @@
 ---
 name: UuidGeneratorMacro
-description: Expands `\\uuid` macros into generated UUID v4 identifiers on send.
+description: Turns \uuid into a random unique ID before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # UuidGeneratorMacro
 
-Replaces every `\\uuid` trigger outside code blocks with a freshly generated v4 UUID.
+Turns \uuid into a random unique ID before sending.

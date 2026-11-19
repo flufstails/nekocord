@@ -1,6 +1,6 @@
 ---
 name: UwUify
-description: Transforms outgoing chat prose while keeping links, mentions, emojis, and code blocks intact.
+description: Makes messages cute and playful while keeping links and mentions intact.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -16,4 +16,4 @@ tags:
 
 # UwUify
 
-Transforms outgoing chat prose while keeping links, mentions, emojis, and code blocks intact.
+Makes messages cute and playful while keeping links and mentions intact.

@@ -1,6 +1,6 @@
 ---
 name: HighlightCodeBlocks
-description: Highlights messages containing fenced Markdown code blocks.
+description: Highlights messages containing code blocks.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HighlightCodeBlocks
 
-Marks chat messages containing triple-backtick code blocks with a purple gutter accent.
+Highlights messages containing code blocks.

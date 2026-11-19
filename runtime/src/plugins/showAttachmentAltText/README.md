@@ -1,6 +1,6 @@
 ---
 name: ShowAttachmentAltText
-description: Displays image alt-text descriptions inline beneath message text.
+description: Shows image alt-text descriptions under images in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ShowAttachmentAltText
 
-Displays image alt-text descriptions inline beneath message text.
+Shows image alt-text descriptions under images in chat.

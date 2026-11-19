@@ -1,6 +1,6 @@
 ---
 name: HideWebhookBadges
-description: Removes `APP` / `BOT` pill tags beside webhook message usernames.
+description: Hides APP and BOT tags beside webhook usernames.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HideWebhookBadges
 
-Clears `tagText` on webhook-sent chat messages cleanly.
+Hides APP and BOT tags beside webhook usernames.

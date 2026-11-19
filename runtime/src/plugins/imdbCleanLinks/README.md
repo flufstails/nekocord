@@ -1,6 +1,6 @@
 ---
 name: ImdbCleanLinks
-description: Strips `?ref_=` query tracking noise from IMDb title and name URLs.
+description: Removes referral tracking tags from IMDb links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ImdbCleanLinks
 
-Shortens `imdb.com/title/tt.../?ref_=...` links cleanly to canonical IMDb URLs.
+Removes referral tracking tags from IMDb links.

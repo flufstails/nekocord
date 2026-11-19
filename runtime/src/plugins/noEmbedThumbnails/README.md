@@ -1,6 +1,6 @@
 ---
 name: NoEmbedThumbnails
-description: Strips thumbnails, preview images, and video frames from link embeds.
+description: Hides thumbnails and preview pictures inside link embed cards.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # NoEmbedThumbnails
 
-Strips thumbnails, preview images, and video frames from link embeds.
+Hides thumbnails and preview pictures inside link embed cards.

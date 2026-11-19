@@ -1,6 +1,6 @@
 ---
 name: UnlockBurstChecks
-description: Clears client cooldown and upsell gates on burst super-reaction checks.
+description: Removes super-reaction client lockouts in the reaction picker.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,6 +13,6 @@ tags:
 
 # UnlockBurstChecks
 
-Clears client cooldown and upsell gates on burst super-reaction checks.
+Removes super-reaction client lockouts in the reaction picker.
 
 Requires a client restart after toggling so Discord initializes cleanly with the updated hooks.

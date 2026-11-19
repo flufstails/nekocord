@@ -702,7 +702,10 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
   }) {
     const { value, onValueChange, p, disabled, accessibilityLabel } = props;
     const canAnimate = Boolean(Animated && typeof Animated.Value === 'function' && Animated.View);
-    const animRef = React.useRef(canAnimate ? new Animated.Value(value ? 1 : 0) : null);
+    const animRef = React.useRef(null as any);
+    if (canAnimate && animRef.current === null) {
+      animRef.current = new Animated.Value(value ? 1 : 0);
+    }
 
     React.useEffect(() => {
       if (!canAnimate || !animRef.current || typeof Animated.timing !== 'function') {
@@ -3965,7 +3968,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
       return null;
     }
 
-    const version = nekocord?.version ?? '1.4.0';
+    const version = nekocord?.version ?? '1.5.0';
     const tagline = nekocord?.tagline ?? 'Your cutest Discord client on mobile';
     const selectedPlugin =
       selectedPluginName && !nekocord?.plugins.get(selectedPluginName)?.core

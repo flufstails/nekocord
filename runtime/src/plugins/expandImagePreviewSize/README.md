@@ -1,6 +1,6 @@
 ---
 name: ExpandImagePreviewSize
-description: Requests full-resolution media CDN URLs inside chat image embeds and attachments.
+description: Loads full-resolution previews for images and embeds in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ExpandImagePreviewSize
 
-Rewrites `media.discordapp.net` width/height query bounds to larger 2048px bounds for sharp zoom.
+Loads full-resolution previews for images and embeds in chat.

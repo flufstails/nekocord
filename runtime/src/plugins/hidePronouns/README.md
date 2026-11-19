@@ -1,6 +1,6 @@
 ---
 name: HidePronouns
-description: Clears pronoun labels on opened user and member profiles.
+description: Hides pronoun labels on user profiles.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,6 +14,6 @@ tags:
 
 # HidePronouns
 
-Clears pronoun labels on opened user and member profiles.
+Hides pronoun labels on user profiles.
 
 Requires a client restart after toggling so Discord initializes cleanly with the updated hooks.

@@ -1,6 +1,6 @@
 ---
 name: TenorCleanLinks
-description: Strips trailing share query parameters from Tenor GIF links.
+description: Removes extra share tracking tags from Tenor GIF links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # TenorCleanLinks
 
-Removes extraneous query parameters from outgoing `tenor.com/view/...` GIF links.
+Removes extra share tracking tags from Tenor GIF links.

@@ -1,6 +1,6 @@
 ---
 name: CleanLinkedinLinks
-description: Strips `trk`, `lipi`, `refId`, and `trackingId` params from LinkedIn links.
+description: Removes LinkedIn tracking and referral tags from links you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CleanLinkedinLinks
 
-Removes session and referral tracking query parameters from outgoing `linkedin.com` URLs.
+Removes LinkedIn tracking and referral tags from links you send.

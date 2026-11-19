@@ -1,6 +1,6 @@
 ---
 name: ImplicitRelationships
-description: "Tracks recent DM and voice interaction peers locally for quick implicit friend discovery."
+description: Keeps a local list of friends you DM or call most often.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ImplicitRelationships
 
-Maintains a local in-memory recency cache of users you exchange DMs with without syncing extra data.
+Keeps a local list of friends you DM or call most often.

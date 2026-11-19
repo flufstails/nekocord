@@ -1,6 +1,6 @@
 ---
 name: SendTimestamps
-description: "Converts @HH:MM and @YYYY-MM-DD HH:MM tokens into native Discord dynamic timestamps."
+description: "Turns @HH:MM times you type into timezone-aware Discord timestamps."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # SendTimestamps
 
-Converts @HH:MM and @YYYY-MM-DD HH:MM tokens into native Discord dynamic timestamps.
+Turns @HH:MM times you type into timezone-aware Discord timestamps.

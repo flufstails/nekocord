@@ -1,6 +1,6 @@
 ---
 name: RoleColorEverywhere
-description: "Resolves and applies a member highest colored role to usernames when missing in chat rows."
+description: Colors usernames with their highest role color across chat messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # RoleColorEverywhere
 
-Reads `GuildMemberStore.getMember` and `GuildStore.getRoles` to fill missing `usernameColor` values on guild messages.
+Colors usernames with their highest role color across chat messages.

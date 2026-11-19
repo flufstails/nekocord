@@ -1,6 +1,6 @@
 ---
 name: UrlDecodeMacro
-description: Expands `\\udec:<percent-encoded>` into decoded plain strings on send.
+description: "Turns \\udec:<encoded> web links back into readable text."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # UrlDecodeMacro
 
-Runs `decodeURIComponent` on `\\udec:...` sequences cleanly before send.
+Turns \udec:<encoded> web links back into readable text.

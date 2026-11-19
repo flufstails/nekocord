@@ -1,6 +1,6 @@
 ---
 name: MobileWikipediaToDesktop
-description: Converts `.m.wikipedia.org` mobile URLs into standard Wikipedia links.
+description: Converts mobile Wikipedia links into standard desktop links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # MobileWikipediaToDesktop
 
-Normalizes `*.m.wikipedia.org` links into clean desktop `*.wikipedia.org` links before sending.
+Converts mobile Wikipedia links into standard desktop links.

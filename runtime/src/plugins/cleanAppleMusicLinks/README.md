@@ -1,6 +1,6 @@
 ---
 name: CleanAppleMusicLinks
-description: Removes `ls=1`, `itsct`, and `itscg` tracking params from Apple Music URLs.
+description: Removes tracking tags from Apple Music links you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CleanAppleMusicLinks
 
-Strips Apple affiliate and campaign query parameters from `music.apple.com` links.
+Removes tracking tags from Apple Music links you send.

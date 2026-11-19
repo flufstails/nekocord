@@ -1,6 +1,6 @@
 ---
 name: HideTyping
-description: Hides typing indicators from other users by dropping incoming TYPING_START events.
+description: Hides typing indicators from other people across Discord.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HideTyping
 
-Hides typing indicators from other users by dropping incoming TYPING_START events.
+Hides typing indicators from other people across Discord.

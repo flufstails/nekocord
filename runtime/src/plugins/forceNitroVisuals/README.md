@@ -1,6 +1,6 @@
 ---
 name: ForceNitroVisuals
-description: Spoofs local Nitro Full badge visibility on your own current user object.
+description: Displays Nitro badge visuals locally on your own account.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,6 +13,6 @@ tags:
 
 # ForceNitroVisuals
 
-Spoofs local Nitro Full badge visibility on your own current user object.
+Displays Nitro badge visuals locally on your own account.
 
 Requires a client restart after toggling so Discord initializes cleanly with the updated hooks.

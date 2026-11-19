@@ -1,6 +1,6 @@
 ---
 name: HideBlockedReplies
-description: Clears inline reply preview banners when replying to blocked message placeholders.
+description: Hides reply preview bars above replies to blocked users.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HideBlockedReplies
 
-Strips `referencedMessage` reply previews on chat rows referencing blocked or unavailable messages.
+Hides reply preview bars above replies to blocked users.

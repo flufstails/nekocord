@@ -1,6 +1,6 @@
 ---
 name: NoStickerAutoSuggest
-description: Disables automatic sticker suggestion popups while typing emojis or words.
+description: Stops sticker suggestion popups while you type.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # NoStickerAutoSuggest
 
-Overrides sticker suggestion helper checks so autocomplete suggestions do not pop up above the chat input.
+Stops sticker suggestion popups while you type.

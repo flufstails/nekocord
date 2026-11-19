@@ -1,6 +1,6 @@
 ---
 name: CompactBotMessages
-description: Collapses extra blank lines inside verbose bot message payloads.
+description: Removes extra blank lines inside long bot messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CompactBotMessages
 
-Compresses consecutive blank lines inside bot-authored string message bodies for tighter vertical spacing.
+Removes extra blank lines inside long bot messages.

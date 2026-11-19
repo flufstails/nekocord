@@ -1,6 +1,6 @@
 ---
 name: QuickSnippetMacros
-description: Expands `\s1` and `\s2` triggers into configurable reusable text snippets on send.
+description: Replaces \s1 and \s2 shortcuts with your saved quick phrases.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # QuickSnippetMacros
 
-Replaces `\s1` and `\s2` placeholders outside code blocks with custom saved responses before sending.
+Replaces \s1 and \s2 shortcuts with your saved quick phrases.

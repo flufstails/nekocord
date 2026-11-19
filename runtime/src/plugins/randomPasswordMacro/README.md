@@ -1,6 +1,6 @@
 ---
 name: RandomPasswordMacro
-description: Expands `\\pass` macros into a 16-character random passphrase wrapped in spoiler tags.
+description: Turns \pass into a random 16-character spoiler-tagged password.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # RandomPasswordMacro
 
-Generates a 16-character alphanumeric passphrase inside `||...||` spoiler tags wherever `\\pass` appears.
+Turns \pass into a random 16-character spoiler-tagged password.

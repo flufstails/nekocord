@@ -1,6 +1,6 @@
 ---
 name: PigLatin
-description: Converts standard English words outside code and mentions into Pig Latin.
+description: Converts words you send into Pig Latin.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # PigLatin
 
-Converts standard English words outside code and mentions into Pig Latin.
+Converts words you send into Pig Latin.

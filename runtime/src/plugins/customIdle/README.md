@@ -1,6 +1,6 @@
 ---
 name: CustomIdle
-description: "Prevents Discord from automatically flipping your online status to Idle due to inactivity."
+description: Stops Discord from marking you Idle while away.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CustomIdle
 
-Drops automatic `IDLE` transitions when triggered without explicit user selection.
+Stops Discord from marking you Idle while away.

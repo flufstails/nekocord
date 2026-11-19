@@ -1,6 +1,6 @@
 ---
 name: ShowMessageLength
-description: Shows character count badges next to timestamps on messages with 120+ characters.
+description: Shows a character count next to long messages (120+ characters).
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ShowMessageLength
 
-Appends `[N chars]` to row timestamps for messages containing at least 120 characters.
+Shows a character count next to long messages (120+ characters).

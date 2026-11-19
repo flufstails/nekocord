@@ -6,20 +6,20 @@ const settings = definePluginSettings({
   blockedWords: {
     type: OptionType.STRING,
     label: 'Filtered Keywords',
-    description: 'Comma-separated words or phrases to mask out of incoming chat rows.',
+    description: 'Comma-separated words or phrases to hide from incoming messages.',
     placeholder: 'spoiler,leak',
     default: 'spoiler',
   },
   caseSensitive: {
     type: OptionType.BOOLEAN,
     label: 'Case Sensitive Match',
-    description: 'Only filter keywords matching exact uppercase/lowercase spelling.',
+    description: 'Only hide words matching exact uppercase or lowercase spelling.',
     default: false,
   },
   replaceWithPlaceholder: {
     type: OptionType.BOOLEAN,
-    label: 'Show Masked Placeholder',
-    description: 'Replace blocked message body with "[blocked by KeywordBlocker]" instead of blanking.',
+    label: 'Show Hidden Notice',
+    description: 'Show "[blocked by KeywordBlocker]" instead of leaving the message blank.',
     default: true,
   },
 });
@@ -39,7 +39,13 @@ const inner = createRowPlugin((_row, msg) => {
     if (!term) continue;
     const needle = sensitive ? term : term.toLowerCase();
     if (haystack.indexOf(needle) !== -1) {
-      msg.content = settings.store.replaceWithPlaceholder ? '[blocked by KeywordBlocker]' : '';
+      if (Array.isArray(msg.content)) {
+        msg.content = settings.store.replaceWithPlaceholder
+          ? [{ type: 'text', content: '[blocked by KeywordBlocker]' }]
+          : [];
+      } else {
+        msg.content = settings.store.replaceWithPlaceholder ? '[blocked by KeywordBlocker]' : '';
+      }
       return true;
     }
   }

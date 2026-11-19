@@ -7,13 +7,13 @@ const settings = definePluginSettings({
   disableAnalytics: {
     type: OptionType.BOOLEAN,
     label: 'Block Discord Analytics',
-    description: 'Suppress Discord TRACK and ANALYTICS_* Flux dispatches before telemetry queues.',
+    description: 'Stop Discord from tracking your app usage and sending analytics.',
     default: true,
   },
   disableScience: {
     type: OptionType.BOOLEAN,
     label: 'Block Science & Experiment Tracking',
-    description: 'Drop SCIENCE_* and EXPERIMENTS_FETCH_TRACK exposure tracking dispatches.',
+    description: 'Stop Discord from logging which experiments and features you test.',
     default: true,
   },
 });

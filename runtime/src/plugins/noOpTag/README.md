@@ -1,6 +1,6 @@
 ---
 name: NoOpTag
-description: Hides Original Poster (OP) badges inside forum and text threads.
+description: "Hides the \"OP\" author tag inside forum threads."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # NoOpTag
 
-Hides Original Poster (OP) badges inside forum and text threads.
+Hides the "OP" author tag inside forum threads.

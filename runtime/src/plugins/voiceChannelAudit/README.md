@@ -1,6 +1,6 @@
 ---
 name: VoiceChannelAudit
-description: Counts and records voice channel join/leave updates for diagnostics.
+description: Counts and records voice channel joins and leaves.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # VoiceChannelAudit
 
-Counts and records voice channel join/leave updates for diagnostics.
+Counts and records voice channel joins and leaves.

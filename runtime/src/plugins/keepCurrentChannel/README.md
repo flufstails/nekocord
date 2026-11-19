@@ -1,6 +1,6 @@
 ---
 name: KeepCurrentChannel
-description: "Remembers your last opened guild and DM channels across navigation switches."
+description: Remembers your last opened server channel and DM across screen switches.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # KeepCurrentChannel
 
-Records each `CHANNEL_SELECT` transition so your last visited channel per server is preserved locally.
+Remembers your last opened server channel and DM across screen switches.

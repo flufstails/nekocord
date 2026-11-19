@@ -1,6 +1,6 @@
 ---
 name: YoutubeNoCookie
-description: Converts YouTube watch links into youtube-nocookie.com privacy embed URLs.
+description: Rewrites YouTube links to privacy-friendly youtube-nocookie.com.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # YoutubeNoCookie
 
-Converts YouTube watch links into youtube-nocookie.com privacy embed URLs.
+Rewrites YouTube links to privacy-friendly youtube-nocookie.com.

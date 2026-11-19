@@ -1,6 +1,6 @@
 ---
 name: ShowAttachmentCount
-description: Displays `[N files]` beside message timestamps when 2 or more attachments exist.
+description: Shows [N files] next to timestamps when a message has multiple files.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ShowAttachmentCount
 
-Appends an attachment count indicator beside message timestamps on multi-file posts.
+Shows [N files] next to timestamps when a message has multiple files.

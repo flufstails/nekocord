@@ -1,6 +1,6 @@
 ---
 name: RevealAllSpoilers
-description: Automatically reveals inline text and attachment spoilers in chat.
+description: Reveals hidden spoiler text and blurred attachments automatically.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # RevealAllSpoilers
 
-Automatically reveals inline text and attachment spoilers in chat.
+Reveals hidden spoiler text and blurred attachments automatically.

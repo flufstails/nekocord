@@ -1,6 +1,6 @@
 ---
 name: CustomRPC
-description: Displays configurable custom Rich Presence (Playing, Streaming, Listening, Watching, Competing) on your Discord profile.
+description: Shows a custom status activity (Playing, Streaming, Listening, Watching) on your profile.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,6 +15,6 @@ tags:
 
 # CustomRPC
 
-Broadcasts a customizable Discord Rich Presence activity directly from mobile via Flux `LOCAL_ACTIVITY_UPDATE`.
+Shows a custom status activity (Playing, Streaming, Listening, Watching) on your profile.
 
 Configure your activity type, title, details, state, optional Twitch/YouTube stream URL, elapsed timer, and status override live from Plugin Info without restarting.

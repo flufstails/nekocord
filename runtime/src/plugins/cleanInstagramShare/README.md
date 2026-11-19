@@ -1,6 +1,6 @@
 ---
 name: CleanInstagramShare
-description: Strips igsh and tracking parameters from outgoing Instagram URLs.
+description: Removes Instagram share tracking tags from links you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # CleanInstagramShare
 
-Strips igsh and tracking parameters from outgoing Instagram URLs.
+Removes Instagram share tracking tags from links you send.

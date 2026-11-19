@@ -1,6 +1,6 @@
 ---
 name: Unindent
-description: "Strips redundant common leading indentation from multi-line fenced code blocks before send."
+description: Removes extra leading spaces from pasted code blocks before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # Unindent
 
-Computes the shared leading whitespace inside fenced code blocks and outdents lines evenly on send.
+Removes extra leading spaces from pasted code blocks before sending.

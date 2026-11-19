@@ -1,6 +1,6 @@
 ---
 name: SilentMessages
-description: "Automatically prepends @silent to outgoing messages so recipients are not pinged."
+description: Adds @silent automatically so your messages never trigger sound notifications.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # SilentMessages
 
-Automatically prepends @silent to outgoing messages so recipients are not pinged.
+Adds @silent automatically so your messages never trigger sound notifications.

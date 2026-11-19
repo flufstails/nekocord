@@ -1,7 +1,7 @@
 import { createUtilityPlugin } from '../_shared/chatUtility.js';
 
 export default createUtilityPlugin((c) => {
-  const trimmed = c.trimStart();
+  const trimmed = c.replace(/^\s+/, '');
   if (!trimmed || trimmed[0] === '/' || trimmed[0] === '`' || /^https?:\/\//i.test(trimmed) || /^:[a-zA-Z0-9_]+:/.test(trimmed)) {
     return c;
   }

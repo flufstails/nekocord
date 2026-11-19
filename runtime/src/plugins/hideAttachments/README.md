@@ -1,6 +1,6 @@
 ---
 name: HideAttachments
-description: "Hides attachment previews from incoming messages while preserving text content."
+description: Hides image and file previews in chat while keeping message text.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HideAttachments
 
-Clears the attachment list from rendered chat rows for compact text-first reading.
+Hides image and file previews in chat while keeping message text.

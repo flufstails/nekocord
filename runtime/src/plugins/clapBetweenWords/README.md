@@ -1,6 +1,6 @@
 ---
 name: ClapBetweenWords
-description: Places clap dividers between outgoing words outside mentions and links.
+description: Adds clap emojis between words in messages you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # ClapBetweenWords
 
-Places clap dividers between outgoing words outside mentions and links.
+Adds clap emojis between words in messages you send.

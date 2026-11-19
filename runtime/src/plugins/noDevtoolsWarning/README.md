@@ -1,6 +1,6 @@
 ---
 name: NoDevtoolsWarning
-description: "Suppresses Discord Hold Up / self-XSS developer console warning banners."
+description: Hides Discord warning banners in the developer console.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # NoDevtoolsWarning
 
-Filters noisy developer console self-XSS warnings and blocks `SHOW_DEVTOOLS_WARNING` dispatches.
+Hides Discord warning banners in the developer console.

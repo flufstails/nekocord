@@ -1,6 +1,6 @@
 ---
 name: SpaceLetters
-description: Inserts gentle spaces between characters of regular words for emphasis.
+description: Adds spaces between letters in words you send for emphasis.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # SpaceLetters
 
-Inserts gentle spaces between characters of regular words for emphasis.
+Adds spaces between letters in words you send for emphasis.

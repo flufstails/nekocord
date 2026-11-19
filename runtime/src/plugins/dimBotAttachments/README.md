@@ -1,6 +1,6 @@
 ---
 name: DimBotAttachments
-description: Lowers media opacity slightly on automated bot and webhook attachments.
+description: Slightly dims images and files sent by bots.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # DimBotAttachments
 
-Lowers media opacity slightly on automated bot and webhook attachments.
+Slightly dims images and files sent by bots.

@@ -1,6 +1,6 @@
 ---
 name: ReactErrorDecoder
-description: "Appends readable explanations when Discord logs minified React error codes."
+description: Shows readable explanations if Discord encounters an app UI error.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ReactErrorDecoder
 
-Monitors `console.error` for `Minified React error #...` codes and appends plain-English diagnostic hints.
+Shows readable explanations if Discord encounters an app UI error.

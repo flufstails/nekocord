@@ -1,6 +1,6 @@
 ---
 name: StripMarkdownOnSend
-description: Strips bold, italic, underline, strikethrough, and heading markers before sending.
+description: Removes bold, italic, and heading formatting before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # StripMarkdownOnSend
 
-Flattens basic inline Markdown formatting syntax on outgoing messages into clean plain text.
+Removes bold, italic, and heading formatting before sending.

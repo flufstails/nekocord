@@ -1,6 +1,6 @@
 ---
 name: BinaryEncodeMacro
-description: "Converts /bin <text> payloads into 8-bit binary octets before sending."
+description: Turns /bin <text> into binary ones and zeros before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,6 +14,6 @@ tags:
 
 # BinaryEncodeMacro
 
-Converts /bin <text> payloads into 8-bit binary octets before sending.
+Turns /bin <text> into binary ones and zeros before sending.
 
 Type `/bin <text>` in any chat composer box and send to expand inline.

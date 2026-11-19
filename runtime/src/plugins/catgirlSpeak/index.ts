@@ -6,5 +6,5 @@ export default createTextStylePlugin((c) =>
         const trimmed = s.trim();
         if (!trimmed) return s;
         const swapped = s.replace(/\bna/gi, 'nya').replace(/\bno\b/gi, 'nyo');
-        return /nya|mrrp|~$/i.test(swapped) ? swapped : `${swapped.trimEnd()} nya~`;
+        return /nya|mrrp|~$/i.test(swapped) ? swapped : `${swapped.replace(/\s+$/, '')} nya~`;
       }));

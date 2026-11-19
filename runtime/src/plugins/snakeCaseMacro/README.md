@@ -1,6 +1,6 @@
 ---
 name: SnakeCaseMacro
-description: Expands `\\snake:<words>` into `snake_case` identifiers on send.
+description: "Turns \\snake:<words> into underscore_joined words when sending."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # SnakeCaseMacro
 
-Transforms `\\snake:User Profile Icon` into `user_profile_icon` cleanly before sending.
+Turns \snake:<words> into underscore_joined words when sending.

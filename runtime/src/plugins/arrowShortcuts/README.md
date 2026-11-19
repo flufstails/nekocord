@@ -1,6 +1,6 @@
 ---
 name: ArrowShortcuts
-description: Expands ASCII arrows (`->`, `<-`, `<->`, `=>`) into crisp Unicode arrows on send.
+description: Turns typed arrows (->, <-, <->, =>) into clean arrow symbols when sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ArrowShortcuts
 
-Replaces ASCII arrow combinations outside code blocks (`->`, `<-`, `<->`, `=>`) with Unicode arrow symbols.
+Turns typed arrows (->, <-, <->, =>) into clean arrow symbols when sending.

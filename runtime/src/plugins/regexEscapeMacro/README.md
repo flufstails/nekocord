@@ -1,6 +1,6 @@
 ---
 name: RegexEscapeMacro
-description: Escapes regular-expression metacharacters via `\\re:<literal>` on send.
+description: "Escapes special search characters in \\re:<text> before sending."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # RegexEscapeMacro
 
-Converts `\\re:foo.bar(baz)` into `foo\\.bar\\(baz\\)` for regex-safe sharing.
+Escapes special search characters in \re:<text> before sending.

@@ -1,6 +1,6 @@
 ---
 name: CleanTwitchLinks
-description: Strips Twitch referral query parameters (`tt_content`, `tt_medium`) from URLs.
+description: Removes referral tags from Twitch links you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CleanTwitchLinks
 
-Removes Twitch mobile share-tracking query parameters on send.
+Removes referral tags from Twitch links you send.

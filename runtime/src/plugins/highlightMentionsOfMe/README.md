@@ -1,6 +1,6 @@
 ---
 name: HighlightMentionsOfMe
-description: Highlights chat rows that mention your account ID or username cleanly in amber.
+description: Highlights messages that mention you in warm amber.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HighlightMentionsOfMe
 
-Applies an amber row highlight whenever an incoming message directly mentions the active user.
+Highlights messages that mention you in warm amber.

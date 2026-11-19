@@ -1,6 +1,6 @@
 ---
 name: DisableUploadPreview
-description: Disables expanded attachment upload card previews in chat rows.
+description: Hides large file preview cards in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # DisableUploadPreview
 
-Disables expanded attachment upload card previews in chat rows.
+Hides large file preview cards in chat.

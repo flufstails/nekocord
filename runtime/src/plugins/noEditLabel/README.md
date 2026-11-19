@@ -1,6 +1,6 @@
 ---
 name: NoEditLabel
-description: Hides the (edited) tag while preserving MessageLogger deleted markers.
+description: "Hides \"(edited)\" labels on messages while keeping deleted markers."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # NoEditLabel
 
-Hides the (edited) tag while preserving MessageLogger deleted markers.
+Hides "(edited)" labels on messages while keeping deleted markers.

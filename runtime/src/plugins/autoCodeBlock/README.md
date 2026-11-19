@@ -1,6 +1,6 @@
 ---
 name: AutoCodeBlock
-description: Wraps multi-line stack traces and JSON blocks automatically inside code fences.
+description: Wraps pasted multi-line logs and JSON text into code blocks automatically.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # AutoCodeBlock
 
-Wraps multi-line stack traces and JSON blocks automatically inside code fences.
+Wraps pasted multi-line logs and JSON text into code blocks automatically.

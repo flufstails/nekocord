@@ -1,6 +1,6 @@
 ---
 name: LibredditLinks
-description: Routes outgoing Reddit links through a lightweight Redlib privacy frontend.
+description: Converts Reddit links into clean Redlib reading links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # LibredditLinks
 
-Routes outgoing Reddit links through a lightweight Redlib privacy frontend.
+Converts Reddit links into clean Redlib reading links.

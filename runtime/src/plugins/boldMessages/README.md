@@ -1,6 +1,6 @@
 ---
 name: BoldMessages
-description: "Automatically wraps outgoing chat text in **bold** Markdown formatting."
+description: Makes all text you send bold using **bold** formatting.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # BoldMessages
 
-Automatically wraps outgoing chat text in **bold** Markdown formatting.
+Makes all text you send bold using **bold** formatting.

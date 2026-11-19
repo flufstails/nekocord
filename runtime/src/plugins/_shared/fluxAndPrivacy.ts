@@ -298,21 +298,30 @@ export function createVoiceActionOnSelectPlugin(
   onJoinOnly: boolean,
   actionMethod: 'toggleSelfDeaf' | 'toggleSelfMute',
   checkStoreMethod: 'isSelfDeaf' | 'isSelfMute',
+  desiredState: boolean,
 ): PluginImplementation {
   let cancelWait: (() => void) | null = null;
   let subscribedDispatcher: FluxDispatcher | null = null;
+  let pendingTimer: ReturnType<typeof setTimeout> | null = null;
 
   const onVoiceSelect = (action: Record<string, any>) => {
     const joined = action.channelId != null;
     if (onJoinOnly !== joined) return;
-    const mediaStore = getStore<any>('MediaEngineStore');
-    const current = Boolean(mediaStore?.[checkStoreMethod]?.());
-    const shouldToggle = onJoinOnly ? !current : current;
-    if (!shouldToggle) return;
-    const voiceActions = findByProps('toggleSelfMute', 'toggleSelfDeaf');
-    if (typeof voiceActions?.[actionMethod] === 'function') {
-      voiceActions[actionMethod]();
+    if (pendingTimer) {
+      clearTimeout(pendingTimer);
     }
+    pendingTimer = setTimeout(() => {
+      pendingTimer = null;
+      if (!subscribedDispatcher) return;
+      const mediaStore = getStore<any>('MediaEngineStore');
+      const current = Boolean(mediaStore?.[checkStoreMethod]?.());
+      const shouldToggle = desiredState ? !current : current;
+      if (!shouldToggle) return;
+      const voiceActions = findByProps('toggleSelfMute', 'toggleSelfDeaf');
+      if (typeof voiceActions?.[actionMethod] === 'function') {
+        voiceActions[actionMethod]();
+      }
+    }, 0);
   };
 
   return definePlugin({
@@ -326,6 +335,10 @@ export function createVoiceActionOnSelectPlugin(
     },
 
     stop() {
+      if (pendingTimer) {
+        clearTimeout(pendingTimer);
+        pendingTimer = null;
+      }
       cancelWait?.();
       cancelWait = null;
       if (subscribedDispatcher) {

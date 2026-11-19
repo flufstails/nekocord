@@ -1,6 +1,6 @@
 ---
 name: StripReferralUpsells
-description: Blocks Nitro referral upsell modal dispatches and marketing impressions.
+description: Blocks Nitro friend referral popups and banners.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # StripReferralUpsells
 
-Blocks Nitro referral upsell modal dispatches and marketing impressions.
+Blocks Nitro friend referral popups and banners.

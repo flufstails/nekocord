@@ -1,6 +1,6 @@
 ---
 name: NekocordSettingsUI
-description: Integrates Nekocord, Plugins, Themes, Updater, and Backup & Restore directly into Discord User Settings.
+description: Adds Nekocord, Plugins, Themes, Notification Log, Updater, and Backup to Discord Settings.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # NekocordSettingsUI
 
-Injects the **Nekocord**, **Plugins**, **Themes**, **Updater**, and **Backup & Restore** entries into Discord User Settings and mounts the Nekocord modal overlay.
+Adds Nekocord, Plugins, Themes, Notification Log, Updater, and Backup to Discord Settings.

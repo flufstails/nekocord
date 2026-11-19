@@ -1,6 +1,6 @@
 ---
 name: MentionLogger
-description: Logs incoming `@everyone` and `@here` ping messages cleanly into Notification Log.
+description: Saves @everyone and @here mentions into the Notification Log.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # MentionLogger
 
-Captures incoming messages carrying `mention_everyone` flags into the Notification Log.
+Saves @everyone and @here mentions into the Notification Log.

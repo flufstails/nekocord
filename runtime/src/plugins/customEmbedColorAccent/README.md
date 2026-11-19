@@ -1,6 +1,6 @@
 ---
 name: CustomEmbedColorAccent
-description: Highlights pinned or bot-authored chat rows with configurable colored gutter accents.
+description: Adds a colored accent stripe next to pinned or bot messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # CustomEmbedColorAccent
 
-Adds configurable gutter highlights to pinned messages or bot replies inside chat.
+Adds a colored accent stripe next to pinned or bot messages.

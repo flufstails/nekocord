@@ -1,6 +1,6 @@
 ---
 name: NoProfileEffects
-description: Strips animated Nitro profile effects from user profile cards.
+description: Hides animated Nitro profile effects on user profiles.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,6 +15,6 @@ tags:
 
 # NoProfileEffects
 
-Strips animated Nitro profile effects from user profile cards.
+Hides animated Nitro profile effects on user profiles.
 
 Requires a client restart after toggling so Discord initializes cleanly with the updated hooks.

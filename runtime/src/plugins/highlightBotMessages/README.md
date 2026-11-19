@@ -1,6 +1,6 @@
 ---
 name: HighlightBotMessages
-description: Marks messages sent by bots or webhooks with a subtle blurple gutter.
+description: Marks bot messages with a subtle purple side accent.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # HighlightBotMessages
 
-Marks messages sent by bots or webhooks with a subtle blurple gutter.
+Marks bot messages with a subtle purple side accent.

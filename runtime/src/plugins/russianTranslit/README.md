@@ -1,6 +1,6 @@
 ---
 name: RussianTranslit
-description: Substitutes lookalike Latin letters with matching Cyrillic homoglyphs.
+description: Swaps matching Latin letters with lookalike Cyrillic letters.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # RussianTranslit
 
-Substitutes lookalike Latin letters with matching Cyrillic homoglyphs.
+Swaps matching Latin letters with lookalike Cyrillic letters.

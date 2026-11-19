@@ -1,6 +1,6 @@
 ---
 name: NoConnectionsRoleTag
-description: Hides linked connections role pills shown next to chat authors.
+description: Hides linked account badges beside usernames in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # NoConnectionsRoleTag
 
-Hides linked connections role pills shown next to chat authors.
+Hides linked account badges beside usernames in chat.

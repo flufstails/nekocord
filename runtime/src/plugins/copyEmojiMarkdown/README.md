@@ -1,6 +1,6 @@
 ---
 name: CopyEmojiMarkdown
-description: "Displays raw `<:name:id>` markup alongside custom emojis in chat for easy copying."
+description: Shows the emoji code next to custom emojis in chat so you can copy it.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CopyEmojiMarkdown
 
-Appends the raw `<:name:id>` or `<a:name:id>` syntax to custom-emoji messages in chat rows.
+Shows the emoji code next to custom emojis in chat so you can copy it.

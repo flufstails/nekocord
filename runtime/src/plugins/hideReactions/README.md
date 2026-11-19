@@ -1,6 +1,6 @@
 ---
 name: HideReactions
-description: Hides all reaction chip rows underneath chat messages.
+description: Hides emoji reaction buttons beneath chat messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # HideReactions
 
-Hides all reaction chip rows underneath chat messages.
+Hides emoji reaction buttons beneath chat messages.

@@ -1,6 +1,6 @@
 ---
 name: UnlockAppIcons
-description: Unlocks custom client app icon selector checks without a Nitro subscription.
+description: Lets you pick custom Discord app icons without Nitro.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # UnlockAppIcons
 
-Overrides client custom app icon entitlement functions so alternate app icons are selectable in settings.
+Lets you pick custom Discord app icons without Nitro.

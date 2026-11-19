@@ -6,8 +6,8 @@ import { definePlugin } from '../types.js';
 const settings = definePluginSettings({
   maxVolume: {
     type: OptionType.SELECT,
-    label: 'Max Boost Multiplier',
-    description: 'Upper ceiling for amplified per-user voice channel volumes.',
+    label: 'Max Boost Level',
+    description: 'Highest volume limit allowed for people in voice calls.',
     default: 400,
     options: [
       { label: '200%', value: 200 },

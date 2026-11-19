@@ -1,6 +1,6 @@
 ---
 name: WhisperCase
-description: Converts outgoing chat words to lowercase outside code and mentions.
+description: Converts words in your message to lowercase.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # WhisperCase
 
-Converts outgoing chat words to lowercase outside code and mentions.
+Converts words in your message to lowercase.

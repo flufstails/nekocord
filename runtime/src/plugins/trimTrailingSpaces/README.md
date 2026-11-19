@@ -1,6 +1,6 @@
 ---
 name: TrimTrailingSpaces
-description: Trims leading/trailing whitespace and collapses excessive empty newlines.
+description: Removes extra blank lines and stray spaces before sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # TrimTrailingSpaces
 
-Trims leading/trailing whitespace and collapses excessive empty newlines.
+Removes extra blank lines and stray spaces before sending.

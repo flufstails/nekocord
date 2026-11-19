@@ -1,6 +1,6 @@
 ---
 name: NoRoleColors
-description: Removes custom role username colours for a uniform neutral feed.
+description: Shows all chat usernames in default text color instead of role colors.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # NoRoleColors
 
-Removes custom role username colours for a uniform neutral feed.
+Shows all chat usernames in default text color instead of role colors.

@@ -1,6 +1,6 @@
 ---
 name: HighlightLongMessages
-description: Highlights messages longer than 350 characters with a cyan gutter accent.
+description: Highlights long messages (over 350 characters) for easier scanning.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # HighlightLongMessages
 
-Highlights incoming chat messages whose plain text length reaches 350 characters or more.
+Highlights long messages (over 350 characters) for easier scanning.

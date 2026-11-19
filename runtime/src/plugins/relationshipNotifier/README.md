@@ -1,6 +1,6 @@
 ---
 name: RelationshipNotifier
-description: Tracks friend removals, server kicks/bans, and group DM removals in real time.
+description: Alerts you when friends remove you or when you leave/get kicked from servers.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -12,4 +12,4 @@ tags:
 
 # RelationshipNotifier
 
-Tracks friend removals, server kicks/bans, and group DM removals in real time.
+Alerts you when friends remove you or when you leave/get kicked from servers.

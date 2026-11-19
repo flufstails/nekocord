@@ -1,6 +1,6 @@
 ---
 name: RxdditLinks
-description: Rewrites outgoing reddit.com links to rxddit.com for inline video and gallery cards.
+description: Rewrites reddit.com links to rxddit.com so videos and galleries preview in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # RxdditLinks
 
-Rewrites outgoing reddit.com links to rxddit.com for inline video and gallery cards.
+Rewrites reddit.com links to rxddit.com so videos and galleries preview in chat.

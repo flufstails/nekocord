@@ -1,6 +1,6 @@
 ---
 name: VaporwaveText
-description: Converts outgoing ASCII characters into aesthetic fullwidth characters.
+description: Converts text you send into wide fullwidth vaporwave letters.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # VaporwaveText
 
-Converts outgoing ASCII characters into aesthetic fullwidth characters.
+Converts text you send into wide fullwidth vaporwave letters.

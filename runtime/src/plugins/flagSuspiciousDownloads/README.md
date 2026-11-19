@@ -1,6 +1,6 @@
 ---
 name: FlagSuspiciousDownloads
-description: Prepends a warning badge to messages carrying flagged or suspicious files.
+description: Shows a warning label on messages carrying suspicious file downloads.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # FlagSuspiciousDownloads
 
-Prepends a warning badge to messages carrying flagged or suspicious files.
+Shows a warning label on messages carrying suspicious file downloads.

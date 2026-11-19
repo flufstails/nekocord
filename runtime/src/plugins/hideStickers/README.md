@@ -1,6 +1,6 @@
 ---
 name: HideStickers
-description: Suppresses sticker renders inline inside chat message rows.
+description: Hides sticker images inside chat messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # HideStickers
 
-Suppresses sticker renders inline inside chat message rows.
+Hides sticker images inside chat messages.

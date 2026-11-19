@@ -1,6 +1,6 @@
 ---
 name: FixPixivLinks
-description: Rewrites pixiv.net artwork links to phixiv.net for inline illustration previews.
+description: Converts pixiv.net links so artworks preview cleanly in Discord chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # FixPixivLinks
 
-Rewrites pixiv.net artwork links to phixiv.net for inline illustration previews.
+Converts pixiv.net links so artworks preview cleanly in Discord chat.

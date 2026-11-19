@@ -1,6 +1,6 @@
 ---
 name: MutualGroupDMs
-description: "Indexes shared group DM channels per user from local ChannelStore state."
+description: Finds shared group DMs with other users locally.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # MutualGroupDMs
 
-Inspects private group DM channels in `ChannelStore` so mutual group memberships can be queried instantly.
+Finds shared group DMs with other users locally.

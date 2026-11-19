@@ -1,6 +1,6 @@
 ---
 name: CleanSoundCloudLinks
-description: Removes `si=` and `utm_*` tracking parameters from SoundCloud links.
+description: Removes tracking tags from SoundCloud links you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CleanSoundCloudLinks
 
-Cleans mobile share tracking tokens from outgoing SoundCloud track URLs.
+Removes tracking tags from SoundCloud links you send.

@@ -1,6 +1,6 @@
 ---
 name: NoRoleGradient
-description: Flattens multi-stop role name gradients down to the primary solid role color.
+description: Turns multi-color username gradients into a single solid color.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # NoRoleGradient
 
-Clears secondary gradient color arrays (`roleColors`) in chat rows while preserving each user’s primary role color.
+Turns multi-color username gradients into a single solid color.

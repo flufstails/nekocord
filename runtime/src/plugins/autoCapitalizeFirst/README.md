@@ -1,6 +1,6 @@
 ---
 name: AutoCapitalizeFirst
-description: Capitalizes the first letter of outgoing plain-text sentences outside code blocks.
+description: Capitalizes the first letter of sentences you send outside code blocks.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # AutoCapitalizeFirst
 
-Automatically capitalizes lowercase opening words in outgoing messages while leaving commands, URLs, and code untouched.
+Capitalizes the first letter of sentences you send outside code blocks.

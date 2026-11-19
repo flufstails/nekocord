@@ -1,6 +1,6 @@
 ---
 name: NoGiftSuggestions
-description: Hides proactive Nitro gift button and upsell prompts.
+description: Hides Nitro gift buttons and upgrade suggestions.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # NoGiftSuggestions
 
-Overrides client Nitro gift upsell gates so proactive gifting prompts stay hidden.
+Hides Nitro gift buttons and upgrade suggestions.

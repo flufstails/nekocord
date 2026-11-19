@@ -14,4 +14,4 @@ tags:
 
 # BlockVoiceChannelStatus
 
-Suppresses `VOICE_CHANNEL_STATUS_UPDATE` dispatches cleanly.
+Hides custom voice channel status updates from being tracked.

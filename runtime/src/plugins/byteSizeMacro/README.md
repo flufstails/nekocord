@@ -1,6 +1,6 @@
 ---
 name: ByteSizeMacro
-description: Appends UTF-8 byte count on strings prefixed with `\\bytes:<text>`.
+description: "Adds exact byte length to text starting with \\bytes:."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # ByteSizeMacro
 
-Computes exact UTF-8 byte length for `\\bytes:<text>` using pure JS encoding.
+Adds exact byte length to text starting with \bytes:.

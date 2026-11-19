@@ -1,6 +1,6 @@
 ---
 name: CleanPinterestLinks
-description: Strips invite code and sender tracking query strings from Pinterest URLs.
+description: Removes invite and sender tracking tags from Pinterest links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CleanPinterestLinks
 
-Cleans query-string tracking params from outgoing `pinterest.com` URLs on send.
+Removes invite and sender tracking tags from Pinterest links.

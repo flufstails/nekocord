@@ -1,6 +1,6 @@
 ---
 name: AlwaysExpandRoles
-description: "Expands all member role chips on user profiles without requiring \"+N\" taps."
+description: "Shows all role badges on profiles without needing to tap \"+N\"."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # AlwaysExpandRoles
 
-Removes client role chip truncation limits on user profile sheets.
+Shows all role badges on profiles without needing to tap "+N".

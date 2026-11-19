@@ -1,6 +1,6 @@
 ---
 name: CleanAmazonLinks
-description: Strips tracking slugs and referral queries down to canonical Amazon /dp/ASIN links.
+description: Shortens Amazon links to clean product pages without tracking.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # CleanAmazonLinks
 
-Strips tracking slugs and referral queries down to canonical Amazon /dp/ASIN links.
+Shortens Amazon links to clean product pages without tracking.

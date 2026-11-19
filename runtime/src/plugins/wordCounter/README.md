@@ -1,6 +1,6 @@
 ---
 name: WordCounter
-description: Displays a word count badge on long messages or appends word counts on send.
+description: Shows word counts on long messages or adds them when sending.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # WordCounter
 
-Counts words in messages exceeding the configured threshold (`minWords`, default `10`) and renders a compact `[Nw]` badge on row timestamps or appends `[N words]` on send.
+Shows word counts on long messages or adds them when sending.

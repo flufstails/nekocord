@@ -1,6 +1,6 @@
 ---
 name: Greentext
-description: "Formats lines starting with >text into green ANSI blocks while preserving > quotes."
+description: Turns lines starting with >text into green quote text in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # Greentext
 
-Formats lines starting with >text into green ANSI blocks while preserving > quotes.
+Turns lines starting with >text into green quote text in chat.

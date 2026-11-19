@@ -1,6 +1,6 @@
 ---
 name: VoiceJoinNotifier
-description: Logs and optionally toasts when users join or leave your active voice channel.
+description: Alerts you when someone joins or leaves your active voice channel.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # VoiceJoinNotifier
 
-Watches `VOICE_STATE_UPDATES` and sends alerts to the Nekocord Notification Log whenever someone enters or exits your voice channel.
+Alerts you when someone joins or leaves your active voice channel.

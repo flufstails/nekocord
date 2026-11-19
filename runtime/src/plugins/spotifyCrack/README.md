@@ -1,6 +1,6 @@
 ---
 name: SpotifyCrack
-description: "Unlocks Spotify Listen Along and pauses-on-speak prevention without Spotify Premium."
+description: Unlocks Spotify Listen Along and stops auto-pausing while speaking.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # SpotifyCrack
 
-Patches `SpotifyStore` socket device checks to report Premium playback capability locally.
+Unlocks Spotify Listen Along and stops auto-pausing while speaking.

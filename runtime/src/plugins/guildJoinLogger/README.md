@@ -1,6 +1,6 @@
 ---
 name: GuildJoinLogger
-description: Records newly joined Discord servers into the Nekocord Notification Log.
+description: Logs newly joined servers in the Nekocord Notification Log.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # GuildJoinLogger
 
-Logs `GUILD_CREATE` server join events into Notification Log with guild ID metadata.
+Logs newly joined servers in the Nekocord Notification Log.

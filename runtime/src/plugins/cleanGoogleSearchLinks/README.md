@@ -1,6 +1,6 @@
 ---
 name: CleanGoogleSearchLinks
-description: Unwraps `google.com/url?q=...` redirect links directly to the target URL.
+description: Unwraps Google redirect links directly to the real destination.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CleanGoogleSearchLinks
 
-Extracts the direct destination URL from Google search redirect links before send.
+Unwraps Google redirect links directly to the real destination.

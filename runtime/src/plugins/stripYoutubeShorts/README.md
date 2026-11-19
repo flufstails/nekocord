@@ -1,6 +1,6 @@
 ---
 name: StripYoutubeShorts
-description: Converts YouTube Shorts URLs to standard watch?v= links before sending.
+description: Converts YouTube Shorts links into normal YouTube video links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # StripYoutubeShorts
 
-Converts YouTube Shorts URLs to standard watch?v= links before sending.
+Converts YouTube Shorts links into normal YouTube video links.

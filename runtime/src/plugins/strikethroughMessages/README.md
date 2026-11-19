@@ -1,6 +1,6 @@
 ---
 name: StrikethroughMessages
-description: Wraps outgoing prose in ~~strikethrough~~ Markdown tags.
+description: Crosses out text you send using ~~strikethrough~~ formatting.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # StrikethroughMessages
 
-Wraps outgoing prose in ~~strikethrough~~ Markdown tags.
+Crosses out text you send using ~~strikethrough~~ formatting.

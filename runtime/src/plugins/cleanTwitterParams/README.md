@@ -1,6 +1,6 @@
 ---
 name: CleanTwitterParams
-description: Strips `s=` and `t=` share tracking parameters from X/Twitter links on send.
+description: Removes share tracking tags from X and Twitter links you send.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,4 +15,4 @@ tags:
 
 # CleanTwitterParams
 
-Removes `?s=` and `&t=` query parameters from outgoing `twitter.com` and `x.com` status links.
+Removes share tracking tags from X and Twitter links you send.

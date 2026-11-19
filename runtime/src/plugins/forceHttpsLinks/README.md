@@ -1,6 +1,6 @@
 ---
 name: ForceHttpsLinks
-description: "Upgrades outgoing insecure http:// web links to https:// automatically."
+description: "Upgrades insecure http:// links to https:// before sending."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # ForceHttpsLinks
 
-Upgrades outgoing insecure http:// web links to https:// automatically.
+Upgrades insecure http:// links to https:// before sending.

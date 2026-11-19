@@ -1,6 +1,6 @@
 ---
 name: NoOnboardingDelay
-description: "Removes artificial prompt countdown delays during server onboarding screens."
+description: Skips countdown delays on server onboarding screens.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # NoOnboardingDelay
 
-Intercepts `GUILD_ONBOARDING_` Flux dispatches and clears client-side confirmation timers immediately.
+Skips countdown delays on server onboarding screens.

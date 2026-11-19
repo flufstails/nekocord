@@ -1,6 +1,6 @@
 ---
 name: HighlightStickersInChat
-description: Highlights messages containing custom or Nitro stickers with a purple gutter.
+description: Highlights messages containing stickers with a purple accent.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # HighlightStickersInChat
 
-Highlights messages containing custom or Nitro stickers with a purple gutter.
+Highlights messages containing stickers with a purple accent.

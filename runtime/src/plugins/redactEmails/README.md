@@ -1,6 +1,6 @@
 ---
 name: RedactEmails
-description: Automatically redacts email addresses before outgoing messages are sent.
+description: Automatically hides email addresses before sending messages.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -13,4 +13,4 @@ tags:
 
 # RedactEmails
 
-Automatically redacts email addresses before outgoing messages are sent.
+Automatically hides email addresses before sending messages.

@@ -1,6 +1,6 @@
 ---
 name: CleanRedditShareLinks
-description: Removes `share_id`, `utm_*`, and `ref` query params from Reddit URLs.
+description: Removes share and referral tracking tags from Reddit links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # CleanRedditShareLinks
 
-Cleans share-tracking query parameters from outgoing Reddit post and comment links.
+Removes share and referral tracking tags from Reddit links.

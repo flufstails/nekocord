@@ -1,6 +1,6 @@
 ---
 name: GiphyCleanLinks
-description: Strips `cid` and `ep` tracking query parameters from Giphy GIF share URLs.
+description: Removes tracking tags from Giphy GIF links.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # GiphyCleanLinks
 
-Removes `cid=` and `ep=` tracking query strings from outgoing `giphy.com` URLs.
+Removes tracking tags from Giphy GIF links.

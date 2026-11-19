@@ -1,6 +1,6 @@
 ---
 name: NoRoleIcons
-description: Hides custom role icons beside author names in chat.
+description: Hides role icons beside usernames in chat.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # NoRoleIcons
 
-Hides custom role icons beside author names in chat.
+Hides role icons beside usernames in chat.

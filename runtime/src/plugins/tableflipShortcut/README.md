@@ -1,6 +1,6 @@
 ---
 name: TableflipShortcut
-description: Expands /tableflip in outgoing messages into the classic flip emoticon.
+description: Turns /tableflip into the classic table flip face.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -15,6 +15,6 @@ tags:
 
 # TableflipShortcut
 
-Expands /tableflip in outgoing messages into the classic flip emoticon.
+Turns /tableflip into the classic table flip face.
 
 Type `/tableflip` in any chat composer box and send to expand inline.

@@ -1,6 +1,6 @@
 ---
 name: BlurNsfw
-description: "Automatically wraps attachments in age-restricted (NSFW) channels behind spoiler overlays."
+description: Blurs images and videos in age-restricted channels until you tap them.
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # BlurNsfw
 
-Checks `ChannelStore` for age-restricted channels and marks all row attachments as spoilers before rendering.
+Blurs images and videos in age-restricted channels until you tap them.

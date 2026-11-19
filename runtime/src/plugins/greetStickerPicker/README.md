@@ -1,6 +1,6 @@
 ---
 name: GreetStickerPicker
-description: "Hides the persistent \"Wave to say hi!\" welcome sticker button in empty DMs and channels."
+description: "Hides the \"Wave to say hi!\" sticker button in empty DMs and channels."
 authors:
   - name: flufstails
     icon: https://avatars.githubusercontent.com/u/244251958?v=4
@@ -14,4 +14,4 @@ tags:
 
 # GreetStickerPicker
 
-Prevents Discord from rendering unsolicited greeting sticker upsells inside new channels.
+Hides the "Wave to say hi!" sticker button in empty DMs and channels.
