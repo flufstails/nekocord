@@ -1,13 +1,12 @@
-import { onFluxDispatcher } from '../../metro/common.js';
+import { interceptFluxDispatcher } from '../../metro/common.js';
 import { findByProps, waitFor } from '../../metro/index.js';
 import { before, type Unpatch } from '../../patcher/index.js';
 import { definePlugin } from '../types.js';
 
 let mutedReplyCount = 0;
 let cancelReplyWait: (() => void) | null = null;
-let cancelDispatcherWait: (() => void) | null = null;
+let stopIntercept: (() => void) | null = null;
 let unpatchCreateReply: Unpatch | null = null;
-let unpatchDispatch: Unpatch | null = null;
 
 /**
  * Returns how many reply mentions were automatically disabled.
@@ -43,21 +42,15 @@ export default definePlugin({
       );
     }
 
-    cancelDispatcherWait = onFluxDispatcher((dispatcher) => {
-      if (unpatchDispatch) {
-        return;
-      }
-      unpatchDispatch = before(dispatcher, 'dispatch', (action: any) => {
-        if (
-          action &&
-          action.type === 'CREATE_PENDING_REPLY' &&
-          action.shouldMention !== false
-        ) {
+    if (!stopIntercept) {
+      stopIntercept = interceptFluxDispatcher((action, args, orig) => {
+        if (action.type === 'CREATE_PENDING_REPLY' && action.shouldMention !== false) {
           action.shouldMention = false;
           mutedReplyCount += 1;
         }
+        return orig(...args);
       });
-    });
+    }
   },
 
   stop() {
@@ -65,17 +58,11 @@ export default definePlugin({
       cancelReplyWait();
       cancelReplyWait = null;
     }
-    if (cancelDispatcherWait) {
-      cancelDispatcherWait();
-      cancelDispatcherWait = null;
-    }
+    stopIntercept?.();
+    stopIntercept = null;
     if (unpatchCreateReply) {
       unpatchCreateReply();
       unpatchCreateReply = null;
-    }
-    if (unpatchDispatch) {
-      unpatchDispatch();
-      unpatchDispatch = null;
     }
   },
 });

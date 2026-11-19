@@ -1,12 +1,14 @@
 import { isChatRowHookReady, registerMessageRowTransformer, toAndroidColor } from '../../chat/rows.js';
 import {
+  getChannelStore,
   getMessageStore,
   getThemeStore,
   getUserStore,
-  onFluxDispatcher,
-  type FluxDispatcher,
+  interceptFluxDispatcher,
+  onMessageActions,
 } from '../../metro/common.js';
-import { instead, type Unpatch } from '../../patcher/index.js';
+import { before, type Unpatch } from '../../patcher/index.js';
+import { extractMessageText } from '../_shared/chatDisplay.js';
 import { definePluginSettings, OptionType } from '../settings.js';
 import { definePlugin } from '../types.js';
 
@@ -47,7 +49,15 @@ interface EditRevision {
   timestamp: number;
 }
 
+interface CachedRowSnapshot {
+  channelId: string;
+  content: string;
+  authorId?: string;
+  bot?: boolean;
+}
+
 const MAX_TRACKED_MESSAGES = 500;
+const MAX_CACHED_ROWS = 800;
 const MAX_REVISIONS_PER_MESSAGE = 10;
 const DUPLICATE_DELETE_WINDOW_MS = 3000;
 const SENTINEL = '\u200b';
@@ -56,9 +66,11 @@ const EPHEMERAL_FLAG = 64;
 
 const deletedMessages = new Map<string, DeletedRecord>();
 const editHistory = new Map<string, EditRevision[]>();
+const renderedRowCache = new Map<string, CachedRowSnapshot>();
 
-let cancelDispatcherWait: (() => void) | null = null;
-let unpatchDispatch: Unpatch | null = null;
+let stopIntercept: (() => void) | null = null;
+let cancelActionsWait: (() => void) | null = null;
+let unpatchEditAction: Unpatch | null = null;
 let unregisterRowTransformer: (() => void) | null = null;
 
 function setWithCap<K, V>(map: Map<K, V>, key: K, value: V, cap: number): void {
@@ -82,10 +94,14 @@ function getMessageFromStore(channelId: string, id: string): any {
   }
   try {
     if (typeof store.getMessage === 'function') {
-      return store.getMessage(channelId, id);
+      const msg = store.getMessage(channelId, id);
+      if (msg) {
+        return msg;
+      }
     }
     if (typeof store.getMessages === 'function') {
-      return store.getMessages(channelId)?.get?.(id);
+      const collection = store.getMessages(channelId);
+      return collection?.get?.(id) ?? collection?._map?.[id] ?? collection?.[id];
     }
   } catch {
     return undefined;
@@ -120,6 +136,9 @@ function formatIsoTimestamp(ts: unknown): string | undefined {
   if (typeof ts === 'string' && ts.length > 0) {
     return ts;
   }
+  if (typeof ts === 'number' && Number.isFinite(ts) && ts > 0) {
+    return new Date(ts).toISOString();
+  }
   if (ts && typeof ts === 'object' && typeof (ts as { toISOString?: unknown }).toISOString === 'function') {
     try {
       return (ts as { toISOString: () => string }).toISOString();
@@ -130,7 +149,64 @@ function formatIsoTimestamp(ts: unknown): string | undefined {
   return undefined;
 }
 
-function buildSyntheticMessageUpdate(existing: any, channelId: string, id: string): Record<string, any> {
+function isValidSnowflake(value: unknown): value is string {
+  return typeof value === 'string' && /^\d+$/.test(value);
+}
+
+function serializeAuthor(existing: any): Record<string, any> | undefined {
+  const rawAuthor = existing?.author;
+  const candidateId = isValidSnowflake(rawAuthor?.id)
+    ? rawAuthor.id
+    : isValidSnowflake(existing?.authorId)
+      ? existing.authorId
+      : isValidSnowflake(existing?.author_id)
+        ? existing.author_id
+        : undefined;
+  const storeUser = candidateId ? getUserStore()?.getUser?.(candidateId) : undefined;
+  const src = storeUser ?? rawAuthor;
+  const id = isValidSnowflake(src?.id) ? src.id : candidateId;
+  if (!id) {
+    return undefined;
+  }
+  const username =
+    typeof src?.username === 'string' && src.username.length > 0 && src.username !== '???'
+      ? src.username
+      : 'Unknown User';
+  const discriminator =
+    typeof src?.discriminator === 'string' && /^\d{1,4}$/.test(src.discriminator)
+      ? src.discriminator
+      : '0';
+  const rawDec = src?.avatarDecorationData ?? src?.avatar_decoration_data;
+  const avatarDecorationData =
+    rawDec && typeof rawDec === 'object' && typeof rawDec.asset === 'string'
+      ? { asset: rawDec.asset, sku_id: rawDec.skuId ?? rawDec.sku_id ?? null }
+      : null;
+
+  return {
+    id,
+    username,
+    discriminator,
+    global_name: src?.globalName ?? src?.global_name ?? null,
+    avatar: typeof src?.avatar === 'string' ? src.avatar : null,
+    bot: Boolean(src?.bot ?? existing?.bot),
+    system: Boolean(src?.system),
+    public_flags:
+      typeof src?.publicFlags === 'number'
+        ? src.publicFlags
+        : typeof src?.public_flags === 'number'
+          ? src.public_flags
+          : 0,
+    avatar_decoration_data: avatarDecorationData,
+  };
+}
+
+function buildSyntheticMessageUpdate(
+  existing: any,
+  channelId: string,
+  id: string,
+  guildId?: unknown,
+  fromStore?: boolean,
+): Record<string, any> {
   const baseContent = typeof existing.content === 'string' ? existing.content : '';
   const nextContent = baseContent.endsWith(SENTINEL) ? `${baseContent} ` : `${baseContent}${SENTINEL}`;
 
@@ -140,16 +216,54 @@ function buildSyntheticMessageUpdate(existing: any, channelId: string, id: strin
     content: nextContent,
   };
 
-  const editedIso = formatIsoTimestamp(existing.editedTimestamp);
+  if (typeof existing.type === 'number') {
+    message.type = existing.type;
+  } else if (!fromStore) {
+    message.type = 0;
+  }
+
+  const tsIso = formatIsoTimestamp(existing.timestamp);
+  if (tsIso !== undefined) {
+    message.timestamp = tsIso;
+  } else if (!fromStore) {
+    message.timestamp = new Date().toISOString();
+  }
+
+  const author = serializeAuthor(existing);
+  if (author) {
+    message.author = author;
+  }
+
+  const webhookId = existing.webhookId ?? existing.webhook_id;
+  if (webhookId) {
+    message.webhook_id = String(webhookId);
+  }
+
+  if (!fromStore) {
+    message.tts = Boolean(existing.tts);
+    message.pinned = Boolean(existing.pinned);
+    message.mention_everyone = Boolean(existing.mentionEveryone ?? existing.mention_everyone);
+    message.mentions = [];
+    message.mention_roles = [];
+    message.attachments = Array.isArray(existing.attachments) ? existing.attachments : [];
+    message.embeds = Array.isArray(existing.embeds) ? existing.embeds : [];
+  }
+
+  const editedIso = formatIsoTimestamp(existing.editedTimestamp ?? existing.edited_timestamp);
   if (editedIso !== undefined) {
     message.edited_timestamp = editedIso;
   }
 
-  return {
+  const resolvedGuildId = guildId ?? existing.guild_id ?? getChannelStore()?.getChannel?.(channelId)?.guild_id;
+  const out: Record<string, any> = {
     type: 'MESSAGE_UPDATE',
     message,
     __purrcordSynthetic: true,
   };
+  if (resolvedGuildId) {
+    out.guildId = String(resolvedGuildId);
+  }
+  return out;
 }
 
 function recordEditRevision(id: string, prevContent: string): void {
@@ -166,27 +280,65 @@ function recordEditRevision(id: string, prevContent: string): void {
   console.log(`[Nekocord/MessageLogger] Recorded edit for ${id} (revisions=${list.length})`);
 }
 
+function getMessageFromStoreOrCache(channelId: string, id: string): any {
+  const fromStore = getMessageFromStore(channelId, id);
+  if (fromStore) {
+    return fromStore;
+  }
+  const cached = renderedRowCache.get(id);
+  if (cached && (!channelId || cached.channelId === channelId)) {
+    return {
+      id,
+      channel_id: cached.channelId,
+      content: cached.content,
+      author: { id: cached.authorId, bot: cached.bot },
+    };
+  }
+  return undefined;
+}
+
+function getActionChannelId(action: Record<string, any>): string {
+  return String(action.channelId ?? action.channel_id ?? action.message?.channel_id ?? action.message?.channelId ?? '');
+}
+
 function handleMessageUpdateDispatch(action: Record<string, any>): void {
   if (action.__purrcordSynthetic) {
     return;
   }
   const rawMsg = action.message;
   const id = rawMsg?.id ? String(rawMsg.id) : '';
-  const channelId = rawMsg?.channel_id ? String(rawMsg.channel_id) : '';
+  const channelId = rawMsg ? String(rawMsg.channel_id ?? rawMsg.channelId ?? action.channelId ?? '') : '';
   if (!id || !channelId || typeof rawMsg.content !== 'string') {
     return;
   }
 
-  const prev = getMessageFromStore(channelId, id);
-  if (!prev || shouldSkipMessage(prev) || typeof prev.content !== 'string') {
+  const storeMsg = getMessageFromStore(channelId, id);
+  const cached = renderedRowCache.get(id);
+  const prev = storeMsg ?? getMessageFromStoreOrCache(channelId, id);
+  if (prev && shouldSkipMessage(prev)) {
     return;
   }
 
-  const prevClean = stripSentinel(prev.content);
   const nextClean = stripSentinel(rawMsg.content);
-  if (prevClean.length > 0 && prevClean !== nextClean) {
-    recordEditRevision(id, prevClean);
+  const storePrev = typeof storeMsg?.content === 'string' ? stripSentinel(storeMsg.content) : '';
+  const cachePrev = cached && (!channelId || cached.channelId === channelId) ? stripSentinel(cached.content) : '';
+
+  const prevContent =
+    storePrev && storePrev !== nextClean
+      ? storePrev
+      : cachePrev && cachePrev !== nextClean
+        ? cachePrev
+        : '';
+
+  if (prevContent.length > 0) {
+    recordEditRevision(id, prevContent);
   }
+  renderedRowCache.set(id, {
+    channelId,
+    content: nextClean,
+    authorId: prev?.author?.id ? String(prev.author.id) : cached?.authorId,
+    bot: Boolean(prev?.author?.bot ?? cached?.bot),
+  });
 }
 
 function handleMessageDelete(
@@ -198,16 +350,18 @@ function handleMessageDelete(
     return orig(...args);
   }
   const id = action.id ? String(action.id) : '';
-  const channelId = action.channelId ? String(action.channelId) : '';
+  const channelId = getActionChannelId(action);
   if (!id || !channelId) {
     return orig(...args);
   }
 
-  const existing = getMessageFromStore(channelId, id);
-  console.log(
-    `[Nekocord/MessageLogger] MESSAGE_DELETE id=${id} found=${Boolean(existing)} hookReady=${isChatRowHookReady()}`,
-  );
-  if (shouldSkipMessage(existing)) {
+  const storeMsg = getMessageFromStore(channelId, id);
+  const fromStore = Boolean(storeMsg);
+  const existing = storeMsg ?? getMessageFromStoreOrCache(channelId, id);
+  if (!existing || shouldSkipMessage(existing)) {
+    console.log(
+      `[Nekocord/MessageLogger] MESSAGE_DELETE id=${id} channel=${channelId} found=${Boolean(existing)} fromStore=${fromStore} skipped=true hookReady=${isChatRowHookReady()}`,
+    );
     return orig(...args);
   }
 
@@ -221,8 +375,16 @@ function handleMessageDelete(
     return orig(...args);
   }
 
+  const synthetic = buildSyntheticMessageUpdate(existing, channelId, id, action.guildId, fromStore);
+  console.log(
+    `[Nekocord/MessageLogger] MESSAGE_DELETE id=${id} channel=${channelId} found=true fromStore=${fromStore} authorId=${synthetic.message.author?.id ?? 'none'} hookReady=${isChatRowHookReady()}`,
+  );
+  if (!fromStore && !synthetic.message.author) {
+    return orig(...args);
+  }
+
   setWithCap(deletedMessages, id, { channelId, deletedAt: Date.now() }, MAX_TRACKED_MESSAGES);
-  return orig(buildSyntheticMessageUpdate(existing, channelId, id));
+  return orig(synthetic, ...args.slice(1));
 }
 
 function handleMessageDeleteBulk(
@@ -233,7 +395,7 @@ function handleMessageDeleteBulk(
   if (action.__purrcordBypass) {
     return orig(...args);
   }
-  const channelId = action.channelId ? String(action.channelId) : '';
+  const channelId = getActionChannelId(action);
   const ids = Array.isArray(action.ids) ? action.ids : [];
   if (!channelId || ids.length === 0) {
     return orig(...args);
@@ -246,13 +408,20 @@ function handleMessageDeleteBulk(
     if (deletedMessages.has(id)) {
       continue;
     }
-    const existing = getMessageFromStore(channelId, id);
-    if (shouldSkipMessage(existing)) {
+    const storeMsg = getMessageFromStore(channelId, id);
+    const fromStore = Boolean(storeMsg);
+    const existing = storeMsg ?? getMessageFromStoreOrCache(channelId, id);
+    if (!existing || shouldSkipMessage(existing)) {
+      remainingIds.push(rawId);
+      continue;
+    }
+    const synthetic = buildSyntheticMessageUpdate(existing, channelId, id, action.guildId, fromStore);
+    if (!fromStore && !synthetic.message.author) {
       remainingIds.push(rawId);
       continue;
     }
     setWithCap(deletedMessages, id, { channelId, deletedAt: Date.now() }, MAX_TRACKED_MESSAGES);
-    orig(buildSyntheticMessageUpdate(existing, channelId, id));
+    orig(synthetic, ...args.slice(1));
   }
 
   if (remainingIds.length === 0) {
@@ -261,7 +430,7 @@ function handleMessageDeleteBulk(
   if (remainingIds.length === ids.length) {
     return orig(...args);
   }
-  return orig({ ...action, ids: remainingIds });
+  return orig({ ...action, ids: remainingIds }, ...args.slice(1));
 }
 
 function extractNodeText(node: unknown): string {
@@ -322,26 +491,47 @@ function normalizeMessageContent(content: unknown, keepSentinelIfEmpty: boolean)
   return keepSentinelIfEmpty ? SENTINEL : content;
 }
 
-function isRevisionSubtextNode(node: any): boolean {
-  return (
-    node &&
-    typeof node === 'object' &&
-    node.type === 'subtext' &&
-    Array.isArray(node.content) &&
-    node.content.length === 2 &&
-    node.content[0]?.type === 's' &&
-    node.content[1]?.type === 'text' &&
-    node.content[1]?.content === ' (edited)'
+function isRevisionNodePair(first: any, second: any): boolean {
+  return Boolean(
+    first &&
+      typeof first === 'object' &&
+      first.type === 's' &&
+      second &&
+      typeof second === 'object' &&
+      second.type === 'text' &&
+      typeof second.content === 'string' &&
+      second.content.indexOf('(edited)') >= 0,
   );
 }
 
 function transformMessageRow(row: Record<string, any>): boolean {
+  const msg = row.message as Record<string, any>;
+  const id = String(msg.id);
+
+  if (!deletedMessages.has(id) && msg.channelId) {
+    const text = stripSentinel(extractMessageText(msg));
+    const existingCached = renderedRowCache.get(id);
+    if (!existingCached && text) {
+      setWithCap(
+        renderedRowCache,
+        id,
+        {
+          channelId: String(msg.channelId),
+          content: text,
+          authorId: msg.authorId ? String(msg.authorId) : undefined,
+          bot: Boolean(msg.bot || msg.tagText === 'BOT' || msg.tagText === 'APP'),
+        },
+        MAX_CACHED_ROWS,
+      );
+    } else if (existingCached && !existingCached.authorId && msg.authorId) {
+      existingCached.authorId = String(msg.authorId);
+    }
+  }
+
   if (deletedMessages.size === 0 && editHistory.size === 0) {
     return false;
   }
 
-  const msg = row.message as Record<string, any>;
-  const id = String(msg.id);
   const isDeleted = deletedMessages.has(id);
   const revisions = editHistory.get(id);
 
@@ -362,14 +552,14 @@ function transformMessageRow(row: Record<string, any>): boolean {
           ? msg.content.slice()
           : [];
 
-    if (!isRevisionSubtextNode(baseNodes[0])) {
-      const revisionNodes = revisions.map((rev) => ({
-        type: 'subtext',
-        content: [
-          { type: 's', content: [{ type: 'text', content: rev.content }] },
-          { type: 'text', content: ' (edited)' },
-        ],
-      }));
+    if (!isRevisionNodePair(baseNodes[0], baseNodes[1])) {
+      const revisionNodes: any[] = [];
+      for (let i = 0; i < revisions.length; i += 1) {
+        revisionNodes.push(
+          { type: 's', content: [{ type: 'text', content: revisions[i].content }] },
+          { type: 'text', content: ' (edited)\n' },
+        );
+      }
       msg.content = [...revisionNodes, ...baseNodes];
     }
   }
@@ -442,20 +632,43 @@ export function clearInlineMessageHistory(): void {
 export default definePlugin({
   settings,
   start() {
+    console.log(
+      `[Nekocord/MessageLogger] Started (logDeletes=${settings.store.logDeletes}, logEdits=${settings.store.logEdits}, ignoreSelf=${settings.store.ignoreSelf})`,
+    );
+
     if (!unregisterRowTransformer) {
       unregisterRowTransformer = registerMessageRowTransformer(transformMessageRow);
     }
 
-    cancelDispatcherWait = onFluxDispatcher((dispatcher: FluxDispatcher) => {
-      if (unpatchDispatch) {
-        return;
-      }
-      unpatchDispatch = instead(dispatcher, 'dispatch', (args, orig) => {
-        const action = args[0] as Record<string, any> | undefined;
-        if (!action || typeof action.type !== 'string') {
-          return orig(...args);
+    if (!cancelActionsWait) {
+      cancelActionsWait = onMessageActions((actions) => {
+        if (unpatchEditAction || typeof actions.editMessage !== 'function') {
+          return;
         }
+        unpatchEditAction = before(actions, 'editMessage', (channelId: any, messageId: any) => {
+          const chId = String(channelId ?? '');
+          const id = String(messageId ?? '');
+          if (!chId || !id) return;
+          const prev = getMessageFromStore(chId, id);
+          if (prev && typeof prev.content === 'string' && !shouldSkipMessage(prev)) {
+            setWithCap(
+              renderedRowCache,
+              id,
+              {
+                channelId: chId,
+                content: stripSentinel(prev.content),
+                authorId: prev.author?.id ? String(prev.author.id) : undefined,
+                bot: Boolean(prev.author?.bot),
+              },
+              MAX_CACHED_ROWS,
+            );
+          }
+        });
+      });
+    }
 
+    if (!stopIntercept) {
+      stopIntercept = interceptFluxDispatcher((action, args, orig) => {
         if (action.type === 'MESSAGE_UPDATE') {
           if (settings.store.logEdits) {
             handleMessageUpdateDispatch(action);
@@ -475,18 +688,16 @@ export default definePlugin({
 
         return orig(...args);
       });
-    });
+    }
   },
 
   stop() {
-    if (cancelDispatcherWait) {
-      cancelDispatcherWait();
-      cancelDispatcherWait = null;
-    }
-    if (unpatchDispatch) {
-      unpatchDispatch();
-      unpatchDispatch = null;
-    }
+    cancelActionsWait?.();
+    cancelActionsWait = null;
+    unpatchEditAction?.();
+    unpatchEditAction = null;
+    stopIntercept?.();
+    stopIntercept = null;
     if (unregisterRowTransformer) {
       unregisterRowTransformer();
       unregisterRowTransformer = null;

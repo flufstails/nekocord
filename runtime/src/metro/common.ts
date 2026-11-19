@@ -1,3 +1,4 @@
+import { instead, type Unpatch } from '../patcher/index.js';
 import { findByProps, findByStoreName, getModule, getTurboModule, waitFor } from './index.js';
 
 export interface NativeCacheModule {
@@ -41,6 +42,7 @@ let cachedUserStore: any;
 let cachedChannelStore: any;
 let cachedRelationshipStore: any;
 let cachedThemeStore: any;
+let cachedHttpClient: any;
 
 function isClassInstance(m: unknown): m is Record<string, any> {
   if (m == null || typeof m !== 'object') {
@@ -259,6 +261,163 @@ export function restartDiscordApp(): boolean {
     }
   }
   return false;
+}
+
+export function isHttpClient(mod: any): boolean {
+  return (
+    mod != null &&
+    typeof mod === 'object' &&
+    typeof mod.get === 'function' &&
+    typeof mod.post === 'function' &&
+    typeof mod.patch === 'function' &&
+    typeof mod.put === 'function' &&
+    typeof mod.del === 'function'
+  );
+}
+
+export function getHttpClient(): any {
+  if (!cachedHttpClient) {
+    cachedHttpClient =
+      findByProps('get', 'post', 'patch', 'put', 'del') ?? getModule(isHttpClient);
+  }
+  return cachedHttpClient;
+}
+
+export function onHttpClient(callback: (http: any) => void): () => void {
+  const existing = getHttpClient();
+  if (existing) {
+    callback(existing);
+    return () => {};
+  }
+  return waitFor(isHttpClient, (http) => {
+    cachedHttpClient = http;
+    callback(http);
+  });
+}
+
+const INTERCEPTOR_PASS = Symbol('nekocord_interceptor_pass');
+
+export type FluxDispatchHandler = (
+  action: Record<string, any>,
+  args: any[],
+  orig: (...a: any[]) => any,
+) => any;
+
+/**
+ * Intercepts all Flux dispatches across {@code dispatcher.dispatch}, prototype {@code _dispatch},
+ * and {@code dispatcher._interceptors} with per-action deduplication.
+ */
+export function interceptFluxDispatcher(handler: FluxDispatchHandler): () => void {
+  let active = true;
+  const seenActions = new WeakSet<object>();
+  const cleanups: Array<() => void> = [];
+  let hookedDispatcher = false;
+
+  const cancelWait = onFluxDispatcher((dispatcher: FluxDispatcher & Record<string, any>) => {
+    if (!active || hookedDispatcher) {
+      return;
+    }
+    hookedDispatcher = true;
+
+    const runOnce = (args: any[], orig: (...a: any[]) => any): any => {
+      const action = args[0] as Record<string, any> | undefined;
+      if (!action || typeof action !== 'object' || typeof action.type !== 'string') {
+        return orig(...args);
+      }
+      if (seenActions.has(action)) {
+        return orig(...args);
+      }
+      seenActions.add(action);
+      const forward = (...nextArgs: any[]) => {
+        if (nextArgs[0] && typeof nextArgs[0] === 'object') {
+          seenActions.add(nextArgs[0]);
+        }
+        if (nextArgs.length === 1 && args.length > 1) {
+          return orig(nextArgs[0], ...args.slice(1));
+        }
+        return orig(...nextArgs);
+      };
+      return handler(action, args, forward);
+    };
+
+    try {
+      const proto = Object.getPrototypeOf(dispatcher);
+      if (proto && proto !== Object.prototype) {
+        for (const method of ['_dispatchWithDevtools', '_dispatchWithLogging', '_dispatch'] as const) {
+          if (typeof proto[method] === 'function') {
+            cleanups.push(instead(proto, method, (args, orig) => runOnce(args, orig)));
+          }
+        }
+      }
+    } catch {
+      // Ignore locked dispatcher prototypes.
+    }
+
+    try {
+      if (typeof dispatcher.dispatch === 'function') {
+        const uDispatch: Unpatch = instead(dispatcher, 'dispatch', (args, orig) =>
+          runOnce(args, orig),
+        );
+        cleanups.push(uDispatch);
+      }
+    } catch {
+      // Ignore locked dispatch properties.
+    }
+
+    try {
+      const interceptors = dispatcher._interceptors;
+      if (Array.isArray(interceptors)) {
+        const interceptor = (action: Record<string, any>): boolean => {
+          if (!action || typeof action !== 'object' || typeof action.type !== 'string') {
+            return false;
+          }
+          if (seenActions.has(action)) {
+            return false;
+          }
+          seenActions.add(action);
+          let forwarded: any = INTERCEPTOR_PASS;
+          let calledForward = false;
+          const res = handler(action, [action], (...nextArgs: any[]) => {
+            calledForward = true;
+            forwarded = nextArgs.length > 0 ? nextArgs[0] : action;
+            return INTERCEPTOR_PASS;
+          });
+          if (!calledForward && res === undefined) {
+            return true;
+          }
+          if (calledForward && forwarded && forwarded !== action && typeof forwarded === 'object') {
+            seenActions.add(forwarded);
+            try {
+              if (typeof dispatcher._dispatch === 'function') {
+                dispatcher._dispatch(forwarded);
+                return true;
+              }
+            } catch {
+              // Fall back to continuing original dispatch.
+            }
+          }
+          return false;
+        };
+        interceptors.unshift(interceptor);
+        cleanups.push(() => {
+          const idx = interceptors.indexOf(interceptor);
+          if (idx >= 0) {
+            interceptors.splice(idx, 1);
+          }
+        });
+      }
+    } catch {
+      // Ignore read-only interceptor arrays.
+    }
+  });
+
+  return () => {
+    active = false;
+    cancelWait();
+    while (cleanups.length > 0) {
+      cleanups.pop()?.();
+    }
+  };
 }
 
 export function onFluxDispatcher(callback: (dispatcher: FluxDispatcher) => void): () => void {

@@ -3,16 +3,14 @@ import {
   getRelationshipStore,
   getStore,
   getUserStore,
-  onFluxDispatcher,
+  interceptFluxDispatcher,
 } from '../../metro/common.js';
-import { before, type Unpatch } from '../../patcher/index.js';
 import { pushNotification } from '../../notifications/index.js';
 import { definePlugin } from '../types.js';
 
 const MAX_RECENT_EVENTS = 25;
 
-let cancelDispatcherWait: (() => void) | null = null;
-let unpatchDispatch: Unpatch | null = null;
+let stopIntercept: (() => void) | null = null;
 let totalEvents = 0;
 const recentEvents: Array<{ summary: string; at: string }> = [];
 
@@ -86,28 +84,19 @@ function handleDispatchBefore(action: any): void {
 
 export default definePlugin({
   start() {
-    cancelDispatcherWait = onFluxDispatcher((dispatcher) => {
-      if (unpatchDispatch) {
-        return;
+    if (stopIntercept) return;
+    stopIntercept = interceptFluxDispatcher((action, args, orig) => {
+      try {
+        handleDispatchBefore(action);
+      } catch (err) {
+        console.error('[Nekocord/RelationshipNotifier] Inspect error:', err);
       }
-      unpatchDispatch = before(dispatcher, 'dispatch', (action: any) => {
-        try {
-          handleDispatchBefore(action);
-        } catch (err) {
-          console.error('[Nekocord/RelationshipNotifier] Inspect error:', err);
-        }
-      });
+      return orig(...args);
     });
   },
 
   stop() {
-    if (cancelDispatcherWait) {
-      cancelDispatcherWait();
-      cancelDispatcherWait = null;
-    }
-    if (unpatchDispatch) {
-      unpatchDispatch();
-      unpatchDispatch = null;
-    }
+    stopIntercept?.();
+    stopIntercept = null;
   },
 });

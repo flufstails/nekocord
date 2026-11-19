@@ -116,19 +116,32 @@ export function appendMessageText(msg: Record<string, any>, note: string): boole
     msg.content.push({ type: 'text', content: `${prefix}${note}` });
     return true;
   }
+  if (msg.content == null && 'authorId' in msg) {
+    msg.content = [{ type: 'text', content: note }];
+    return true;
+  }
   const base = typeof msg.content === 'string' ? msg.content.replace(/\s+$/, '') : '';
   msg.content = base ? `${base} ${note}` : note;
   return true;
 }
 
 /**
- * Appends a concise tag to {@code msg.timestamp} when not already present.
+ * Appends a concise tag to {@code msg.timestamp} (or {@code msg.edited} on grouped Android rows).
  */
 export function appendTimestampNote(msg: Record<string, any>, suffix: string): boolean {
   if (!suffix) return false;
   const cur = typeof msg.timestamp === 'string' ? msg.timestamp : '';
-  if (cur.includes(suffix)) return false;
-  msg.timestamp = cur ? `${cur} ${suffix}` : suffix;
+  const editedCur = typeof msg.edited === 'string' ? msg.edited : '';
+  if (cur.includes(suffix) || editedCur.includes(suffix)) return false;
+  if (cur) {
+    msg.timestamp = `${cur} ${suffix}`;
+    return true;
+  }
+  if ('authorId' in msg && typeof msg.edited === 'string') {
+    msg.edited = editedCur ? `${editedCur} ${suffix}` : suffix;
+    return true;
+  }
+  msg.timestamp = suffix;
   return true;
 }
 

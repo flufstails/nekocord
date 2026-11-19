@@ -1,14 +1,14 @@
-import { getChannelStore } from '../../metro/common.js';
-import { findByProps, waitFor } from '../../metro/index.js';
+import { getChannelStore, getStore, onHttpClient, onMessageActions } from '../../metro/common.js';
 import { pushNotification } from '../../notifications/index.js';
-import { before, type Unpatch } from '../../patcher/index.js';
+import { before } from '../../patcher/index.js';
+import { patchOutgoingUploads } from '../../utils/uploader.js';
 import { definePluginSettings, OptionType } from '../settings.js';
 import { definePlugin } from '../types.js';
 
 const IS_VOICE_MESSAGE_FLAG = 8192;
-const PENDING_TTL_MS = 30000;
-const ATTACHMENTS_POST_RE = /^\/?channels\/(\d+)\/attachments(?:$|\?)/;
-const MESSAGES_POST_RE = /^\/?channels\/(\d+)\/messages(?:$|\?)/;
+const PENDING_TTL_MS = 120000;
+const ATTACHMENTS_POST_RE = /^\/?channels\/([^/?]+)\/attachments(?:$|\?)/;
+const MESSAGES_POST_RE = /^\/?channels\/([^/?]+)\/messages(?:$|\?)/;
 const AUDIO_EXT_RE = /\.(ogg|opus|mp3|m4a|wav|aac|flac|webm|amr|3gp)(?:\?.*)?$/i;
 const VOICE_KEYWORD_RE = /(?:^|\s)(?:\/voice|!vm)(?=\s|$)/i;
 const VOICE_KEYWORD_GLOBAL_RE = /(?:^|\s)(?:\/voice|!vm)(?=\s|$)/gi;
@@ -21,6 +21,7 @@ interface PendingAudioInfo {
   origName: string;
   size: number;
   durationSecs: number | null;
+  waveform: string;
   hasTriggerKeyword: boolean;
   hadCaption: boolean;
   renamedToOgg: boolean;
@@ -67,27 +68,13 @@ const settings = definePluginSettings({
     type: OptionType.BOOLEAN,
     label: 'Convert Even With Message Text',
     description: 'In automatic mode, convert audio files even if you wrote text alongside them.',
-    default: false,
+    default: true,
   },
 });
 
 const pendingByChannel = new Map<string, PendingAudioInfo>();
 const cleanups: Array<() => void> = [];
-let patchedModules = new WeakMap<object, Set<string>>();
 let convertedTotal = 0;
-
-function markPatched(target: object, key: string): boolean {
-  let keys = patchedModules.get(target);
-  if (!keys) {
-    keys = new Set<string>();
-    patchedModules.set(target, keys);
-  }
-  if (keys.has(key)) {
-    return false;
-  }
-  keys.add(key);
-  return true;
-}
 
 function bytesToBase64(bytes: number[]): string {
   let out = '';
@@ -142,18 +129,37 @@ function isAudioCandidate(file: any): boolean {
   if (!file || typeof file !== 'object') {
     return false;
   }
-  const mime = typeof file.mimeType === 'string'
-    ? file.mimeType
-    : typeof file.type === 'string'
-      ? file.type
-      : typeof file.content_type === 'string'
-        ? file.content_type
-        : '';
+  const mime =
+    typeof file.mimeType === 'string'
+      ? file.mimeType
+      : typeof file.type === 'string'
+        ? file.type
+        : typeof file.content_type === 'string'
+          ? file.content_type
+          : typeof file.file?.mimeType === 'string'
+            ? file.file.mimeType
+            : typeof file.file?.type === 'string'
+              ? file.file.type
+              : typeof file.item?.mimeType === 'string'
+                ? file.item.mimeType
+                : typeof file.item?.type === 'string'
+                  ? file.item.type
+                  : '';
   if (/^audio\//i.test(mime)) {
     return true;
   }
   const name =
-    file.filename ?? file.name ?? file.uploaded_filename ?? file.uri ?? file.item?.filename ?? '';
+    file.filename ??
+    file.name ??
+    file.uploaded_filename ??
+    file.uri ??
+    file.file?.name ??
+    file.file?.filename ??
+    file.file?.uri ??
+    file.item?.filename ??
+    file.item?.name ??
+    file.item?.uri ??
+    '';
   return typeof name === 'string' && AUDIO_EXT_RE.test(name.trim());
 }
 
@@ -216,37 +222,105 @@ function getFreshPending(channelId: string): PendingAudioInfo | null {
   return entry;
 }
 
-function handleUploadFilesBefore(opts: any): void {
-  if (!opts || typeof opts !== 'object' || !Array.isArray(opts.files) || opts.files.length !== 1) {
-    return;
-  }
-  const file = opts.files[0];
-  if (!isAudioCandidate(file)) {
-    return;
-  }
-  const channelId = String(opts.channelId ?? '');
-  if (!channelId) {
-    return;
-  }
-  const origName = String(file.filename ?? file.name ?? file.item?.filename ?? 'audio.ogg');
-  const size = Number(file.size ?? file.item?.size ?? 0) || 0;
-  const durationSecs = extractRawDurationSecs(file);
-  const msgObj = opts.parsedMessage;
-  const { cleaned, hadKeyword } = stripVoiceKeywords(msgObj?.content);
+function getSelectedOrUploadChannelId(fallback?: string): string {
+  if (fallback) return fallback;
+  return String(getStore<any>('SelectedChannelStore')?.getChannelId?.() ?? '');
+}
 
-  if (hadKeyword && msgObj && typeof msgObj.content === 'string') {
-    msgObj.content = cleaned;
+function resolveDuration(origName: string, size: number, raw?: any, existing?: PendingAudioInfo | null): number {
+  const customSecs = Number(settings.store.customDurationSecs) || 0;
+  if (customSecs > 0) {
+    return Math.round(Math.max(1, Math.min(1200, customSecs)) * 10) / 10;
   }
+  const extracted = raw ? extractRawDurationSecs(raw) : null;
+  if (extracted && extracted > 0) {
+    return extracted;
+  }
+  if (existing?.durationSecs && existing.durationSecs > 0) {
+    return existing.durationSecs;
+  }
+  return estimateDurationFromSize(origName, size);
+}
 
-  pendingByChannel.set(channelId, {
+function buildPendingFromUpload(channelId: string, raw: any, origName: string, size: number): PendingAudioInfo {
+  const existing = getFreshPending(channelId);
+  const style = String((settings.store.waveformStyle as WaveformStyle) || 'natural');
+  const durationSecs = resolveDuration(origName, size, raw, existing);
+  const waveform =
+    (typeof raw?.waveform === 'string' && raw.waveform) ||
+    existing?.waveform ||
+    generateWaveformBase64(style, `${channelId}:${origName}`);
+
+  const info: PendingAudioInfo = {
     timestamp: Date.now(),
-    origName,
-    size,
+    origName: origName === 'voice-message.ogg' && existing?.origName ? existing.origName : origName,
+    size: size || existing?.size || 0,
     durationSecs,
-    hasTriggerKeyword: hadKeyword,
-    hadCaption: cleaned.length > 0,
-    renamedToOgg: false,
-  });
+    waveform,
+    hasTriggerKeyword: Boolean(existing?.hasTriggerKeyword),
+    hadCaption: Boolean(existing?.hadCaption),
+    renamedToOgg: Boolean(existing?.renamedToOgg),
+  };
+  pendingByChannel.set(channelId, info);
+  return info;
+}
+
+function shouldConvertNow(hasKeyword: boolean, hadCaption: boolean, isPostTime: boolean): boolean {
+  const mode = String(settings.store.triggerMode || 'auto');
+  if (mode === 'keyword') {
+    return hasKeyword;
+  }
+  if (!isPostTime && !hasKeyword && !settings.store.clearCaptionOnAuto && hadCaption) {
+    return false;
+  }
+  if (isPostTime && hadCaption && !hasKeyword && !settings.store.clearCaptionOnAuto) {
+    return false;
+  }
+  return true;
+}
+
+function handleOutgoingMessageMeta(channelId: string, message: any): void {
+  if (!message || typeof message !== 'object') return;
+  const chId = getSelectedOrUploadChannelId(channelId);
+  if (!chId) return;
+
+  const { cleaned, hadKeyword } = stripVoiceKeywords(message.content);
+  if (hadKeyword && typeof message.content === 'string') {
+    message.content = cleaned;
+  }
+
+  const existing = getFreshPending(chId);
+  const uas = getStore<any>('UploadAttachmentStore');
+  const uploads = uas?.getUploads?.(chId, 0) ?? uas?.getUploads?.(chId);
+  const singleAudio =
+    Array.isArray(uploads) && uploads.length === 1 && (isAudioCandidate(uploads[0]) || existing)
+      ? uploads[0]
+      : null;
+
+  if (!existing && !singleAudio) {
+    return;
+  }
+
+  const origName = existing?.origName || String(singleAudio?.filename ?? 'audio.ogg');
+  const size = existing?.size || Number(singleAudio?.currentSize ?? singleAudio?.item?.size ?? 0) || 0;
+  const info = existing ?? buildPendingFromUpload(chId, singleAudio, origName, size);
+  info.timestamp = Date.now();
+  info.hasTriggerKeyword = info.hasTriggerKeyword || hadKeyword;
+  info.hadCaption = cleaned.length > 0;
+
+  if (singleAudio && shouldConvertNow(info.hasTriggerKeyword, info.hadCaption, false)) {
+    singleAudio.durationSecs = info.durationSecs;
+    singleAudio.waveform = info.waveform;
+    singleAudio.isVoiceMessage = true;
+    singleAudio.mimeType = 'audio/ogg';
+    if (settings.store.renameToOgg && typeof singleAudio.setFilename === 'function') {
+      singleAudio.setFilename('voice-message.ogg');
+      info.renamedToOgg = true;
+    } else if (settings.store.renameToOgg) {
+      singleAudio.filename = 'voice-message.ogg';
+      info.renamedToOgg = true;
+    }
+  }
 }
 
 function handleHttpPostBefore(reqOrUrl: any): void {
@@ -262,32 +336,23 @@ function handleHttpPostBefore(reqOrUrl: any): void {
   if (attMatch && Array.isArray(body.files) && body.files.length === 1) {
     const channelId = attMatch[1];
     const file = body.files[0];
-    if (!isAudioCandidate(file)) {
+    const existing = getFreshPending(channelId);
+    if (!isAudioCandidate(file) && !(existing && file.filename === 'voice-message.ogg')) {
       return;
     }
-    const existing = getFreshPending(channelId);
+
     const origName = existing?.origName || String(file.filename ?? 'audio.ogg');
     const size = Number(file.file_size ?? existing?.size ?? 0) || 0;
-    const durationSecs = existing?.durationSecs ?? estimateDurationFromSize(origName, size);
-    const shouldPreRename =
+    const info = buildPendingFromUpload(channelId, file, origName, size);
+
+    const shouldRename =
       Boolean(settings.store.renameToOgg) &&
-      (settings.store.triggerMode === 'keyword'
-        ? Boolean(existing?.hasTriggerKeyword)
-        : !existing?.hadCaption || Boolean(existing?.hasTriggerKeyword) || Boolean(settings.store.clearCaptionOnAuto));
+      shouldConvertNow(info.hasTriggerKeyword, info.hadCaption, false);
 
-    if (shouldPreRename) {
+    if (shouldRename) {
       file.filename = 'voice-message.ogg';
+      info.renamedToOgg = true;
     }
-
-    pendingByChannel.set(channelId, {
-      timestamp: Date.now(),
-      origName,
-      size,
-      durationSecs,
-      hasTriggerKeyword: Boolean(existing?.hasTriggerKeyword),
-      hadCaption: Boolean(existing?.hadCaption),
-      renamedToOgg: shouldPreRename,
-    });
     return;
   }
 
@@ -310,41 +375,39 @@ function handleHttpPostBefore(reqOrUrl: any): void {
 
   const { cleaned, hadKeyword } = stripVoiceKeywords(body.content);
   const hasTrigger = Boolean(pending?.hasTriggerKeyword) || hadKeyword;
-  const mode = String(settings.store.triggerMode || 'auto');
 
-  if (mode === 'keyword' && !hasTrigger) {
-    pendingByChannel.delete(channelId);
-    return;
-  }
-  if (mode === 'auto' && cleaned.length > 0 && !hasTrigger && !settings.store.clearCaptionOnAuto) {
+  if (!shouldConvertNow(hasTrigger, cleaned.length > 0, true)) {
+    console.log(
+      `[Nekocord/AudioToVoiceMessage] Skipped ${att.filename} (triggerMode=${settings.store.triggerMode}, hadCaption=${cleaned.length > 0}, hasTrigger=${hasTrigger})`,
+    );
     pendingByChannel.delete(channelId);
     return;
   }
 
   const displayName = pending?.origName || String(att.filename || 'audio.ogg');
-  const customSecs = Number(settings.store.customDurationSecs) || 0;
-  const existingAttDuration = Number(att.duration_secs ?? att.durationSecs) || 0;
-  const durationSecs =
-    customSecs > 0
-      ? Math.max(1, Math.min(1200, Math.round(customSecs * 10) / 10))
-      : existingAttDuration > 0
-        ? existingAttDuration
-        : pending?.durationSecs ?? estimateDurationFromSize(displayName, pending?.size ?? 0);
+  const durationSecs = resolveDuration(displayName, pending?.size ?? 0, att, pending);
+  const waveform =
+    pending?.waveform ||
+    generateWaveformBase64(
+      String((settings.store.waveformStyle as WaveformStyle) || 'natural'),
+      `${channelId}:${att.uploaded_filename || displayName}`,
+    );
 
   if (settings.store.renameToOgg) {
     att.filename = 'voice-message.ogg';
   }
   att.duration_secs = durationSecs;
-  att.waveform = generateWaveformBase64(
-    String((settings.store.waveformStyle as WaveformStyle) || 'natural'),
-    `${channelId}:${att.uploaded_filename || displayName}`,
-  );
+  att.waveform = waveform;
 
   body.flags = (Number(body.flags) || 0) | IS_VOICE_MESSAGE_FLAG;
   body.content = '';
   delete body.embeds;
   pendingByChannel.delete(channelId);
   convertedTotal += 1;
+
+  console.log(
+    `[Nekocord/AudioToVoiceMessage] Converted ${displayName} (${durationSecs}s, flags=${body.flags}) in ${channelId}`,
+  );
 
   const chName = getChannelStore()?.getChannel?.(channelId)?.name;
   pushNotification({
@@ -357,22 +420,6 @@ function handleHttpPostBefore(reqOrUrl: any): void {
   });
 }
 
-function patchUploadModule(mod: any): void {
-  if (!mod || typeof mod.uploadFiles !== 'function' || !markPatched(mod, 'uploadFiles')) {
-    return;
-  }
-  const u: Unpatch = before(mod, 'uploadFiles', handleUploadFilesBefore);
-  cleanups.push(u);
-}
-
-function patchHttpModule(mod: any): void {
-  if (!mod || typeof mod.post !== 'function' || !markPatched(mod, 'post')) {
-    return;
-  }
-  const u: Unpatch = before(mod, 'post', handleHttpPostBefore);
-  cleanups.push(u);
-}
-
 /**
  * Returns how many audio uploads have been converted into voice messages this session.
  */
@@ -383,32 +430,81 @@ export function getAudioToVoiceCount(): number {
 export default definePlugin({
   settings,
   start() {
-    const existingUpload = findByProps('uploadFiles');
-    if (existingUpload) {
-      patchUploadModule(existingUpload);
-    } else {
-      cleanups.push(
-        waitFor(
-          (m) => typeof m === 'object' && m !== null && typeof m.uploadFiles === 'function',
-          patchUploadModule,
-        ),
-      );
-    }
+    if (cleanups.length > 0) return;
 
-    const isHttpClient = (m: any) =>
-      typeof m === 'object' &&
-      m !== null &&
-      typeof m.get === 'function' &&
-      typeof m.post === 'function' &&
-      typeof m.patch === 'function' &&
-      typeof m.put === 'function' &&
-      typeof m.del === 'function';
-    const existingHttp = findByProps('get', 'post', 'patch', 'put', 'del');
-    if (existingHttp) {
-      patchHttpModule(existingHttp);
-    } else {
-      cleanups.push(waitFor(isHttpClient, patchHttpModule));
-    }
+    console.log(
+      `[Nekocord/AudioToVoiceMessage] Started (triggerMode=${settings.store.triggerMode}, renameToOgg=${settings.store.renameToOgg}, clearCaptionOnAuto=${settings.store.clearCaptionOnAuto})`,
+    );
+
+    cleanups.push(
+      patchOutgoingUploads((item, ctx) => {
+        if (
+          !isAudioCandidate(item.raw) &&
+          !/^audio\//i.test(item.mimeType) &&
+          !AUDIO_EXT_RE.test(item.filename.trim())
+        ) {
+          return;
+        }
+        const chId = getSelectedOrUploadChannelId(item.channelId);
+        if (!chId) return;
+
+        const msgObj = ctx.parsedMessage;
+        const { cleaned, hadKeyword } = stripVoiceKeywords(msgObj?.content);
+        if (hadKeyword && msgObj && typeof msgObj.content === 'string') {
+          msgObj.content = cleaned;
+        }
+
+        const info = buildPendingFromUpload(chId, item.raw, item.filename || 'audio.ogg', item.size);
+        if (hadKeyword) {
+          info.hasTriggerKeyword = true;
+        }
+        if (cleaned.length > 0) {
+          info.hadCaption = true;
+        }
+
+        if (shouldConvertNow(info.hasTriggerKeyword, info.hadCaption, false)) {
+          item.raw.durationSecs = info.durationSecs;
+          item.raw.waveform = info.waveform;
+          item.raw.isVoiceMessage = true;
+          item.raw.mimeType = 'audio/ogg';
+          if (settings.store.renameToOgg && item.filename !== 'voice-message.ogg') {
+            item.setFilename('voice-message.ogg');
+            info.renamedToOgg = true;
+          }
+          console.log(
+            `[Nekocord/AudioToVoiceMessage] Prepared ${info.origName} at stage=${ctx.stage} (${info.durationSecs}s)`,
+          );
+          return true;
+        }
+      }),
+    );
+
+    cleanups.push(
+      onMessageActions((actions: any) => {
+        if (typeof actions.sendMessage === 'function') {
+          cleanups.push(
+            before(actions, 'sendMessage', (channelId: any, message: any) => {
+              handleOutgoingMessageMeta(String(channelId ?? ''), message);
+            }),
+          );
+        }
+        if (typeof actions._sendMessage === 'function') {
+          cleanups.push(
+            before(actions, '_sendMessage', (channelId: any, message: any) => {
+              handleOutgoingMessageMeta(String(channelId ?? ''), message);
+            }),
+          );
+        }
+      }),
+    );
+
+    cleanups.push(
+      onHttpClient((http: any) => {
+        if (typeof http?.post === 'function') {
+          cleanups.push(before(http, 'post', handleHttpPostBefore));
+        }
+      }),
+    );
   },
 
   stop() {
@@ -416,6 +512,5 @@ export default definePlugin({
       cleanups.pop()?.();
     }
     pendingByChannel.clear();
-    patchedModules = new WeakMap<object, Set<string>>();
   },
 });

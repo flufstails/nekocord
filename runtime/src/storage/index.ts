@@ -553,7 +553,7 @@ export function updateSettings(partial: Partial<NekocordSettings>): void {
 export function exportSettingsJson(): string {
   return JSON.stringify(
     {
-      nekocordVersion: globalThis.Nekocord?.version ?? '1.5.0',
+      nekocordVersion: globalThis.Nekocord?.version ?? '1.6.0',
       exportedAt: new Date().toISOString(),
       settings: {
         plugins: state.plugins,

@@ -65,7 +65,7 @@ const settings = definePluginSettings({
     type: OptionType.STRING,
     label: 'Hover Image Caption',
     description: 'Caption text shown on the activity card emblem.',
-    placeholder: 'Nekocord v1.5.0',
+    placeholder: 'Nekocord v1.6.0',
     default: 'Nekocord',
   },
   showTimestamp: {

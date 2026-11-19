@@ -1,12 +1,10 @@
-import { findByProps, waitFor } from '../../metro/index.js';
-import { before, type Unpatch } from '../../patcher/index.js';
+import { patchOutgoingUploads } from '../../utils/uploader.js';
 import { definePlugin } from '../types.js';
 
 const EXT_RE = /(\.[a-zA-Z0-9]{1,10})$/;
 
 let anonymisedCount = 0;
-let cancelWait: (() => void) | null = null;
-let unpatchUpload: Unpatch | null = null;
+let unpatchUploads: (() => void) | null = null;
 
 function randomHex8(): string {
   let out = '';
@@ -17,51 +15,11 @@ function randomHex8(): string {
 }
 
 function buildAnonymisedName(originalName: string): string {
-  const match = originalName.match(EXT_RE);
+  const hasSpoiler = originalName.indexOf('SPOILER_') === 0;
+  const baseName = hasSpoiler ? originalName.slice(8) : originalName;
+  const match = baseName.match(EXT_RE);
   const ext = match ? match[1].toLowerCase() : '';
-  return `${randomHex8()}${ext}`;
-}
-
-function anonymiseUploadList(items: unknown[]): void {
-  for (let i = 0; i < items.length; i += 1) {
-    const item = items[i] as Record<string, any> | undefined;
-    if (!item || typeof item !== 'object') {
-      continue;
-    }
-
-    const rawName =
-      typeof item.filename === 'string'
-        ? item.filename
-        : typeof item.file?.name === 'string'
-          ? item.file.name
-          : typeof item.name === 'string'
-            ? item.name
-            : '';
-
-    if (!rawName) {
-      continue;
-    }
-
-    const nextName = buildAnonymisedName(rawName);
-    let modified = false;
-
-    if (typeof item.filename === 'string') {
-      item.filename = nextName;
-      modified = true;
-    }
-    if (item.file && typeof item.file === 'object' && typeof item.file.name === 'string') {
-      item.file.name = nextName;
-      modified = true;
-    }
-    if (!modified && typeof item.name === 'string') {
-      item.name = nextName;
-      modified = true;
-    }
-
-    if (modified) {
-      anonymisedCount += 1;
-    }
-  }
+  return `${hasSpoiler ? 'SPOILER_' : ''}${randomHex8()}${ext}`;
 }
 
 /**
@@ -73,38 +31,24 @@ export function getAnonymisedUploadCount(): number {
 
 export default definePlugin({
   start() {
-    const patchUploader = (mod: any) => {
-      if (unpatchUpload || typeof mod?.uploadFiles !== 'function') {
+    if (unpatchUploads) return;
+    unpatchUploads = patchOutgoingUploads((item) => {
+      if (item.raw?.isVoiceMessage) {
         return;
       }
-      unpatchUpload = before(mod, 'uploadFiles', (...args: any[]) => {
-        if (Array.isArray(args[0])) {
-          anonymiseUploadList(args[0]);
-        } else if (args[0] && typeof args[0] === 'object' && Array.isArray(args[0].uploads)) {
-          anonymiseUploadList(args[0].uploads);
-        }
-      });
-    };
-
-    const existing = findByProps('uploadFiles');
-    if (existing) {
-      patchUploader(existing);
-    } else {
-      cancelWait = waitFor(
-        (m) => typeof m === 'object' && m !== null && typeof m.uploadFiles === 'function',
-        patchUploader,
-      );
-    }
+      const rawName = item.filename;
+      if (!rawName || rawName === 'voice-message.ogg') {
+        return;
+      }
+      const nextName = buildAnonymisedName(rawName);
+      item.setFilename(nextName);
+      anonymisedCount += 1;
+      console.log(`[Nekocord/AnonymiseFileNames] Renamed ${rawName} -> ${nextName}`);
+    });
   },
 
   stop() {
-    if (cancelWait) {
-      cancelWait();
-      cancelWait = null;
-    }
-    if (unpatchUpload) {
-      unpatchUpload();
-      unpatchUpload = null;
-    }
+    unpatchUploads?.();
+    unpatchUploads = null;
   },
 });

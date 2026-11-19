@@ -3968,7 +3968,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
       return null;
     }
 
-    const version = nekocord?.version ?? '1.5.0';
+    const version = nekocord?.version ?? '1.6.0';
     const tagline = nekocord?.tagline ?? 'Your cutest Discord client on mobile';
     const selectedPlugin =
       selectedPluginName && !nekocord?.plugins.get(selectedPluginName)?.core

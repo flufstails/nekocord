@@ -1,6 +1,7 @@
 import {
   getStore,
   getUserStore,
+  interceptFluxDispatcher,
   onFluxDispatcher,
   onMessageActions,
   type FluxDispatcher,
@@ -37,28 +38,22 @@ export function createDispatcherBlockerPlugin(
 export function createDispatcherInterceptorPlugin(
   onDispatch: (action: Record<string, any>) => boolean | void,
 ): PluginImplementation {
-  let cancelWait: (() => void) | null = null;
-  let unpatch: Unpatch | null = null;
+  let stopIntercept: (() => void) | null = null;
 
   return definePlugin({
     start() {
-      cancelWait = onFluxDispatcher((dispatcher: FluxDispatcher) => {
-        if (unpatch) return;
-        unpatch = instead(dispatcher, 'dispatch', (args, orig) => {
-          const action = args[0] as Record<string, any> | undefined;
-          if (action && typeof action.type === 'string' && onDispatch(action) === false) {
-            return undefined;
-          }
-          return orig(...args);
-        });
+      if (stopIntercept) return;
+      stopIntercept = interceptFluxDispatcher((action, args, orig) => {
+        if (onDispatch(action) === false) {
+          return undefined;
+        }
+        return orig(...args);
       });
     },
 
     stop() {
-      cancelWait?.();
-      cancelWait = null;
-      unpatch?.();
-      unpatch = null;
+      stopIntercept?.();
+      stopIntercept = null;
     },
   });
 }
@@ -268,28 +263,22 @@ export function createSuppressReadReceiptsPlugin(): PluginImplementation {
 }
 
 export function createReplyPingPlugin(forceMention: boolean): PluginImplementation {
-  let cancelWait: (() => void) | null = null;
-  let unpatch: Unpatch | null = null;
+  let stopIntercept: (() => void) | null = null;
 
   return definePlugin({
     start() {
-      cancelWait = onFluxDispatcher((dispatcher) => {
-        if (unpatch) return;
-        unpatch = instead(dispatcher, 'dispatch', (args, orig) => {
-          const action = args[0] as Record<string, any> | undefined;
-          if (action?.type === 'CREATE_PENDING_REPLY') {
-            action.shouldMention = forceMention;
-          }
-          return orig(...args);
-        });
+      if (stopIntercept) return;
+      stopIntercept = interceptFluxDispatcher((action, args, orig) => {
+        if (action?.type === 'CREATE_PENDING_REPLY') {
+          action.shouldMention = forceMention;
+        }
+        return orig(...args);
       });
     },
 
     stop() {
-      cancelWait?.();
-      cancelWait = null;
-      unpatch?.();
-      unpatch = null;
+      stopIntercept?.();
+      stopIntercept = null;
     },
   });
 }

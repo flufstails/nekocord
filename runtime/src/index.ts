@@ -17,7 +17,7 @@ import * as updater from './updater/index.js';
 
 import type { NekocordTab } from './ui/NekocordModal.js';
 
-export const NEKOCORD_VERSION = '1.5.0';
+export const NEKOCORD_VERSION = '1.6.0';
 export const NEKOCORD_TAGLINE = 'Your cutest Discord client on mobile';
 
 export interface NekocordApi {

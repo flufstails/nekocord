@@ -131,14 +131,15 @@ export function definePluginSettings<D extends SettingsDefinition>(
   };
 
   const store = {} as SettingsStoreType<D>;
-  for (const key of Object.keys(def) as Array<keyof D & string>) {
-    Object.defineProperty(store, key, {
+  Object.keys(def).forEach((key) => {
+    const typedKey = key as keyof D & string;
+    Object.defineProperty(store, typedKey, {
       enumerable: true,
       configurable: true,
-      get: () => getVal(key),
-      set: (val: D[typeof key]['default']) => setVal(key, val),
+      get: () => getVal(typedKey),
+      set: (val: D[typeof typedKey]['default']) => setVal(typedKey, val),
     });
-  }
+  });
 
   return {
     def,

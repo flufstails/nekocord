@@ -1,5 +1,4 @@
-import { onFluxDispatcher } from '../../metro/common.js';
-import { instead, type Unpatch } from '../../patcher/index.js';
+import { interceptFluxDispatcher } from '../../metro/common.js';
 import { definePluginSettings, OptionType } from '../settings.js';
 import { definePlugin } from '../types.js';
 
@@ -19,8 +18,7 @@ const settings = definePluginSettings({
 });
 
 let blockedCount = 0;
-let cancelWait: (() => void) | null = null;
-let unpatchDispatch: Unpatch | null = null;
+let stopIntercept: (() => void) | null = null;
 
 export function getBlockedTrackingCount(): number {
   return blockedCount;
@@ -29,37 +27,26 @@ export function getBlockedTrackingCount(): number {
 export default definePlugin({
   settings,
   start() {
-    cancelWait = onFluxDispatcher((dispatcher) => {
-      if (unpatchDispatch) {
-        return;
+    if (stopIntercept) return;
+    stopIntercept = interceptFluxDispatcher((action, args, orig) => {
+      const type = typeof action?.type === 'string' ? action.type : '';
+      if (settings.store.disableAnalytics && (type === 'TRACK' || type.startsWith('ANALYTICS_'))) {
+        blockedCount += 1;
+        return undefined;
       }
-      unpatchDispatch = instead(dispatcher, 'dispatch', (args, orig) => {
-        const action = args[0] as { type?: unknown } | undefined;
-        const type = typeof action?.type === 'string' ? action.type : '';
-        if (settings.store.disableAnalytics && (type === 'TRACK' || type.startsWith('ANALYTICS_'))) {
-          blockedCount += 1;
-          return undefined;
-        }
-        if (
-          settings.store.disableScience &&
-          (type.startsWith('SCIENCE_') || type === 'EXPERIMENTS_FETCH_TRACK')
-        ) {
-          blockedCount += 1;
-          return undefined;
-        }
-        return orig(...args);
-      });
+      if (
+        settings.store.disableScience &&
+        (type.startsWith('SCIENCE_') || type === 'EXPERIMENTS_FETCH_TRACK')
+      ) {
+        blockedCount += 1;
+        return undefined;
+      }
+      return orig(...args);
     });
   },
 
   stop() {
-    if (cancelWait) {
-      cancelWait();
-      cancelWait = null;
-    }
-    if (unpatchDispatch) {
-      unpatchDispatch();
-      unpatchDispatch = null;
-    }
+    stopIntercept?.();
+    stopIntercept = null;
   },
 });

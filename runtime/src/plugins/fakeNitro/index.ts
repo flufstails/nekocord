@@ -1247,20 +1247,6 @@ function patchMessageParserMod(mod: any): void {
   console.log('[Nekocord/FakeNitro] Hooked MessageParser.parse');
 }
 
-function patchUploadMod(mod: any): void {
-  if (!mod || typeof mod.uploadFiles !== 'function' || !markPatchedMethod(mod, 'uploadFiles')) {
-    return;
-  }
-  cleanups.push(
-    before(mod, 'uploadFiles', (opts: any) => {
-      if (opts && typeof opts === 'object' && opts.parsedMessage) {
-        processOutgoingMessage(String(opts.channelId ?? ''), opts.parsedMessage);
-      }
-    }),
-  );
-  console.log('[Nekocord/FakeNitro] Hooked UploadActions.uploadFiles');
-}
-
 function patchHttpModule(httpMod: any): void {
   if (!httpMod || typeof httpMod.post !== 'function' || !markPatchedMethod(httpMod, 'post')) {
     return;
@@ -1482,18 +1468,6 @@ export default definePlugin({
     const existingInternalSend = findByProps('_sendMessage');
     if (existingInternalSend) {
       patchSendFunction(existingInternalSend, '_sendMessage');
-    }
-
-    const existingUpload = findByProps('uploadFiles');
-    if (existingUpload) {
-      patchUploadMod(existingUpload);
-    } else {
-      cleanups.push(
-        waitFor(
-          (m) => typeof m === 'object' && m !== null && typeof m.uploadFiles === 'function',
-          patchUploadMod,
-        ),
-      );
     }
 
     const isHttpClient = (m: any) =>
