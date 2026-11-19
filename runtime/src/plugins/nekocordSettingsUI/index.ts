@@ -1,7 +1,8 @@
-import { getReact, getReactNative, getThemeStore, onReactAndNative } from '../../metro/common.js';
+import { getReact, getThemeStore, onReactAndNative } from '../../metro/common.js';
 import { findByProps, waitFor } from '../../metro/index.js';
 import { after, instead, type Unpatch } from '../../patcher/index.js';
 import { createNekocordOverlay, openNekocordSettings, type NekocordTab } from '../../ui/NekocordModal.js';
+import { createSettingRowIcon } from '../../ui/VencordIcons.js';
 import { definePlugin } from '../types.js';
 
 interface NekocordSettingEntry {
@@ -13,7 +14,13 @@ interface NekocordSettingEntry {
   createIcon: () => any;
 }
 
-const NEKOCORD_KEYS = new Set(['NEKOCORD_SETTINGS', 'NEKOCORD_PLUGINS', 'NEKOCORD_THEMES']);
+const NEKOCORD_KEYS = new Set([
+  'NEKOCORD_SETTINGS',
+  'NEKOCORD_PLUGINS',
+  'NEKOCORD_THEMES',
+  'NEKOCORD_UPDATER',
+  'NEKOCORD_BACKUP',
+]);
 
 let cancelReactWait: (() => void) | null = null;
 const cleanups: Array<() => void> = [];
@@ -41,142 +48,6 @@ function wrapRootComponent(React: any, Overlay: any, OriginalComponent: any) {
 function getFallbackTint(): string {
   const theme = getThemeStore<{ theme?: string }>()?.theme;
   return theme === 'light' ? '#4e5058' : '#f2f3f5';
-}
-
-function createNativeOrFallbackIcon(
-  nativePropNames: string[],
-  renderFallback: (React: any, ReactNative: any, tint: string) => any,
-): any {
-  let cachedNativeIcon: any = undefined;
-  let missAttempts = 0;
-
-  return function NekocordSettingRowIcon(props: any) {
-    const React = getReact();
-    const ReactNative = getReactNative();
-    if (!React || !ReactNative) {
-      return null;
-    }
-    const tint = getFallbackTint();
-
-    if (cachedNativeIcon === undefined) {
-      for (let i = 0; i < nativePropNames.length; i += 1) {
-        const propName = nativePropNames[i];
-        const iconMod = findByProps(propName);
-        const NativeIcon = iconMod?.[propName];
-        if (typeof NativeIcon === 'function' || (NativeIcon && typeof NativeIcon === 'object')) {
-          cachedNativeIcon = NativeIcon;
-          break;
-        }
-      }
-      if (cachedNativeIcon === undefined) {
-        missAttempts += 1;
-        if (missAttempts >= 3) {
-          cachedNativeIcon = null;
-        }
-      }
-    }
-
-    if (cachedNativeIcon) {
-      return React.createElement(cachedNativeIcon, {
-        size: 'md',
-        color: tint,
-        ...props,
-      });
-    }
-    return renderFallback(React, ReactNative, tint);
-  };
-}
-
-function renderMonogramFallback(React: any, ReactNative: any, tint: string) {
-  const { Text, View } = ReactNative;
-  return React.createElement(
-    View,
-    {
-      style: {
-        width: 22,
-        height: 22,
-        borderRadius: 6,
-        borderWidth: 1.8,
-        borderColor: tint,
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-    },
-    React.createElement(
-      Text,
-      {
-        style: {
-          color: tint,
-          fontSize: 12,
-          fontWeight: '800',
-        },
-      },
-      'N',
-    ),
-  );
-}
-
-function renderGridFallback(React: any, ReactNative: any, tint: string) {
-  const { View } = ReactNative;
-  const cell = (key: string) =>
-    React.createElement(View, {
-      key,
-      style: {
-        width: 8.5,
-        height: 8.5,
-        borderRadius: 2.5,
-        backgroundColor: tint,
-      },
-    });
-  return React.createElement(
-    View,
-    {
-      style: {
-        width: 22,
-        height: 22,
-        justifyContent: 'space-between',
-        padding: 1.5,
-      },
-    },
-    React.createElement(
-      View,
-      { style: { flexDirection: 'row', justifyContent: 'space-between' } },
-      cell('a'),
-      cell('b'),
-    ),
-    React.createElement(
-      View,
-      { style: { flexDirection: 'row', justifyContent: 'space-between' } },
-      cell('c'),
-      cell('d'),
-    ),
-  );
-}
-
-function renderPaletteFallback(React: any, ReactNative: any, tint: string) {
-  const { View } = ReactNative;
-  return React.createElement(
-    View,
-    {
-      style: {
-        width: 22,
-        height: 22,
-        borderRadius: 11,
-        borderWidth: 1.8,
-        borderColor: tint,
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-    },
-    React.createElement(View, {
-      style: {
-        width: 8,
-        height: 8,
-        borderRadius: 4,
-        backgroundColor: tint,
-      },
-    }),
-  );
 }
 
 function createSettingData(entry: NekocordSettingEntry, IconComponent: any): Record<string, any> {
@@ -280,8 +151,8 @@ function buildSettingEntries(): NekocordSettingEntry[] {
       title: 'Nekocord',
       tab: 'overview',
       breadcrumbs: ['Nekocord'],
-      searchTerms: ['nekocord', 'nekocord settings', 'about', 'updates', 'update'],
-      createIcon: () => createNativeOrFallbackIcon(['SettingsIcon'], renderMonogramFallback),
+      searchTerms: ['nekocord', 'nekocord settings', 'about', 'quick actions'],
+      createIcon: () => createSettingRowIcon('mainSettings', getFallbackTint),
     },
     {
       key: 'NEKOCORD_PLUGINS',
@@ -302,10 +173,10 @@ function buildSettingEntries(): NekocordSettingEntry[] {
         'clearurls',
         'fixembeds',
         'experiments',
+        'showhiddenchannels',
         'nekocord settings',
       ],
-      createIcon: () =>
-        createNativeOrFallbackIcon(['PuzzlePieceIcon', 'AppsIcon'], renderGridFallback),
+      createIcon: () => createSettingRowIcon('plugins', getFallbackTint),
     },
     {
       key: 'NEKOCORD_THEMES',
@@ -325,8 +196,23 @@ function buildSettingEntries(): NekocordSettingEntry[] {
         'sakura',
         'tokyo night',
       ],
-      createIcon: () =>
-        createNativeOrFallbackIcon(['PaintPaletteIcon', 'BrushIcon'], renderPaletteFallback),
+      createIcon: () => createSettingRowIcon('paintbrush', getFallbackTint),
+    },
+    {
+      key: 'NEKOCORD_UPDATER',
+      title: 'Updater',
+      tab: 'updater',
+      breadcrumbs: ['Nekocord', 'Updater'],
+      searchTerms: ['nekocord', 'updater', 'update', 'updates', 'ota', 'release', 'github'],
+      createIcon: () => createSettingRowIcon('updater', getFallbackTint),
+    },
+    {
+      key: 'NEKOCORD_BACKUP',
+      title: 'Backup & Restore',
+      tab: 'backup',
+      breadcrumbs: ['Nekocord', 'Backup & Restore'],
+      searchTerms: ['nekocord', 'backup', 'restore', 'export', 'import', 'json', 'sync', 'reset'],
+      createIcon: () => createSettingRowIcon('backupRestore', getFallbackTint),
     },
   ];
 }

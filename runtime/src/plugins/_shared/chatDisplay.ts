@@ -57,6 +57,80 @@ export function clearArrayProp(obj: Record<string, any>, key: string): boolean {
   return false;
 }
 
+/**
+ * Checks whether a chat message's content string or AST node array contains {@code needle}.
+ */
+export function messageContainsText(msg: Record<string, any>, needle: string): boolean {
+  if (!needle) return false;
+  if (typeof msg.content === 'string') {
+    return msg.content.includes(needle);
+  }
+  if (!Array.isArray(msg.content)) {
+    return false;
+  }
+  const stack = [...msg.content];
+  while (stack.length > 0) {
+    const node = stack.pop();
+    if (!node) continue;
+    if (typeof node === 'string') {
+      if (node.includes(needle)) return true;
+    } else if (typeof node === 'object') {
+      if (typeof node.content === 'string' && node.content.includes(needle)) {
+        return true;
+      }
+      if (Array.isArray(node.content)) {
+        for (let i = 0; i < node.content.length; i += 1) {
+          stack.push(node.content[i]);
+        }
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * Appends a text note to either a string or Discord AST {@code msg.content} array.
+ */
+export function appendMessageText(msg: Record<string, any>, note: string): boolean {
+  if (!note || messageContainsText(msg, note)) {
+    return false;
+  }
+  if (Array.isArray(msg.content)) {
+    const prefix = msg.content.length > 0 ? ' ' : '';
+    msg.content.push({ type: 'text', content: `${prefix}${note}` });
+    return true;
+  }
+  const base = typeof msg.content === 'string' ? msg.content.trimEnd() : '';
+  msg.content = base ? `${base} ${note}` : note;
+  return true;
+}
+
+/**
+ * Appends a concise tag to {@code msg.timestamp} when not already present.
+ */
+export function appendTimestampNote(msg: Record<string, any>, suffix: string): boolean {
+  if (!suffix) return false;
+  const cur = typeof msg.timestamp === 'string' ? msg.timestamp : '';
+  if (cur.includes(suffix)) return false;
+  msg.timestamp = cur ? `${cur} ${suffix}` : suffix;
+  return true;
+}
+
+/**
+ * Converts HSL (h: 0..360, s: 0..100, l: 0..100) into Android signed ARGB int.
+ */
+export function hslToAndroidArgb(h: number, s: number, l: number): number {
+  const sn = Math.max(0, Math.min(100, s)) / 100;
+  const ln = Math.max(0, Math.min(100, l)) / 100;
+  const a = sn * Math.min(ln, 1 - ln);
+  const channel = (n: number) => {
+    const k = (n + h / 30) % 12;
+    const val = ln - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(val * 255);
+  };
+  return toAndroidColor(255, channel(0), channel(8), channel(4));
+}
+
 export function createRowPlugin(
   transform: (row: Record<string, any>, msg: Record<string, any>) => boolean,
 ): PluginImplementation {

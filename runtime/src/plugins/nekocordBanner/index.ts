@@ -19,7 +19,7 @@ export default definePlugin({
   start() {
     const stats = getMetroStats();
     console.log(
-      `[Nekocord] Runtime v1.0.0 started (preloadHook=${stats.hookedPreload}, factories=${stats.factories}, initialized=${stats.initialized})`,
+      `[Nekocord] Runtime v${globalThis.Nekocord?.version ?? '1.1.0'} started (preloadHook=${stats.hookedPreload}, factories=${stats.factories}, initialized=${stats.initialized})`,
     );
 
     cancelDispatcherWait = onFluxDispatcher((dispatcher) => {

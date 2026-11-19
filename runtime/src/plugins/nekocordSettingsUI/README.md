@@ -1,6 +1,6 @@
 ---
 name: NekocordSettingsUI
-description: Integrates Nekocord overview, plugins, and themes directly into Discord User Settings.
+description: Integrates Nekocord, Plugins, Themes, Updater, and Backup & Restore directly into Discord User Settings.
 authors:
   - flufstails
 category: ui
@@ -14,4 +14,4 @@ tags:
 
 # NekocordSettingsUI
 
-Injects the **Nekocord**, **Plugins**, and **Themes** entries into Discord User Settings and mounts the Nekocord modal overlay.
+Injects the **Nekocord**, **Plugins**, **Themes**, **Updater**, and **Backup & Restore** entries into Discord User Settings and mounts the Nekocord modal overlay.

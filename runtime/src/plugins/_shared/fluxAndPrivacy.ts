@@ -27,6 +27,16 @@ export function cloneWithPrototype<T extends object>(source: T, patch: Record<st
 export function createDispatcherBlockerPlugin(
   shouldBlock: (action: Record<string, any>) => boolean,
 ): PluginImplementation {
+  return createDispatcherInterceptorPlugin((action) => !shouldBlock(action));
+}
+
+/**
+ * Intercepts FluxDispatcher.dispatch; return {@code false} to suppress an action
+ * or mutate it in place before letting it proceed.
+ */
+export function createDispatcherInterceptorPlugin(
+  onDispatch: (action: Record<string, any>) => boolean | void,
+): PluginImplementation {
   let cancelWait: (() => void) | null = null;
   let unpatch: Unpatch | null = null;
 
@@ -36,7 +46,7 @@ export function createDispatcherBlockerPlugin(
         if (unpatch) return;
         unpatch = instead(dispatcher, 'dispatch', (args, orig) => {
           const action = args[0] as Record<string, any> | undefined;
-          if (action && typeof action.type === 'string' && shouldBlock(action)) {
+          if (action && typeof action.type === 'string' && onDispatch(action) === false) {
             return undefined;
           }
           return orig(...args);

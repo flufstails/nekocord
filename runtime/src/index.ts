@@ -9,7 +9,9 @@ import * as storage from './storage/index.js';
 import * as themes from './themes/index.js';
 import * as updater from './updater/index.js';
 
-export const NEKOCORD_VERSION = '1.0.0';
+import type { NekocordTab } from './ui/NekocordModal.js';
+
+export const NEKOCORD_VERSION = '1.1.0';
 export const NEKOCORD_TAGLINE = 'Your cutest Discord client on mobile';
 
 export interface NekocordApi {
@@ -27,7 +29,8 @@ export interface NekocordApi {
   startPlugin(name: string): boolean;
   stopPlugin(name: string): boolean;
   togglePlugin(name: string): boolean;
-  openSettings(tab?: 'overview' | 'plugins' | 'themes'): void;
+  reconcileSettings(): void;
+  openSettings(tab?: NekocordTab): void;
   status(): ReturnType<typeof metro.getMetroStats> & { activePlugins: string[] };
 }
 
@@ -152,6 +155,10 @@ function bootstrap(): void {
     startPlugin,
     stopPlugin,
     togglePlugin,
+    reconcileSettings() {
+      reconcilePluginsWithStorage();
+      themes.applyActiveTheme();
+    },
     openSettings: openNekocordSettings,
     status() {
       return {

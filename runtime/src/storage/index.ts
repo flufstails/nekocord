@@ -49,6 +49,7 @@ export type StoredPurrcordTheme = StoredNekocordTheme;
 
 export interface NekocordSettings {
   plugins: Record<string, { enabled: boolean }>;
+  favoritePlugins?: string[];
   activeThemeId?: string | null;
   customThemes?: StoredNekocordTheme[];
   updateSource?: string;
@@ -58,12 +59,14 @@ export type PurrcordSettings = NekocordSettings;
 
 const state: NekocordSettings = {
   plugins: {},
+  favoritePlugins: [],
   activeThemeId: null,
   customThemes: [],
   updateSource: DEFAULT_UPDATE_SOURCE,
 };
 
 const dirtyPlugins = new Set<string>();
+let dirtyFavorites = false;
 let dirtyActiveTheme = false;
 let dirtyCustomThemes = false;
 let dirtyUpdateSource = false;
@@ -107,6 +110,16 @@ function applyParsedSettings(
         state.plugins[name] = { enabled: entry.enabled };
       }
     }
+  }
+  if (!dirtyFavorites && Array.isArray(parsed.favoritePlugins)) {
+    const clean = new Set<string>();
+    for (let i = 0; i < parsed.favoritePlugins.length; i += 1) {
+      const item = parsed.favoritePlugins[i];
+      if (typeof item === 'string' && item.trim()) {
+        clean.add(fromLegacy ? (LEGACY_PLUGIN_KEY_REMAP[item] ?? item) : item);
+      }
+    }
+    state.favoritePlugins = Array.from(clean);
   }
   if (
     !dirtyActiveTheme &&
@@ -219,6 +232,29 @@ export function setPluginEnabled(name: string, enabled: boolean): void {
   notifyListeners();
 }
 
+export function getFavoritePlugins(): string[] {
+  return state.favoritePlugins ? [...state.favoritePlugins] : [];
+}
+
+export function isFavoritePlugin(name: string): boolean {
+  return Boolean(state.favoritePlugins?.includes(name));
+}
+
+export function toggleFavoritePlugin(name: string): boolean {
+  dirtyFavorites = true;
+  const current = new Set(state.favoritePlugins ?? []);
+  const next = !current.has(name);
+  if (next) {
+    current.add(name);
+  } else {
+    current.delete(name);
+  }
+  state.favoritePlugins = Array.from(current);
+  persist();
+  notifyListeners();
+  return next;
+}
+
 export function getActiveThemeId(): string | null {
   return state.activeThemeId ?? null;
 }
@@ -278,6 +314,10 @@ export function updateSettings(partial: Partial<NekocordSettings>): void {
       state.plugins[name] = { enabled: Boolean(entry?.enabled) };
     }
   }
+  if (partial.favoritePlugins !== undefined) {
+    dirtyFavorites = true;
+    state.favoritePlugins = [...partial.favoritePlugins];
+  }
   if (partial.activeThemeId !== undefined) {
     dirtyActiveTheme = true;
     state.activeThemeId = partial.activeThemeId;
@@ -290,6 +330,172 @@ export function updateSettings(partial: Partial<NekocordSettings>): void {
     dirtyUpdateSource = true;
     state.updateSource = partial.updateSource;
   }
+  persist();
+  notifyListeners();
+}
+
+/**
+ * Serializes current Nekocord settings into a portable JSON backup envelope.
+ */
+export function exportSettingsJson(): string {
+  return JSON.stringify(
+    {
+      nekocordVersion: globalThis.Nekocord?.version ?? '1.1.0',
+      exportedAt: new Date().toISOString(),
+      settings: {
+        plugins: state.plugins,
+        favoritePlugins: state.favoritePlugins ?? [],
+        activeThemeId: state.activeThemeId ?? null,
+        customThemes: state.customThemes ?? [],
+        updateSource: getUpdateSource(),
+      },
+    },
+    null,
+    2,
+  );
+}
+
+/**
+ * Validates and imports a Nekocord settings backup JSON string, replacing current state.
+ */
+export function importSettingsJson(rawJson: string): {
+  ok: boolean;
+  message: string;
+  pluginCount?: number;
+  changedPlugins?: string[];
+} {
+  const trimmed = typeof rawJson === 'string' ? rawJson.trim() : '';
+  if (!trimmed) {
+    return { ok: false, message: 'Paste exported Nekocord settings JSON first.' };
+  }
+
+  let parsedUnknown: unknown;
+  try {
+    parsedUnknown = JSON.parse(trimmed);
+  } catch (err) {
+    return {
+      ok: false,
+      message: err instanceof Error ? `Invalid JSON: ${err.message}` : 'Invalid JSON syntax.',
+    };
+  }
+
+  if (!parsedUnknown || typeof parsedUnknown !== 'object') {
+    return { ok: false, message: 'Backup JSON must be an object.' };
+  }
+
+  const envelope = parsedUnknown as Record<string, any>;
+  const source =
+    envelope.settings && typeof envelope.settings === 'object'
+      ? (envelope.settings as Record<string, any>)
+      : envelope;
+
+  const hasKnownKey =
+    'plugins' in source ||
+    'favoritePlugins' in source ||
+    'activeThemeId' in source ||
+    'customThemes' in source ||
+    'updateSource' in source;
+  if (!hasKnownKey) {
+    return { ok: false, message: 'JSON does not contain valid Nekocord settings fields.' };
+  }
+
+  const nextPlugins: Record<string, { enabled: boolean }> = {};
+  const changedSet = new Set<string>();
+  const oldPlugins = state.plugins;
+
+  if (source.plugins && typeof source.plugins === 'object') {
+    for (const [name, val] of Object.entries(source.plugins)) {
+      if (val && typeof val === 'object' && typeof (val as any).enabled === 'boolean') {
+        const enabled = (val as any).enabled;
+        nextPlugins[name] = { enabled };
+        if (oldPlugins[name]?.enabled !== enabled) {
+          changedSet.add(name);
+        }
+      }
+    }
+  }
+  for (const oldName of Object.keys(oldPlugins)) {
+    if (!(oldName in nextPlugins)) {
+      changedSet.add(oldName);
+    }
+  }
+
+  const nextFavorites = Array.isArray(source.favoritePlugins)
+    ? Array.from(
+        new Set(
+          source.favoritePlugins.filter(
+            (v: unknown): v is string => typeof v === 'string' && v.trim().length > 0,
+          ),
+        ),
+      )
+    : [];
+
+  const nextThemeId =
+    source.activeThemeId === null || typeof source.activeThemeId === 'string'
+      ? source.activeThemeId
+      : null;
+
+  const nextCustomThemes = Array.isArray(source.customThemes)
+    ? source.customThemes.filter(
+        (item: unknown): item is StoredNekocordTheme =>
+          Boolean(
+            item &&
+              typeof item === 'object' &&
+              typeof (item as any).id === 'string' &&
+              typeof (item as any).name === 'string',
+          ),
+      )
+    : [];
+
+  const nextUpdateSource =
+    typeof source.updateSource === 'string' && source.updateSource.trim()
+      ? source.updateSource.trim()
+      : DEFAULT_UPDATE_SOURCE;
+
+  for (const k of Object.keys(state.plugins)) {
+    dirtyPlugins.add(k);
+  }
+  for (const k of Object.keys(nextPlugins)) {
+    dirtyPlugins.add(k);
+  }
+  state.plugins = nextPlugins;
+  state.favoritePlugins = nextFavorites;
+  state.activeThemeId = nextThemeId;
+  state.customThemes = nextCustomThemes;
+  state.updateSource = nextUpdateSource;
+  dirtyFavorites = true;
+  dirtyActiveTheme = true;
+  dirtyCustomThemes = true;
+  dirtyUpdateSource = true;
+
+  persist();
+  notifyListeners();
+
+  const pluginCount = Object.keys(nextPlugins).length;
+  return {
+    ok: true,
+    message: `Imported settings (${pluginCount} plugin overrides, ${nextFavorites.length} favorites).`,
+    pluginCount,
+    changedPlugins: Array.from(changedSet),
+  };
+}
+
+/**
+ * Resets all plugin overrides, favorites, themes, and update source back to defaults.
+ */
+export function resetSettings(): void {
+  for (const k of Object.keys(state.plugins)) {
+    dirtyPlugins.add(k);
+  }
+  state.plugins = {};
+  state.favoritePlugins = [];
+  state.activeThemeId = null;
+  state.customThemes = [];
+  state.updateSource = DEFAULT_UPDATE_SOURCE;
+  dirtyFavorites = true;
+  dirtyActiveTheme = true;
+  dirtyCustomThemes = true;
+  dirtyUpdateSource = true;
   persist();
   notifyListeners();
 }

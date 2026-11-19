@@ -1,34 +1,35 @@
 # Nekocord
 
-![Release](https://img.shields.io/badge/release-v1.0.0-5865F2)
-![Plugins](https://img.shields.io/badge/plugins-200%20built--in-23A55A)
+![Release](https://img.shields.io/badge/release-v1.1.0-5865F2)
+![Plugins](https://img.shields.io/badge/plugins-250%20built--in-23A55A)
 [![License](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE)
 
-**Your cutest Discord client on mobile.** Nekocord `v1.0.0` is a fast, clean TypeScript plugin runtime and live theme engine for Discord Android (`353.11`), shipping with **200 Vencord-style built-in plugins** and Vendetta/Bunny theme support.
+**Your cutest Discord client on mobile.** Nekocord `v1.1.0` is a fast, clean TypeScript plugin runtime and live theme engine for Discord Android (`353.11`), shipping with **250 Vencord-style built-in plugins** and Vendetta/Bunny theme support.
 
 > [!NOTE]
 > Verified on Discord Android `353.11` (`arm64-v8a`). Patched builds keep the standard `com.discord` package ID by default, or pass `--package com.nekocord` for a side-by-side install.
 
 ## Features
 
-- **Vencord-Style Plugin Directory Architecture:** All 200 plugins live in dedicated `runtime/src/plugins/<slug>/` folders with `index.ts` and YAML-backed `README.md` documentation viewable directly inside the app.
-- **Native User Settings Integration:** Adds **Nekocord**, **Plugins**, and **Themes** right into Discord User Settings with instant search across names, categories, and tags, zero-glitch memoized lists, restart prompts, and OTA GitHub Release updates.
+- **Vencord-Exact Native Vector UI:** Renders native vector SVG icons via `react-native-svg` across Discord User Settings (**Nekocord**, **Plugins**, **Themes**, **Updater**, **Backup & Restore**) with Vencord-style hero cards, quick action pills, bordered addon cards, plugin info modals, favorite starring, and GitHub source links.
+- **Vencord-Style Plugin Directory Architecture:** All 250 plugins live in dedicated `runtime/src/plugins/<slug>/` folders with `index.ts` and YAML-backed `README.md` documentation viewable directly inside the app, supporting both substring and acronym search.
+- **Portable Backup & Restore + OTA Updates:** Export and restore plugin toggles, starred favorites, custom themes, and update sources as JSON, or pull new JS bundles directly from GitHub Releases on `flufstails/nekocord`.
 - **FakeNitro Unlock & Native Chat Rendering:** Unlocks external emojis, animated emojis, and Nitro stickers in the picker, converts locked sends and edits into clean CDN links, and renders received links back into native Discord emojis and stickers inline.
 - **Inline MessageLogger:** Preserves deleted messages inline in chat with a `deleted` badge and renders prior edit revisions above edited messages.
-- **High-Speed Metro & Theme Engine:** Uses an O(1) incremental Metro candidate cache, a single multiplexed export watcher, and cached semantic/raw token resolution across 6 curated built-in themes (`AMOLED Pitch`, `Catppuccin Mocha`, `Rose Pine`, `Nordic Frost`, `Sakura Cream`, `Tokyo Night`) plus custom JSON theme URLs.
+- **High-Speed Metro & Theme Engine:** Uses an O(1) incremental Metro candidate cache, a single multiplexed export watcher, and cached semantic/raw token resolution across 6 curated built-in themes (`AMOLED Pitch`, `Catppuccin Mocha`, `Rose Pine`, `Nordic Frost`, `Sakura Cream`, `Tokyo Night`) plus Online Themes JSON URL installs.
 
 ## Plugin Categories
 
 | Category | Count | Highlights |
 | :--- | :--- | :--- |
-| **Chat** | 84 | `MessageLogger`, `NoReplyMention`, `NoBlockedMessages`, `RevealAllSpoilers`, `ShowMeYourName`, `FullTimestamps`, `CompactTimestamps`, `HighlightEveryonePings`, `VxTwitterLinks`, dice/math macros |
-| **UI** | 37 | `HideGiftButton`, `HideAppsButton`, `NoProfileThemes`, `HideReactions`, `HidePolls`, `HidePronouns`, `HideUserBanners`, `HideEmbeds`, `NoRoleIcons`, `BetterRoleDot` |
-| **Privacy** | 30 | `NoTrack`, `ClearURLs`, `SilentTyping`, `AnonymiseFileNames`, `SuppressReadReceipts`, `NoAnalyticsBeacons`, `RedactJwtTokens`, `RedactEmails`, `InvidiousLinks`, `CleanAmazonLinks` |
-| **Utility** | 18 | `AlwaysTrust`, `NSFWGateBypass`, `RelationshipNotifier`, `ShowAttachmentAltText`, `QuickMathEval`, `OldRedditLinks`, `BreezeWikiLinks`, `SmartQuotes` |
-| **Developer** | 15 | `DeveloperMode`, `Experiments`, `BypassSlowmodeDisplay`, `UnixTimestamps`, `SnowflakeIdsInChat`, `Base64EncodeMacro`, `HexEncodeMacro`, `AutoCodeBlock` |
-| **Nitro** | 9 | `FakeNitro`, `AlwaysAnimate`, `NoGifAutoplay`, `ForceNitroVisuals`, `UnlockClientThemes`, `UnlockBurstChecks`, `HidePremiumUpsells` |
-| **Voice** | 5 | `FakeDeafen`, `VoiceMuteOnJoin`, `VoiceDeafenOnJoin`, `VoiceUnmuteOnLeave`, `VoiceChannelAudit` |
-| **Core** | 2 | `NekocordBanner`, `NekocordSettingsUI` |
+| **Chat** | 102 | `MessageLogger`, `FixImagesQuality`, `IrcColors`, `ReplyTimestamp`, `MessageLatency`, `Unindent`, `TextReplace`, `NoReplyMention`, `NoBlockedMessages`, `RevealAllSpoilers`, `FullTimestamps` |
+| **UI** | 50 | `ForceOwnerCrown`, `RoleColorEverywhere`, `ShowTimeoutDuration`, `MemberCount`, `HideGiftButton`, `HideAppsButton`, `NoProfileThemes`, `BetterRoleDot`, `NekocordSettingsUI` (core) |
+| **Privacy** | 38 | `NoTrack`, `ClearURLs`, `SilentTyping`, `IgnoreActivities`, `OnePingPerDM`, `CustomIdle`, `NoDevtoolsWarning`, `AnonymiseFileNames`, `SuppressReadReceipts` |
+| **Utility** | 24 | `ShowHiddenChannels`, `PermissionFreeWill`, `KeepCurrentChannel`, `ReplaceGoogleSearch`, `OverrideForumDefaults`, `AlwaysTrust`, `NSFWGateBypass`, `RelationshipNotifier` |
+| **Developer** | 16 | `DeveloperMode`, `Experiments`, `ReactErrorDecoder`, `BypassSlowmodeDisplay`, `UnixTimestamps`, `SnowflakeIdsInChat`, `Base64EncodeMacro` |
+| **Nitro** | 10 | `FakeNitro`, `SpotifyCrack`, `AlwaysAnimate`, `NoGifAutoplay`, `ForceNitroVisuals`, `UnlockClientThemes`, `UnlockBurstChecks`, `HidePremiumUpsells` |
+| **Voice** | 9 | `VolumeBooster`, `CallTimer`, `DisableCallIdle`, `StreamerModeOnStream`, `FakeDeafen`, `VoiceMuteOnJoin`, `VoiceDeafenOnJoin` |
+| **Core** | 1 | `NekocordBanner` |
 
 Browse the complete catalog in [PLUGINS.md](docs/PLUGINS.md), or open **User Settings > Nekocord** inside the app.
 
@@ -36,15 +37,15 @@ Browse the complete catalog in [PLUGINS.md](docs/PLUGINS.md), or open **User Set
 
 ### Option 1: GitHub Releases (Recommended)
 
-1. Download `nekocord-v1.0.0-arm64-v8a.apks` from [GitHub Releases](https://github.com/flufstails/nekocord/releases/latest).
+1. Download `nekocord-v1.1.0-arm64-v8a.apks` from [GitHub Releases](https://github.com/flufstails/nekocord/releases/latest).
 2. Install the split APK bundle using SAI, ZArchiver, or MT Manager (or extract the `.apks` archive and install over ADB):
    ```sh
    adb install-multiple *.apk
    ```
-3. Open **User Settings > Nekocord** (or **Plugins** / **Themes**) inside Discord.
+3. Open **User Settings > Nekocord** (**Plugins**, **Themes**, **Updater**, or **Backup & Restore**) inside Discord.
 
 > [!TIP]
-> Because default builds use `com.discord`, uninstall stock Discord first if upgrading from an unmodified Play Store installation. For updates between Nekocord releases, use **Check for Updates** in-app to pull new runtime JS bundles straight from `flufstails/nekocord`.
+> Because default builds use `com.discord`, uninstall stock Discord first if upgrading from an unmodified Play Store installation. For updates between Nekocord releases, open **User Settings > Updater** in-app to pull new runtime JS bundles straight from `flufstails/nekocord`.
 
 ### Option 2: Build From Source
 
@@ -56,7 +57,7 @@ npm run typecheck
 npm run patch
 ```
 
-Signed split APKs are written to `out/` and archived as `dist/nekocord-v1.0.0-arm64-v8a.apks`.
+Signed split APKs are written to `out/` and archived as `dist/nekocord-v1.1.0-arm64-v8a.apks`.
 
 Optional commands:
 

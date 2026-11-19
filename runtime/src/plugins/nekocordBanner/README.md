@@ -13,4 +13,4 @@ tags:
 
 # NekocordBanner
 
-Logs startup diagnostics for Nekocord `1.0.0`, including Metro hook status, core stores, and chat bridge readiness.
+Logs startup diagnostics for Nekocord, including Metro hook status, core stores, and chat bridge readiness.
