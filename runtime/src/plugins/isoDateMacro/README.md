@@ -1,0 +1,17 @@
+---
+name: IsoDateMacro
+description: "Replaces /today with today's ISO YYYY-MM-DD date stamp."
+authors:
+  - flufstails
+category: utility
+enabledByDefault: false
+tags:
+  - utility
+  - macros
+---
+
+# IsoDateMacro
+
+Replaces /today with today's ISO YYYY-MM-DD date stamp.
+
+Type `/today` in any chat composer box and send to expand inline.

@@ -1,0 +1,17 @@
+node_modules/
+apk/
+apktool/
+jadx/
+dist/
+build/
+out/
+*.apk
+*.apks
+*.xapk
+*.keystore
+*.jks
+*.idsig
+*.log
+*.png
+.DS_Store
+Thumbs.db
