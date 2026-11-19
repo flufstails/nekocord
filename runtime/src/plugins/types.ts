@@ -43,6 +43,8 @@ export interface PluginImplementation {
   enabledByDefault?: boolean;
   requiresRestart?: boolean;
   isNew?: boolean;
+  imported?: boolean;
+  sourceUrl?: string;
   dependencies?: string[];
   settings?: DefinedPluginSettings<any>;
   tags?: string[];
@@ -51,6 +53,8 @@ export interface PluginImplementation {
 }
 
 export interface NekocordPlugin extends PluginReadmeMeta {
+  imported?: boolean;
+  sourceUrl?: string;
   dependencies?: string[];
   settings?: DefinedPluginSettings<any>;
   start?(): void;

@@ -68,7 +68,7 @@ function compareVersions(a: string, b: string): number {
 }
 
 function getCurrentVersion(): string {
-  return globalThis.Nekocord?.version ?? '1.3.0';
+  return globalThis.Nekocord?.version ?? '1.4.0';
 }
 
 /**

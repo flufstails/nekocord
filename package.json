@@ -1,6 +1,6 @@
 {
   "name": "nekocord",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "private": true,
   "description": "Your cutest Discord client on mobile — fast TypeScript plugin runtime and theme engine for Discord Android.",
   "author": "flufstail <flufstails@gmail.com>",

@@ -38,6 +38,8 @@ export interface StoredNekocordTheme {
   description?: string;
   authors?: string[];
   spec?: number;
+  kind?: 'json' | 'css';
+  customCss?: string;
   sourceUrl?: string;
   baseMode?: 'dark' | 'light';
   preview?: string[];
@@ -47,12 +49,43 @@ export interface StoredNekocordTheme {
 
 export type StoredPurrcordTheme = StoredNekocordTheme;
 
+export interface StoredCustomPlugin {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  authors: Array<{ name: string; icon?: string; github?: string }>;
+  authorIcon?: string;
+  category: string;
+  sourceUrl?: string;
+  code: string;
+  tags?: string[];
+  readme?: string;
+  installedAt: number;
+}
+
+export interface NotificationLogSettings {
+  enabled: boolean;
+  showToasts: boolean;
+  captureMentions: boolean;
+  captureRelationships: boolean;
+}
+
+export const DEFAULT_NOTIFICATION_SETTINGS: NotificationLogSettings = {
+  enabled: true,
+  showToasts: true,
+  captureMentions: true,
+  captureRelationships: true,
+};
+
 export interface NekocordSettings {
   plugins: Record<string, { enabled: boolean }>;
   pluginSettings?: Record<string, Record<string, any>>;
   favoritePlugins?: string[];
   activeThemeId?: string | null;
   customThemes?: StoredNekocordTheme[];
+  customPlugins?: StoredCustomPlugin[];
+  notificationSettings?: NotificationLogSettings;
   updateSource?: string;
 }
 
@@ -64,6 +97,8 @@ const state: NekocordSettings = {
   favoritePlugins: [],
   activeThemeId: null,
   customThemes: [],
+  customPlugins: [],
+  notificationSettings: { ...DEFAULT_NOTIFICATION_SETTINGS },
   updateSource: DEFAULT_UPDATE_SOURCE,
 };
 
@@ -72,6 +107,8 @@ const dirtyPluginSettings = new Set<string>();
 let dirtyFavorites = false;
 let dirtyActiveTheme = false;
 let dirtyCustomThemes = false;
+let dirtyCustomPlugins = false;
+let dirtyNotificationSettings = false;
 let dirtyUpdateSource = false;
 let hydrated = false;
 const listeners = new Set<() => void>();
@@ -144,6 +181,27 @@ function applyParsedSettings(
       (item): item is StoredNekocordTheme =>
         Boolean(item && typeof item === 'object' && typeof item.id === 'string' && typeof item.name === 'string'),
     );
+  }
+  if (!dirtyCustomPlugins && Array.isArray(parsed.customPlugins)) {
+    state.customPlugins = parsed.customPlugins.filter(
+      (item): item is StoredCustomPlugin =>
+        Boolean(
+          item &&
+            typeof item === 'object' &&
+            typeof item.id === 'string' &&
+            typeof item.name === 'string' &&
+            typeof item.code === 'string',
+        ),
+    );
+  }
+  if (!dirtyNotificationSettings && parsed.notificationSettings && typeof parsed.notificationSettings === 'object') {
+    const ns = parsed.notificationSettings as Partial<NotificationLogSettings>;
+    state.notificationSettings = {
+      enabled: ns.enabled !== false,
+      showToasts: ns.showToasts !== false,
+      captureMentions: ns.captureMentions !== false,
+      captureRelationships: ns.captureRelationships !== false,
+    };
   }
   if (!dirtyUpdateSource && typeof parsed.updateSource === 'string') {
     const trimmed = parsed.updateSource.trim();
@@ -308,6 +366,61 @@ export function removeCustomTheme(id: string): void {
   notifyListeners();
 }
 
+export function getCustomPlugins(): StoredCustomPlugin[] {
+  return state.customPlugins ? [...state.customPlugins] : [];
+}
+
+export function addCustomPlugin(plugin: StoredCustomPlugin): void {
+  dirtyCustomPlugins = true;
+  const current = state.customPlugins ?? [];
+  const idx = current.findIndex((item) => item.name === plugin.name || item.id === plugin.id);
+  if (idx >= 0) {
+    current[idx] = plugin;
+  } else {
+    current.push(plugin);
+  }
+  state.customPlugins = current;
+  persist();
+  notifyListeners();
+}
+
+export function removeCustomPlugin(nameOrId: string): void {
+  dirtyCustomPlugins = true;
+  const current = state.customPlugins ?? [];
+  state.customPlugins = current.filter((item) => item.name !== nameOrId && item.id !== nameOrId);
+  persist();
+  notifyListeners();
+}
+
+export function getNotificationSettings(): NotificationLogSettings {
+  const ns = state.notificationSettings ?? DEFAULT_NOTIFICATION_SETTINGS;
+  return {
+    enabled: ns.enabled !== false,
+    showToasts: ns.showToasts !== false,
+    captureMentions: ns.captureMentions !== false,
+    captureRelationships: ns.captureRelationships !== false,
+  };
+}
+
+export function updateNotificationSettings(patch: Partial<NotificationLogSettings>): NotificationLogSettings {
+  dirtyNotificationSettings = true;
+  const current = getNotificationSettings();
+  const next: NotificationLogSettings = {
+    enabled: patch.enabled !== undefined ? Boolean(patch.enabled) : current.enabled,
+    showToasts: patch.showToasts !== undefined ? Boolean(patch.showToasts) : current.showToasts,
+    captureMentions:
+      patch.captureMentions !== undefined ? Boolean(patch.captureMentions) : current.captureMentions,
+    captureRelationships:
+      patch.captureRelationships !== undefined
+        ? Boolean(patch.captureRelationships)
+        : current.captureRelationships,
+  };
+  state.notificationSettings = next;
+  persist();
+  notifyListeners();
+  return next;
+}
+
 export function getUpdateSource(): string {
   return state.updateSource?.trim() ? state.updateSource : DEFAULT_UPDATE_SOURCE;
 }
@@ -378,7 +491,7 @@ export function updateSettings(partial: Partial<NekocordSettings>): void {
 export function exportSettingsJson(): string {
   return JSON.stringify(
     {
-      nekocordVersion: globalThis.Nekocord?.version ?? '1.2.0',
+      nekocordVersion: globalThis.Nekocord?.version ?? '1.4.0',
       exportedAt: new Date().toISOString(),
       settings: {
         plugins: state.plugins,
@@ -386,6 +499,8 @@ export function exportSettingsJson(): string {
         favoritePlugins: state.favoritePlugins ?? [],
         activeThemeId: state.activeThemeId ?? null,
         customThemes: state.customThemes ?? [],
+        customPlugins: state.customPlugins ?? [],
+        notificationSettings: getNotificationSettings(),
         updateSource: getUpdateSource(),
       },
     },
@@ -434,6 +549,8 @@ export function importSettingsJson(rawJson: string): {
     'favoritePlugins' in source ||
     'activeThemeId' in source ||
     'customThemes' in source ||
+    'customPlugins' in source ||
+    'notificationSettings' in source ||
     'updateSource' in source;
   if (!hasKnownKey) {
     return { ok: false, message: 'JSON does not contain valid Nekocord settings fields.' };
@@ -496,6 +613,32 @@ export function importSettingsJson(rawJson: string): {
       )
     : [];
 
+  const nextCustomPlugins = Array.isArray(source.customPlugins)
+    ? source.customPlugins.filter(
+        (item: unknown): item is StoredCustomPlugin =>
+          Boolean(
+            item &&
+              typeof item === 'object' &&
+              typeof (item as any).id === 'string' &&
+              typeof (item as any).name === 'string' &&
+              typeof (item as any).code === 'string',
+          ),
+      )
+    : [];
+
+  const rawNotif =
+    source.notificationSettings && typeof source.notificationSettings === 'object'
+      ? (source.notificationSettings as Partial<NotificationLogSettings>)
+      : null;
+  const nextNotificationSettings: NotificationLogSettings = rawNotif
+    ? {
+        enabled: rawNotif.enabled !== false,
+        showToasts: rawNotif.showToasts !== false,
+        captureMentions: rawNotif.captureMentions !== false,
+        captureRelationships: rawNotif.captureRelationships !== false,
+      }
+    : { ...DEFAULT_NOTIFICATION_SETTINGS };
+
   const nextUpdateSource =
     typeof source.updateSource === 'string' && source.updateSource.trim()
       ? source.updateSource.trim()
@@ -512,10 +655,14 @@ export function importSettingsJson(rawJson: string): {
   state.favoritePlugins = nextFavorites;
   state.activeThemeId = nextThemeId;
   state.customThemes = nextCustomThemes;
+  state.customPlugins = nextCustomPlugins;
+  state.notificationSettings = nextNotificationSettings;
   state.updateSource = nextUpdateSource;
   dirtyFavorites = true;
   dirtyActiveTheme = true;
   dirtyCustomThemes = true;
+  dirtyCustomPlugins = true;
+  dirtyNotificationSettings = true;
   dirtyUpdateSource = true;
 
   persist();
@@ -531,7 +678,7 @@ export function importSettingsJson(rawJson: string): {
 }
 
 /**
- * Resets all plugin overrides, per-plugin settings, favorites, themes, and update source back to defaults.
+ * Resets all plugin overrides, per-plugin settings, favorites, themes, custom plugins, notifications, and update source back to defaults.
  */
 export function resetSettings(): void {
   for (const k of Object.keys(state.plugins)) {
@@ -545,10 +692,14 @@ export function resetSettings(): void {
   state.favoritePlugins = [];
   state.activeThemeId = null;
   state.customThemes = [];
+  state.customPlugins = [];
+  state.notificationSettings = { ...DEFAULT_NOTIFICATION_SETTINGS };
   state.updateSource = DEFAULT_UPDATE_SOURCE;
   dirtyFavorites = true;
   dirtyActiveTheme = true;
   dirtyCustomThemes = true;
+  dirtyCustomPlugins = true;
+  dirtyNotificationSettings = true;
   dirtyUpdateSource = true;
   persist();
   notifyListeners();

@@ -5,6 +5,7 @@ import {
   onFluxDispatcher,
 } from '../../metro/common.js';
 import { before, type Unpatch } from '../../patcher/index.js';
+import { pushNotification } from '../../notifications/index.js';
 import { definePlugin } from '../types.js';
 
 const MAX_RECENT_EVENTS = 25;
@@ -28,6 +29,13 @@ function recordEvent(summary: string): void {
     recentEvents.length = MAX_RECENT_EVENTS;
   }
   console.log(`[Nekocord/RelationshipNotifier] ${summary}`);
+  pushNotification({
+    title: 'Relationship Update',
+    body: summary,
+    source: 'RelationshipNotifier',
+    kind: 'warning',
+    showToast: true,
+  });
 }
 
 function handleDispatchBefore(action: any): void {

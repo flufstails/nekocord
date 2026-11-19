@@ -29,6 +29,7 @@ export type VencordIconName =
   | 'folder'
   | 'log'
   | 'clock'
+  | 'exclamation'
   | 'switchCheck'
   | 'switchCross';
 
@@ -280,6 +281,16 @@ const VENCORD_ICONS: Record<VencordIconName, SvgIconSpec> = {
       },
     ],
   },
+  exclamation: {
+    viewBox: '0 0 24 24',
+    paths: [
+      {
+        d: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 4.5a1.15 1.15 0 0 1 1.15 1.15v5.6a1.15 1.15 0 1 1-2.3 0v-5.6A1.15 1.15 0 0 1 12 6.5Zm0 11.25a1.3 1.3 0 1 1 0-2.6 1.3 1.3 0 0 1 0 2.6Z',
+        fillRule: 'evenodd',
+        clipRule: 'evenodd',
+      },
+    ],
+  },
   switchCheck: {
     viewBox: '0 0 20 20',
     paths: [
@@ -460,6 +471,7 @@ function renderFallbackBadge(
     updater: 'U',
     backupRestore: 'B',
     info: 'i',
+    exclamation: '!',
     starFilled: '*',
     starOutlined: '+',
     delete: 'x',

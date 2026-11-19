@@ -6,6 +6,7 @@ import {
   watchNamedExports,
 } from '../metro/index.js';
 import { getThemeStore } from '../metro/common.js';
+import { pushNotification } from '../notifications/index.js';
 import { after, instead, type Unpatch } from '../patcher/index.js';
 import {
   addCustomTheme,
@@ -259,201 +260,23 @@ function computeEffectiveRawColors(theme: NekocordTheme): Record<string, string>
   return merged;
 }
 
-export const BUILTIN_THEMES: NekocordTheme[] = [
-  {
-    id: 'amoled-pitch',
-    name: 'AMOLED Pitch',
-    description: 'True black OLED surfaces with deep ink panels and crisp contrast.',
-    authors: ['flufstails'],
-    spec: 2,
-    builtin: true,
-    baseMode: 'dark',
-    preview: ['#000000', '#0a0a0c', '#5865f2'],
-    semanticColors: {
-      BACKGROUND_PRIMARY: ['#000000', '#ffffff'],
-      BACKGROUND_SECONDARY: ['#09090b', '#f2f3f5'],
-      BACKGROUND_TERTIARY: ['#111115', '#e3e5e8'],
-      BACKGROUND_MOBILE_PRIMARY: ['#000000', '#ffffff'],
-      BACKGROUND_MOBILE_SECONDARY: ['#09090b', '#f2f3f5'],
-      CHAT_BACKGROUND: ['#000000', '#ffffff'],
-      CARD_PRIMARY_BG: ['#0e0e12', '#ffffff'],
-      BG_BASE_PRIMARY: ['#000000', '#ffffff'],
-      BG_BASE_SECONDARY: ['#09090b', '#f2f3f5'],
-      BG_BASE_TERTIARY: ['#111115', '#e3e5e8'],
-      BACKGROUND_BASE_LOW: ['#000000', '#ffffff'],
-      BACKGROUND_BASE_LOWER: ['#09090b', '#f2f3f5'],
-      BACKGROUND_BASE_LOWEST: ['#050507', '#ebedef'],
-      BACKGROUND_SURFACE_HIGH: ['#121216', '#f7f8fa'],
-      TEXT_NORMAL: ['#f5f6f8', '#060607'],
-      TEXT_MUTED: ['#8b8f9a', '#6d6f78'],
-      HEADER_PRIMARY: ['#ffffff', '#060607'],
-    },
-    rawColors: buildDarkRawRamp('#000000', '#09090b', '#050507', '#121216'),
-  },
-  {
-    id: 'catppuccin-mocha',
-    name: 'Catppuccin Mocha',
-    description: 'Warm pastel lavender and midnight slate theme.',
-    authors: ['flufstails'],
-    spec: 2,
-    builtin: true,
-    baseMode: 'dark',
-    preview: ['#1e1e2e', '#181825', '#cba6f7'],
-    semanticColors: {
-      BACKGROUND_PRIMARY: ['#1e1e2e', '#eff1f5'],
-      BACKGROUND_SECONDARY: ['#181825', '#e6e9ef'],
-      BACKGROUND_TERTIARY: ['#11111b', '#dce0e8'],
-      BACKGROUND_MOBILE_PRIMARY: ['#1e1e2e', '#eff1f5'],
-      BACKGROUND_MOBILE_SECONDARY: ['#181825', '#e6e9ef'],
-      CHAT_BACKGROUND: ['#1e1e2e', '#eff1f5'],
-      CARD_PRIMARY_BG: ['#242436', '#ffffff'],
-      BG_BASE_PRIMARY: ['#1e1e2e', '#eff1f5'],
-      BG_BASE_SECONDARY: ['#181825', '#e6e9ef'],
-      BG_BASE_TERTIARY: ['#11111b', '#dce0e8'],
-      BACKGROUND_BASE_LOW: ['#1e1e2e', '#eff1f5'],
-      BACKGROUND_BASE_LOWER: ['#181825', '#e6e9ef'],
-      BACKGROUND_BASE_LOWEST: ['#11111b', '#dce0e8'],
-      BACKGROUND_SURFACE_HIGH: ['#29293e', '#ffffff'],
-      TEXT_NORMAL: ['#cdd6f4', '#4c4f69'],
-      TEXT_MUTED: ['#9399b2', '#6c6f85'],
-      HEADER_PRIMARY: ['#f5e0dc', '#4c4f69'],
-      BRAND_500: ['#cba6f7', '#8839ef'],
-    },
-    rawColors: buildDarkRawRamp('#1e1e2e', '#181825', '#11111b', '#29293e', '#cba6f7'),
-  },
-  {
-    id: 'rose-pine',
-    name: 'Rose Pine',
-    description: 'Muted velvet plum panels with soft rose and iris highlights.',
-    authors: ['flufstails'],
-    spec: 2,
-    builtin: true,
-    baseMode: 'dark',
-    preview: ['#191724', '#1f1d2e', '#ebbcba'],
-    semanticColors: {
-      BACKGROUND_PRIMARY: ['#191724', '#faf4ed'],
-      BACKGROUND_SECONDARY: ['#1f1d2e', '#fffaf3'],
-      BACKGROUND_TERTIARY: ['#26233a', '#f2e9e1'],
-      BACKGROUND_MOBILE_PRIMARY: ['#191724', '#faf4ed'],
-      BACKGROUND_MOBILE_SECONDARY: ['#1f1d2e', '#fffaf3'],
-      CHAT_BACKGROUND: ['#191724', '#faf4ed'],
-      CARD_PRIMARY_BG: ['#232136', '#fffaf3'],
-      BG_BASE_PRIMARY: ['#191724', '#faf4ed'],
-      BG_BASE_SECONDARY: ['#1f1d2e', '#fffaf3'],
-      BG_BASE_TERTIARY: ['#26233a', '#f2e9e1'],
-      BACKGROUND_BASE_LOW: ['#191724', '#faf4ed'],
-      BACKGROUND_BASE_LOWER: ['#1f1d2e', '#fffaf3'],
-      BACKGROUND_BASE_LOWEST: ['#14121d', '#f2e9e1'],
-      BACKGROUND_SURFACE_HIGH: ['#2a273f', '#fffaf3'],
-      TEXT_NORMAL: ['#e0def4', '#575279'],
-      TEXT_MUTED: ['#908caa', '#797593'],
-      HEADER_PRIMARY: ['#f6c177', '#575279'],
-      BRAND_500: ['#c4a7e7', '#907aa9'],
-    },
-    rawColors: buildDarkRawRamp('#191724', '#1f1d2e', '#14121d', '#2a273f', '#c4a7e7'),
-  },
-  {
-    id: 'nordic-frost',
-    name: 'Nordic Frost',
-    description: 'Cool arctic slate palette with glacier cyan accents.',
-    authors: ['flufstails'],
-    spec: 2,
-    builtin: true,
-    baseMode: 'dark',
-    preview: ['#2e3440', '#3b4252', '#88c0d0'],
-    semanticColors: {
-      BACKGROUND_PRIMARY: ['#2e3440', '#eceff4'],
-      BACKGROUND_SECONDARY: ['#3b4252', '#e5e9f0'],
-      BACKGROUND_TERTIARY: ['#242933', '#d8dee9'],
-      BACKGROUND_MOBILE_PRIMARY: ['#2e3440', '#eceff4'],
-      BACKGROUND_MOBILE_SECONDARY: ['#3b4252', '#e5e9f0'],
-      CHAT_BACKGROUND: ['#2e3440', '#eceff4'],
-      CARD_PRIMARY_BG: ['#434c5e', '#ffffff'],
-      BG_BASE_PRIMARY: ['#2e3440', '#eceff4'],
-      BG_BASE_SECONDARY: ['#3b4252', '#e5e9f0'],
-      BG_BASE_TERTIARY: ['#242933', '#d8dee9'],
-      BACKGROUND_BASE_LOW: ['#2e3440', '#eceff4'],
-      BACKGROUND_BASE_LOWER: ['#3b4252', '#e5e9f0'],
-      BACKGROUND_BASE_LOWEST: ['#242933', '#d8dee9'],
-      BACKGROUND_SURFACE_HIGH: ['#434c5e', '#ffffff'],
-      TEXT_NORMAL: ['#eceff4', '#2e3440'],
-      TEXT_MUTED: ['#a5b1c2', '#4c566a'],
-      HEADER_PRIMARY: ['#ffffff', '#2e3440'],
-      BRAND_500: ['#88c0d0', '#5e81ac'],
-    },
-    rawColors: buildDarkRawRamp('#2e3440', '#3b4252', '#242933', '#434c5e', '#88c0d0'),
-  },
-  {
-    id: 'sakura-cream',
-    name: 'Sakura Cream',
-    description: 'Soft golden cream and blossom pink theme inspired by sunny desks.',
-    authors: ['flufstails'],
-    spec: 2,
-    builtin: true,
-    baseMode: 'light',
-    preview: ['#fdf6ec', '#f6e8d7', '#e07a9c'],
-    semanticColors: {
-      BACKGROUND_PRIMARY: ['#2b2220', '#fdf6ec'],
-      BACKGROUND_SECONDARY: ['#241c1a', '#f6e8d7'],
-      BACKGROUND_TERTIARY: ['#1c1513', '#edd8c2'],
-      BACKGROUND_MOBILE_PRIMARY: ['#2b2220', '#fdf6ec'],
-      BACKGROUND_MOBILE_SECONDARY: ['#241c1a', '#f6e8d7'],
-      CHAT_BACKGROUND: ['#2b2220', '#fdf6ec'],
-      CARD_PRIMARY_BG: ['#352a27', '#fffaf2'],
-      BG_BASE_PRIMARY: ['#2b2220', '#fdf6ec'],
-      BG_BASE_SECONDARY: ['#241c1a', '#f6e8d7'],
-      BG_BASE_TERTIARY: ['#1c1513', '#edd8c2'],
-      BACKGROUND_BASE_LOW: ['#2b2220', '#fdf6ec'],
-      BACKGROUND_BASE_LOWER: ['#241c1a', '#f6e8d7'],
-      BACKGROUND_BASE_LOWEST: ['#1c1513', '#edd8c2'],
-      BACKGROUND_SURFACE_HIGH: ['#352a27', '#fffaf2'],
-      TEXT_NORMAL: ['#f9efe6', '#3d2c28'],
-      TEXT_MUTED: ['#b89f97', '#7b615a'],
-      HEADER_PRIMARY: ['#fff4ea', '#2c1d19'],
-      BRAND_500: ['#e07a9c', '#d9648a'],
-    },
-    rawColors: buildLightRawRamp(
-      '#fdf6ec',
-      '#f6e8d7',
-      '#edd8c2',
-      '#2b2220',
-      '#241c1a',
-      '#1c1513',
-      '#e07a9c',
-    ),
-  },
-  {
-    id: 'tokyo-night',
-    name: 'Tokyo Night',
-    description: 'Deep indigo storm backdrop with neon sky-blue accents.',
-    authors: ['flufstails'],
-    spec: 2,
-    builtin: true,
-    baseMode: 'dark',
-    preview: ['#1a1b26', '#16161e', '#7aa2f7'],
-    semanticColors: {
-      BACKGROUND_PRIMARY: ['#1a1b26', '#d5d6db'],
-      BACKGROUND_SECONDARY: ['#16161e', '#cbccd1'],
-      BACKGROUND_TERTIARY: ['#12121a', '#c0c1c7'],
-      BACKGROUND_MOBILE_PRIMARY: ['#1a1b26', '#d5d6db'],
-      BACKGROUND_MOBILE_SECONDARY: ['#16161e', '#cbccd1'],
-      CHAT_BACKGROUND: ['#1a1b26', '#d5d6db'],
-      CARD_PRIMARY_BG: ['#24283b', '#e6e7ec'],
-      BG_BASE_PRIMARY: ['#1a1b26', '#d5d6db'],
-      BG_BASE_SECONDARY: ['#16161e', '#cbccd1'],
-      BG_BASE_TERTIARY: ['#12121a', '#c0c1c7'],
-      BACKGROUND_BASE_LOW: ['#1a1b26', '#d5d6db'],
-      BACKGROUND_BASE_LOWER: ['#16161e', '#cbccd1'],
-      BACKGROUND_BASE_LOWEST: ['#12121a', '#c0c1c7'],
-      BACKGROUND_SURFACE_HIGH: ['#24283b', '#e6e7ec'],
-      TEXT_NORMAL: ['#c0caf5', '#343b58'],
-      TEXT_MUTED: ['#787c99', '#565a6e'],
-      HEADER_PRIMARY: ['#e0e6ff', '#1f2335'],
-      BRAND_500: ['#7aa2f7', '#3d59a1'],
-    },
-    rawColors: buildDarkRawRamp('#1a1b26', '#16161e', '#12121a', '#24283b', '#7aa2f7'),
-  },
-];
+export const BUILTIN_THEMES: NekocordTheme[] = [];
+
+export const CUSTOM_CSS_TEMPLATE = `/**
+ * @name Cozy Cream Dusk
+ * @author flufstails
+ * @description Soft midnight plum surfaces with golden-cream accents.
+ */
+:root {
+  --background-primary: #1a1826;
+  --background-secondary: #14121d;
+  --background-tertiary: #0f0e17;
+  --card-primary-bg: #232034;
+  --text-normal: #f4eee6;
+  --text-muted: #9e96b3;
+  --header-primary: #fff8ef;
+  --brand-500: #d982b5;
+}`;
 
 let initialized = false;
 const cleanups: Array<() => void> = [];
@@ -1071,15 +894,230 @@ function collectPreviewSwatches(
   return picks.length > 0 ? picks.slice(0, 3) : ['#1e1e2e', '#181825', '#5865f2'];
 }
 
+const CSS_COLOR_VALUE_RE =
+  /^(?:#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})|rgba?\([^)]+\)|hsla?\([^)]+\))$/i;
+
+const CSS_VAR_TO_SEMANTIC: Record<string, string[]> = {
+  'background-primary': ['BACKGROUND_PRIMARY', 'BG_BASE_PRIMARY', 'CHAT_BACKGROUND', 'BACKGROUND_MOBILE_PRIMARY', 'BACKGROUND_BASE_LOW'],
+  'bg-base-primary': ['BACKGROUND_PRIMARY', 'BG_BASE_PRIMARY', 'CHAT_BACKGROUND', 'BACKGROUND_BASE_LOW'],
+  'bg-primary': ['BACKGROUND_PRIMARY', 'BG_BASE_PRIMARY', 'CHAT_BACKGROUND'],
+  'background-secondary': ['BACKGROUND_SECONDARY', 'BG_BASE_SECONDARY', 'BACKGROUND_MOBILE_SECONDARY', 'BACKGROUND_BASE_LOWER'],
+  'background-secondary-alt': ['BACKGROUND_SECONDARY_ALT', 'BACKGROUND_TERTIARY', 'CARD_PRIMARY_BG'],
+  'bg-base-secondary': ['BACKGROUND_SECONDARY', 'BG_BASE_SECONDARY', 'BACKGROUND_BASE_LOWER'],
+  'background-tertiary': ['BACKGROUND_TERTIARY', 'BG_BASE_TERTIARY', 'BACKGROUND_BASE_LOWEST'],
+  'bg-base-tertiary': ['BACKGROUND_TERTIARY', 'BG_BASE_TERTIARY', 'BACKGROUND_BASE_LOWEST'],
+  'background-mobile-primary': ['BACKGROUND_MOBILE_PRIMARY', 'BACKGROUND_PRIMARY'],
+  'background-mobile-secondary': ['BACKGROUND_MOBILE_SECONDARY', 'BACKGROUND_SECONDARY'],
+  'chat-background': ['CHAT_BACKGROUND', 'BACKGROUND_PRIMARY'],
+  'background-floating': ['BACKGROUND_FLOATING', 'CARD_PRIMARY_BG', 'BACKGROUND_SURFACE_HIGH'],
+  'card-primary-bg': ['CARD_PRIMARY_BG', 'BACKGROUND_SURFACE_HIGH'],
+  'background-surface-high': ['BACKGROUND_SURFACE_HIGH', 'CARD_PRIMARY_BG'],
+  'text-normal': ['TEXT_NORMAL', 'TEXT_DEFAULT', 'TEXT_PRIMARY'],
+  'text-default': ['TEXT_DEFAULT', 'TEXT_NORMAL', 'TEXT_PRIMARY'],
+  'text-muted': ['TEXT_MUTED', 'TEXT_SUBTLE', 'TEXT_SECONDARY'],
+  'text-subtle': ['TEXT_SUBTLE', 'TEXT_MUTED'],
+  'header-primary': ['HEADER_PRIMARY', 'TEXT_STRONG'],
+  'header-secondary': ['HEADER_SECONDARY', 'TEXT_MUTED'],
+  'brand-500': ['BRAND_500', 'BG_BRAND', 'BACKGROUND_BRAND'],
+  'brand-experiment': ['BRAND_500', 'BG_BRAND', 'BACKGROUND_BRAND'],
+  'accent-color': ['BRAND_500', 'BG_BRAND'],
+  'control-brand-foreground': ['CONTROL_BRAND_FOREGROUND', 'BRAND_500'],
+  'interactive-normal': ['INTERACTIVE_NORMAL', 'ICON_MUTED'],
+  'interactive-active': ['INTERACTIVE_ACTIVE', 'ICON_STRONG'],
+};
+
+function resolveCssColorVar(
+  rawVal: string,
+  varMap: Record<string, string>,
+  depth = 0,
+): string | null {
+  if (depth > 6 || !rawVal) {
+    return null;
+  }
+  const cleaned = rawVal.replace(/\s*!important\s*$/i, '').trim();
+  if (CSS_COLOR_VALUE_RE.test(cleaned)) {
+    return cleaned;
+  }
+  const varMatch = /^var\(\s*--([a-z0-9_-]+)(?:\s*,\s*([^)]+))?\s*\)$/i.exec(cleaned);
+  if (!varMatch) {
+    return null;
+  }
+  const refName = varMatch[1].toLowerCase();
+  if (varMap[refName]) {
+    const resolved = resolveCssColorVar(varMap[refName], varMap, depth + 1);
+    if (resolved) return resolved;
+  }
+  if (varMatch[2]) {
+    return resolveCssColorVar(varMatch[2], varMap, depth + 1);
+  }
+  return null;
+}
+
+function collectCssDeclsFromBlocks(
+  cssText: string,
+  targetSelectorFilter: 'light' | 'general',
+): Record<string, string> {
+  const vars: Record<string, string> = {};
+  const withoutComments = cssText.replace(/\/\*[\s\S]*?\*\//g, ' ');
+  const blockRe = /([^{}]+)\{([^{}]*)\}/g;
+  let blockMatch: RegExpExecArray | null;
+
+  while ((blockMatch = blockRe.exec(withoutComments)) !== null) {
+    const selector = blockMatch[1].trim().toLowerCase();
+    const isLightBlock = selector.indexOf('.theme-light') !== -1;
+    if (targetSelectorFilter === 'light' && !isLightBlock) {
+      continue;
+    }
+    if (targetSelectorFilter === 'general' && isLightBlock) {
+      continue;
+    }
+
+    const body = blockMatch[2];
+    const declRe = /--([a-z0-9_-]+)\s*:\s*([^;}\n]+)/gi;
+    let declMatch: RegExpExecArray | null;
+    while ((declMatch = declRe.exec(body)) !== null) {
+      vars[declMatch[1].toLowerCase()] = declMatch[2].trim();
+    }
+  }
+
+  return vars;
+}
+
 /**
- * Downloads, validates, and saves a Vendetta/Bunny-compatible theme JSON from an HTTPS URL.
+ * Parses a custom CSS theme (BetterDiscord/Vencord/CSS variable declarations) into a {@link NekocordTheme}.
+ */
+export function parseCssTheme(
+  cssText: string,
+  options?: { name?: string; sourceUrl?: string },
+): { ok: boolean; theme?: NekocordTheme; error?: string } {
+  const rawCss = typeof cssText === 'string' ? cssText.trim() : '';
+  if (!rawCss) {
+    return { ok: false, error: 'Paste CSS variable rules or a valid CSS theme first.' };
+  }
+
+  const metaName = /@name\s+([^\r\n*]+)/i.exec(rawCss)?.[1]?.trim();
+  const metaAuthor = /@author\s+([^\r\n*]+)/i.exec(rawCss)?.[1]?.trim();
+  const metaDesc = /@description\s+([^\r\n*]+)/i.exec(rawCss)?.[1]?.trim();
+
+  const generalVars = collectCssDeclsFromBlocks(rawCss, 'general');
+  const lightVars = collectCssDeclsFromBlocks(rawCss, 'light');
+
+  if (Object.keys(generalVars).length === 0 && Object.keys(lightVars).length === 0) {
+    const fallbackDecls = /--([a-z0-9_-]+)\s*:\s*([^;}\n]+)/gi;
+    let m: RegExpExecArray | null;
+    while ((m = fallbackDecls.exec(rawCss)) !== null) {
+      generalVars[m[1].toLowerCase()] = m[2].trim();
+    }
+  }
+
+  const mergedLookupVars = { ...lightVars, ...generalVars };
+  const semanticColors: Record<string, Array<string | null> | string> = {};
+  const rawColors: Record<string, string> = {};
+  let colorCount = 0;
+
+  const mapDeclSet = (declMap: Record<string, string>, slot: 0 | 1) => {
+    for (const [varName, rawValue] of Object.entries(declMap)) {
+      const color = resolveCssColorVar(rawValue, slot === 0 ? generalVars : mergedLookupVars);
+      if (!color) continue;
+
+      const semanticTargets = CSS_VAR_TO_SEMANTIC[varName];
+      if (semanticTargets) {
+        for (let i = 0; i < semanticTargets.length; i += 1) {
+          const semKey = semanticTargets[i];
+          const existing = Array.isArray(semanticColors[semKey])
+            ? [...(semanticColors[semKey] as Array<string | null>)]
+            : [null, null];
+          existing[slot] = color;
+          if (!existing[0]) existing[0] = color;
+          if (!existing[1]) existing[1] = color;
+          semanticColors[semKey] = existing;
+          colorCount += 1;
+        }
+      } else {
+        const normalizedKey = normalizeTokenKey(varName);
+        if (/^(?:PRIMARY|PLUM|NEUTRAL|BRAND|WHITE|BLACK|GREEN|YELLOW|RED)_[0-9]+$/i.test(normalizedKey)) {
+          rawColors[normalizedKey] = color;
+          colorCount += 1;
+        } else if (normalizedKey && /^(?:BACKGROUND|TEXT|HEADER|CARD|BG|BRAND|ACCENT)/.test(normalizedKey)) {
+          const existing = Array.isArray(semanticColors[normalizedKey])
+            ? [...(semanticColors[normalizedKey] as Array<string | null>)]
+            : [color, color];
+          existing[slot] = color;
+          semanticColors[normalizedKey] = existing;
+          colorCount += 1;
+        }
+      }
+    }
+  };
+
+  mapDeclSet(generalVars, 0);
+  if (Object.keys(lightVars).length > 0) {
+    mapDeclSet(lightVars, 1);
+  }
+
+  if (colorCount === 0) {
+    return {
+      ok: false,
+      error: 'No supported CSS color variables (e.g. --background-primary, --text-normal, --brand-500) found.',
+    };
+  }
+
+  const resolvedName = options?.name?.trim() || metaName || 'Custom CSS Theme';
+  const existing =
+    (options?.sourceUrl
+      ? getCustomThemes().find((t) => t.sourceUrl === options.sourceUrl)
+      : undefined) ?? getCustomThemes().find((t) => t.name === resolvedName && t.kind === 'css');
+
+  const theme: NekocordTheme = {
+    id: existing?.id ?? slugifyThemeId(resolvedName),
+    name: resolvedName,
+    description: metaDesc || 'Custom CSS variable theme.',
+    authors: metaAuthor ? [metaAuthor] : ['Custom CSS'],
+    spec: 2,
+    kind: 'css',
+    customCss: rawCss,
+    ...(options?.sourceUrl ? { sourceUrl: options.sourceUrl } : {}),
+    baseMode: Object.keys(lightVars).length > 0 && Object.keys(generalVars).length === 0 ? 'light' : 'dark',
+    preview: collectPreviewSwatches(semanticColors, rawColors),
+    semanticColors,
+    rawColors,
+  };
+
+  return { ok: true, theme };
+}
+
+/**
+ * Compiles and saves a custom CSS theme locally, immediately invalidating cached tokens.
+ */
+export function installThemeFromCss(
+  cssText: string,
+  customName?: string,
+  sourceUrl?: string,
+): { ok: boolean; theme?: NekocordTheme; error?: string } {
+  const parsed = parseCssTheme(cssText, { name: customName, sourceUrl });
+  if (!parsed.ok || !parsed.theme) {
+    return parsed;
+  }
+  invalidateThemeCache();
+  addCustomTheme(parsed.theme);
+  pushNotification({
+    title: 'Custom CSS Theme Installed',
+    body: `Saved "${parsed.theme.name}". Toggle it on and restart to apply.`,
+    source: 'Themes',
+    kind: 'success',
+  });
+  return { ok: true, theme: parsed.theme };
+}
+
+/**
+ * Downloads, validates, and saves either a Vendetta/Bunny JSON theme or a custom `.css` theme URL.
  */
 export async function installThemeFromUrl(
   rawUrl: string,
 ): Promise<{ ok: boolean; theme?: NekocordTheme; error?: string }> {
   const url = rawUrl.trim();
   if (!/^https?:\/\/\S+$/i.test(url)) {
-    return { ok: false, error: 'Enter a valid http:// or https:// theme JSON URL.' };
+    return { ok: false, error: 'Enter a valid http:// or https:// theme URL.' };
   }
   const fetchFn = (globalThis as Record<string, any>).fetch as
     | ((input: string, init?: any) => Promise<any>)
@@ -1093,7 +1131,16 @@ export async function installThemeFromUrl(
     if (!res.ok) {
       return { ok: false, error: `Download failed with HTTP ${res.status}.` };
     }
-    const parsed = (await res.json()) as Record<string, any>;
+    const text = await res.text();
+    const trimmed = typeof text === 'string' ? text.trim() : '';
+    const looksCss =
+      /\.css(?:\?|#|$)/i.test(url) || (trimmed.length > 0 && trimmed[0] !== '{' && trimmed[0] !== '[');
+
+    if (looksCss) {
+      return installThemeFromCss(trimmed, undefined, url);
+    }
+
+    const parsed = JSON.parse(trimmed) as Record<string, any>;
     if (!parsed || typeof parsed !== 'object' || typeof parsed.name !== 'string' || !parsed.name.trim()) {
       return { ok: false, error: 'Invalid theme JSON: missing "name" field.' };
     }
@@ -1130,6 +1177,7 @@ export async function installThemeFromUrl(
           : 'Installed custom theme.',
       authors: authorsRaw.length > 0 ? authorsRaw : ['Custom'],
       spec: typeof parsed.spec === 'number' ? parsed.spec : 2,
+      kind: 'json',
       sourceUrl: url,
       preview: collectPreviewSwatches(semanticColors, rawColors),
       semanticColors,
@@ -1138,11 +1186,17 @@ export async function installThemeFromUrl(
 
     invalidateThemeCache();
     addCustomTheme(theme);
+    pushNotification({
+      title: 'Theme Installed',
+      body: `Installed "${theme.name}" from URL.`,
+      source: 'Themes',
+      kind: 'success',
+    });
     return { ok: true, theme };
   } catch (err) {
     return {
       ok: false,
-      error: err instanceof Error ? err.message : 'Failed to parse theme JSON.',
+      error: err instanceof Error ? err.message : 'Failed to parse theme file.',
     };
   }
 }

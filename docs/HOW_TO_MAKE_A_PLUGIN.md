@@ -228,7 +228,33 @@ npm run patch
 
 ---
 
-## 7. Constraints Checklist
+## 7. Importing Standalone Runtime Plugins In-App
+
+You can also load single-file JavaScript plugins directly from **Plugins > Import** using a raw `.js` HTTPS URL or pasted snippet:
+
+```js
+// @name GreetingLogger
+// @description Logs a welcome entry to Notification Log on startup.
+// @author flufstails
+// @category utility
+// @tags custom, notifications
+
+export default definePlugin({
+  start() {
+    Nekocord.notifications.push({
+      title: 'GreetingLogger Ready',
+      body: 'Custom runtime plugin started successfully.',
+      source: 'GreetingLogger',
+      kind: 'success',
+    });
+  },
+  stop() {},
+});
+```
+
+---
+
+## 8. Constraints Checklist
 
 - **Hermes ES2018 target:** Do not use `BigInt` literals (`123n`), `String.prototype.replaceAll`, `Array.prototype.at`, or `Object.hasOwn`. `runtime/build.mjs` targets `['es2018']`.
 - **Clean teardown:** Unsubscribe every dispatcher listener, cancel every `waitFor` handle, and invoke every `Unpatch` inside `stop()`.

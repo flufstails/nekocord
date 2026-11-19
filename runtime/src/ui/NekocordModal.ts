@@ -1,4 +1,14 @@
 import { getClipboardModule, getStore, restartDiscordApp } from '../metro/common.js';
+import {
+  clearNotificationLog,
+  deleteNotification,
+  getNotificationLog,
+  pushNotification,
+  subscribeNotifications,
+  subscribeToasts,
+  type NekocordNotificationEntry,
+} from '../notifications/index.js';
+import { EXAMPLE_CUSTOM_PLUGIN_CODE } from '../plugins/custom.js';
 import { clearInlineMessageHistory } from '../plugins/messageLogger/index.js';
 import {
   formatSettingLabel,
@@ -16,6 +26,7 @@ import {
   exportSettingsJson,
   getActiveThemeId,
   getFavoritePlugins,
+  getNotificationSettings,
   getUpdateSource,
   importSettingsJson,
   resetPluginSettings,
@@ -23,12 +34,15 @@ import {
   setUpdateSource,
   subscribeSettings,
   toggleFavoritePlugin,
+  updateNotificationSettings,
 } from '../storage/index.js';
 import {
+  CUSTOM_CSS_TEMPLATE,
   deleteCustomTheme,
   getActiveTheme,
   getActiveThemeUiPalette,
   getAllThemes,
+  installThemeFromCss,
   installThemeFromUrl,
   selectTheme,
   type NekocordTheme,
@@ -46,14 +60,27 @@ import {
   type VencordIconName,
 } from './VencordIcons.js';
 
-export type NekocordTab = 'overview' | 'plugins' | 'themes' | 'updater' | 'backup';
+export type NekocordTab =
+  | 'overview'
+  | 'plugins'
+  | 'themes'
+  | 'notifications'
+  | 'updater'
+  | 'backup';
 export type PurrcordTab = NekocordTab;
 
 type NekocordRoute =
   | { kind: 'page'; tab: NekocordTab }
-  | { kind: 'plugin'; pluginName: string };
+  | { kind: 'plugin'; pluginName: string }
+  | { kind: 'import-plugin' };
 
-type PluginStatusFilter = 'all' | 'favorites' | 'configurable' | 'enabled' | 'disabled';
+type PluginStatusFilter =
+  | 'all'
+  | 'favorites'
+  | 'configurable'
+  | 'imported'
+  | 'enabled'
+  | 'disabled';
 type PluginCategoryFilter =
   | 'all'
   | 'chat'
@@ -64,6 +91,7 @@ type PluginCategoryFilter =
   | 'nitro'
   | 'voice';
 type ThemeSubTab = 'local' | 'online';
+type NotificationFilter = 'all' | 'nekocord' | 'discord' | 'alerts';
 
 let modalVisible = false;
 let requestedTab: NekocordTab = 'overview';
@@ -824,9 +852,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
     onToggle: (plugin: NekocordPlugin) => void;
   }) {
     const { plugin, enabled, favorite, p, onSelect, onToggle } = props;
-    const catStyle = getCategoryStyle(plugin.category, p);
     const isConfigurable = hasVisiblePluginSettings(plugin) || hasPluginActions(plugin);
-    const iconName: VencordIconName = isConfigurable ? 'cogWheel' : 'info';
 
     return h(
       Pressable,
@@ -848,88 +874,70 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
           { style: styles.addonTitleWrap },
           h(
             View,
-            { style: styles.addonTitleRow },
+            { style: [styles.addonTitleRow, { flexWrap: 'nowrap' }] },
             h(
               Text,
-              { style: { color: p.textPrimary, fontSize: 15, fontWeight: '700' } },
+              {
+                numberOfLines: 1,
+                style: {
+                  color: p.textPrimary,
+                  fontSize: 15,
+                  fontWeight: '700',
+                  flexShrink: 1,
+                },
+              },
               plugin.name,
             ),
             favorite
               ? h(View, { style: { marginLeft: 5 } }, icon('starFilled', 13, '#f0b232'))
               : null,
-            plugin.category
+            isConfigurable
               ? h(
-                  View,
+                  Pressable,
                   {
+                    onPress: () => onSelect(plugin),
+                    hitSlop: 8,
+                    accessible: true,
+                    accessibilityRole: 'button',
+                    accessibilityLabel: `${plugin.name} settings`,
                     style: {
                       marginLeft: 6,
-                      backgroundColor: catStyle.bg,
-                      borderRadius: 4,
-                      paddingHorizontal: 5.5,
-                      paddingVertical: 1.5,
+                      width: 24,
+                      height: 24,
+                      borderRadius: 6,
+                      backgroundColor: p.surfaceAlt,
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     },
                   },
-                  h(
-                    Text,
-                    {
-                      style: {
-                        color: catStyle.fg,
-                        fontSize: 9.5,
-                        fontWeight: '700',
-                        textTransform: 'uppercase',
-                      },
-                    },
-                    plugin.category,
-                  ),
+                  icon('cogWheel', 14.5, p.textSecondary),
                 )
               : null,
-            plugin.requiresRestart
-              ? h(
-                  View,
-                  {
-                    style: {
-                      marginLeft: 5,
-                      backgroundColor: p.warningSoft,
-                      borderRadius: 4,
-                      paddingHorizontal: 5,
-                      paddingVertical: 1.5,
-                    },
-                  },
-                  h(Text, { style: { color: p.warning, fontSize: 9, fontWeight: '700' } }, 'RESTART'),
-                )
-              : null,
-            plugin.isNew
-              ? h(
-                  View,
-                  {
-                    style: {
-                      marginLeft: 5,
-                      backgroundColor: p.danger,
-                      borderRadius: 4,
-                      paddingHorizontal: 5,
-                      paddingVertical: 1.5,
-                    },
-                  },
-                  h(Text, { style: { color: '#ffffff', fontSize: 9, fontWeight: '800' } }, 'NEW'),
-                )
-              : null,
+            h(
+              Pressable,
+              {
+                onPress: () => onSelect(plugin),
+                hitSlop: 8,
+                accessible: true,
+                accessibilityRole: 'button',
+                accessibilityLabel: `${plugin.name} info`,
+                style: {
+                  marginLeft: 5,
+                  width: 24,
+                  height: 24,
+                  borderRadius: 6,
+                  backgroundColor: plugin.requiresRestart ? p.warningSoft : p.surfaceAlt,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                },
+              },
+              icon('exclamation', 14.5, plugin.requiresRestart ? p.warning : p.textSecondary),
+            ),
           ),
         ),
         h(
           View,
           { style: styles.addonControls },
-          h(
-            Pressable,
-            {
-              onPress: () => onSelect(plugin),
-              hitSlop: 8,
-              accessible: true,
-              accessibilityRole: 'button',
-              accessibilityLabel: `${plugin.name} info`,
-              style: [styles.iconButton, { backgroundColor: p.surfaceAlt }],
-            },
-            icon(iconName, 17, p.textSecondary),
-          ),
           h(DiscordSwitch, {
             value: enabled,
             p,
@@ -1011,7 +1019,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
               {
                 style: {
                   marginLeft: 6,
-                  backgroundColor: theme.builtin ? p.brandSoft : p.surfaceAlt,
+                  backgroundColor: theme.kind === 'css' ? p.brandSoft : p.surfaceAlt,
                   borderRadius: 4,
                   paddingHorizontal: 5.5,
                   paddingVertical: 1.5,
@@ -1021,13 +1029,13 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
                 Text,
                 {
                   style: {
-                    color: theme.builtin ? '#8ea1ff' : p.textSecondary,
+                    color: theme.kind === 'css' ? '#8ea1ff' : p.textSecondary,
                     fontSize: 9.5,
                     fontWeight: '700',
                     textTransform: 'uppercase',
                   },
                 },
-                theme.builtin ? 'Built-in' : 'Custom',
+                theme.kind === 'css' ? 'CSS' : 'JSON',
               ),
             ),
             theme.baseMode
@@ -1128,6 +1136,12 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
       { key: 'qa-plugins', icon: 'plugins', label: 'Plugins', onPress: () => ctx.onOpenTab('plugins') },
       { key: 'qa-themes', icon: 'paintbrush', label: 'Themes', onPress: () => ctx.onOpenTab('themes') },
       {
+        key: 'qa-notif',
+        icon: 'log',
+        label: 'Notification Log',
+        onPress: () => ctx.onOpenTab('notifications'),
+      },
+      {
         key: 'qa-updater',
         icon: 'updater',
         label: 'Check Updates',
@@ -1139,7 +1153,6 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
         label: 'Backup & Restore',
         onPress: () => ctx.onOpenTab('backup'),
       },
-      { key: 'qa-reload', icon: 'restart', label: 'Relaunch Discord', onPress: ctx.onReloadApp },
       { key: 'qa-source', icon: 'github', label: 'View Source Code', onPress: ctx.onOpenRepo },
     ];
 
@@ -1376,6 +1389,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
     onSettingChanged: (plugin: NekocordPlugin, key: string, restartNeeded?: boolean) => void;
     onResetPluginSettings: (plugin: NekocordPlugin) => void;
     onClearHistory: () => void;
+    onUninstallPlugin: (plugin: NekocordPlugin) => void;
   }) {
     const { p, plugin, favorite } = ctx;
     const catStyle = getCategoryStyle(plugin.category, p);
@@ -1673,6 +1687,36 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
                   h(Text, { style: { color: p.warning, fontSize: 10, fontWeight: '700' } }, 'RESTART'),
                 )
               : null,
+            plugin.isNew
+              ? h(
+                  View,
+                  {
+                    style: {
+                      marginLeft: 6,
+                      backgroundColor: p.danger,
+                      borderRadius: 5,
+                      paddingHorizontal: 6,
+                      paddingVertical: 2,
+                    },
+                  },
+                  h(Text, { style: { color: '#ffffff', fontSize: 10, fontWeight: '800' } }, 'NEW'),
+                )
+              : null,
+            plugin.imported
+              ? h(
+                  View,
+                  {
+                    style: {
+                      marginLeft: 6,
+                      backgroundColor: p.brandSoft,
+                      borderRadius: 5,
+                      paddingHorizontal: 6,
+                      paddingVertical: 2,
+                    },
+                  },
+                  h(Text, { style: { color: '#8ea1ff', fontSize: 10, fontWeight: '800' } }, 'IMPORTED'),
+                )
+              : null,
           ),
           h(
             View,
@@ -1928,9 +1972,41 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
             ctx.enabled ? p.success : p.textMuted,
           ),
           renderInfoRow('pd-cat', 'Category', plugin.category.toUpperCase(), p),
-          renderInfoRow('pd-dir', 'Directory', `plugins/${plugin.slug}`, p),
+          renderInfoRow(
+            'pd-dir',
+            plugin.imported ? 'Source' : 'Directory',
+            plugin.imported ? plugin.sourceUrl ?? 'Imported snippet' : `plugins/${plugin.slug}`,
+            p,
+          ),
           plugin.requiresRestart
             ? renderInfoRow('pd-restart', 'Requires Restart', 'Yes', p, p.warning)
+            : null,
+          plugin.imported
+            ? h(
+                Pressable,
+                {
+                  key: 'pd-uninstall',
+                  onPress: () => ctx.onUninstallPlugin(plugin),
+                  style: {
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingHorizontal: 14,
+                    paddingVertical: 12,
+                  },
+                },
+                h(
+                  View,
+                  { style: { flexDirection: 'row', alignItems: 'center' } },
+                  icon('delete', 17, p.danger),
+                  h(
+                    Text,
+                    { style: { color: p.danger, fontSize: 14.5, fontWeight: '600', marginLeft: 8 } },
+                    'Uninstall Imported Plugin',
+                  ),
+                ),
+                icon('rightArrow', 16, p.textMuted),
+              )
             : null,
         ],
         p,
@@ -1953,6 +2029,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
     onSelectPlugin: (plugin: NekocordPlugin) => void;
     onTogglePlugin: (plugin: NekocordPlugin) => void;
     onRestartNow: () => void;
+    onOpenImportPlugin: () => void;
   }) {
     const {
       p,
@@ -1995,6 +2072,14 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
       return total;
     }, [plugins]);
 
+    const importedCount = React.useMemo(() => {
+      let total = 0;
+      for (let i = 0; i < plugins.length; i += 1) {
+        if (plugins[i].imported) total += 1;
+      }
+      return total;
+    }, [plugins]);
+
     const sortedAndFiltered = React.useMemo(() => {
       const normalized = searchQuery.trim().toLowerCase();
       const matched = plugins.filter((plugin) => {
@@ -2004,6 +2089,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
 
         if (statusFilter === 'favorites' && !fav) return false;
         if (statusFilter === 'configurable' && !configurable) return false;
+        if (statusFilter === 'imported' && !plugin.imported) return false;
         if (statusFilter === 'enabled' && !enabled) return false;
         if (statusFilter === 'disabled' && enabled) return false;
         if (categoryFilter !== 'all' && plugin.category !== categoryFilter) return false;
@@ -2044,6 +2130,9 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
       { id: 'all', label: `Show All (${plugins.length})` },
       { id: 'favorites', label: `Favorites (${favoriteSet.size})` },
       { id: 'configurable', label: `Configurable (${configurableCount})` },
+      ...(importedCount > 0
+        ? [{ id: 'imported' as PluginStatusFilter, label: `Imported (${importedCount})` }]
+        : []),
       { id: 'enabled', label: `Enabled (${visibleEnabledCount})` },
       { id: 'disabled', label: `Disabled (${Math.max(0, plugins.length - visibleEnabledCount)})` },
     ];
@@ -2093,48 +2182,77 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
             {
               variant: 'normal',
               title: 'Plugin Management',
-              body: 'Press the info or cog icon to inspect a plugin, star favorites, or view source.',
+              body: 'Tap the cog or (!) icon beside any plugin title for tags, settings, and documentation.',
               iconName: 'info',
             },
             p,
           ),
       h(
         View,
-        {
-          style: [
-            styles.searchBox,
-            { backgroundColor: p.surface, borderColor: p.border },
-          ],
-        },
-        icon('search', 17, p.textMuted),
-        TextInput
-          ? h(TextInput, {
-              value: searchQuery,
-              onChangeText: ctx.onSearchChange,
-              placeholder: 'Search for a plugin...',
-              placeholderTextColor: p.textMuted,
-              autoCapitalize: 'none',
-              autoCorrect: false,
-              style: [styles.searchInput, { color: p.textPrimary }],
-            })
-          : null,
-        searchQuery.length > 0
-          ? h(
-              Pressable,
-              {
-                onPress: () => ctx.onSearchChange(''),
-                style: {
-                  width: 22,
-                  height: 22,
-                  borderRadius: 11,
-                  backgroundColor: p.surfaceAlt,
-                  alignItems: 'center',
-                  justifyContent: 'center',
+        { style: { flexDirection: 'row', alignItems: 'center' } },
+        h(
+          View,
+          {
+            style: [
+              styles.searchBox,
+              { flex: 1, backgroundColor: p.surface, borderColor: p.border },
+            ],
+          },
+          icon('search', 17, p.textMuted),
+          TextInput
+            ? h(TextInput, {
+                value: searchQuery,
+                onChangeText: ctx.onSearchChange,
+                placeholder: 'Search for a plugin...',
+                placeholderTextColor: p.textMuted,
+                autoCapitalize: 'none',
+                autoCorrect: false,
+                style: [styles.searchInput, { color: p.textPrimary }],
+              })
+            : null,
+          searchQuery.length > 0
+            ? h(
+                Pressable,
+                {
+                  onPress: () => ctx.onSearchChange(''),
+                  style: {
+                    width: 22,
+                    height: 22,
+                    borderRadius: 11,
+                    backgroundColor: p.surfaceAlt,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  },
                 },
-              },
-              h(Text, { style: { color: p.textSecondary, fontSize: 12, fontWeight: '700' } }, 'x'),
-            )
-          : null,
+                h(Text, { style: { color: p.textSecondary, fontSize: 12, fontWeight: '700' } }, 'x'),
+              )
+            : null,
+        ),
+        h(
+          Pressable,
+          {
+            onPress: ctx.onOpenImportPlugin,
+            accessible: true,
+            accessibilityRole: 'button',
+            accessibilityLabel: 'Import custom plugin',
+            style: {
+              marginLeft: 8,
+              height: 42,
+              paddingHorizontal: 12,
+              borderRadius: 8,
+              backgroundColor: p.brand,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+            },
+          },
+          icon('plus', 15, p.brandOnText),
+          h(
+            Text,
+            { style: { color: p.brandOnText, fontSize: 13, fontWeight: '700', marginLeft: 5 } },
+            'Import',
+          ),
+        ),
       ),
       h(
         ScrollView,
@@ -2286,10 +2404,16 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
     themes: NekocordTheme[];
     activeThemeId: string | null;
     themeUrlInput: string;
+    cssNameInput: string;
+    cssCodeInput: string;
     themeBusy: boolean;
     themeMessage: { text: string; tone: 'success' | 'error' } | null;
     onSubTabChange: (t: ThemeSubTab) => void;
     onThemeUrlChange: (url: string) => void;
+    onCssNameChange: (name: string) => void;
+    onCssCodeChange: (css: string) => void;
+    onLoadCssTemplate: () => void;
+    onInstallCssTheme: () => void;
     onInstallTheme: () => void;
     onSelectTheme: (theme: NekocordTheme) => void;
     onResetTheme: () => void;
@@ -2314,8 +2438,8 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
         },
         ...(
           [
-            { id: 'local' as const, label: `Local Themes (${ctx.themes.length})` },
-            { id: 'online' as const, label: 'Online Themes' },
+            { id: 'local' as const, label: `Installed (${ctx.themes.length})` },
+            { id: 'online' as const, label: 'Import / Custom CSS' },
           ]
         ).map((item) => {
           const active = subTab === item.id;
@@ -2355,7 +2479,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
                   {
                     variant: 'brand',
                     title: 'Active Theme Override',
-                    body: 'You can switch back to Stock Discord anytime without deleting themes.',
+                    body: 'You can switch back to Stock Discord anytime without deleting your installed themes.',
                     iconName: 'paintbrush',
                     actionLabel: 'Reset',
                     actionIcon: 'restart',
@@ -2366,31 +2490,78 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
               : renderNoticeCard(
                   {
                     variant: 'normal',
-                    title: 'Local & Built-in Themes',
-                    body: 'Toggle a theme card below to restyle semantic Discord colors across the app.',
+                    title: 'Custom Themes Only',
+                    body: 'Install a Custom CSS theme or theme JSON URL under Import / Custom CSS, then toggle it here.',
                     iconName: 'paintbrush',
                   },
                   p,
                 ),
-            ...ctx.themes.map((theme) =>
-              h(ThemeCard, {
-                key: theme.id,
-                theme,
-                active: ctx.activeThemeId === theme.id,
-                p,
-                onSelect: ctx.onSelectTheme,
-                onDelete: ctx.onDeleteTheme,
-              }),
-            ),
+            ctx.themes.length === 0
+              ? h(
+                  View,
+                  {
+                    style: {
+                      backgroundColor: p.surface,
+                      borderColor: p.border,
+                      borderWidth: 1,
+                      borderRadius: 10,
+                      padding: 20,
+                      alignItems: 'center',
+                      marginTop: 4,
+                    },
+                  },
+                  h(
+                    Text,
+                    { style: { color: p.textPrimary, fontSize: 15, fontWeight: '700' } },
+                    'No custom themes installed yet.',
+                  ),
+                  h(
+                    Text,
+                    {
+                      style: {
+                        color: p.textMuted,
+                        fontSize: 13,
+                        textAlign: 'center',
+                        marginTop: 5,
+                        marginBottom: 14,
+                      },
+                    },
+                    'Paste Discord CSS variables or download a theme JSON / CSS URL to customize Discord.',
+                  ),
+                  renderButton(
+                    {
+                      key: 'empty-open-css',
+                      label: 'Open Import / Custom CSS',
+                      tone: 'brand',
+                      iconName: 'plus',
+                      onPress: () => ctx.onSubTabChange('online'),
+                    },
+                    p,
+                  ),
+                )
+              : h(
+                  React.Fragment,
+                  null,
+                  ...ctx.themes.map((theme) =>
+                    h(ThemeCard, {
+                      key: theme.id,
+                      theme,
+                      active: ctx.activeThemeId === theme.id,
+                      p,
+                      onSelect: ctx.onSelectTheme,
+                      onDelete: ctx.onDeleteTheme,
+                    }),
+                  ),
+                ),
           )
         : h(
             React.Fragment,
             null,
             renderNoticeCard(
               {
-                variant: 'warning',
-                title: 'Online Themes',
-                body: 'Paste a direct raw JSON URL (Vendetta / Bunny / Nekocord spec v2) to download and install into Local Themes.',
+                variant: 'normal',
+                title: 'Import JSON or Custom CSS Theme',
+                body: 'Install themes from a direct .css / .json URL or write custom Discord CSS variables directly below.',
                 iconName: 'link',
               },
               p,
@@ -2404,14 +2575,15 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
                   borderWidth: 1,
                   borderColor: p.border,
                   padding: 14,
+                  marginBottom: 12,
                 },
               },
-              renderSectionHeading('Theme JSON URL', p, true),
+              renderSectionHeading('Theme URL (.css or .json)', p, true),
               TextInput
                 ? h(TextInput, {
                     value: ctx.themeUrlInput,
                     onChangeText: ctx.onThemeUrlChange,
-                    placeholder: 'https://raw.githubusercontent.com/.../theme.json',
+                    placeholder: 'https://raw.githubusercontent.com/.../theme.css',
                     placeholderTextColor: p.textMuted,
                     autoCapitalize: 'none',
                     autoCorrect: false,
@@ -2431,13 +2603,102 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
               renderButton(
                 {
                   key: 'theme-install-btn',
-                  label: ctx.themeBusy ? 'Installing...' : 'Install & Apply Theme',
+                  label: ctx.themeBusy ? 'Installing...' : 'Download & Install Theme',
                   tone: 'brand',
-                  iconName: 'plus',
+                  iconName: 'cloudDownload',
                   disabled: ctx.themeBusy,
                   onPress: ctx.onInstallTheme,
                 },
                 p,
+              ),
+            ),
+            h(
+              View,
+              {
+                style: {
+                  backgroundColor: p.surface,
+                  borderRadius: 8,
+                  borderWidth: 1,
+                  borderColor: p.border,
+                  padding: 14,
+                },
+              },
+              renderSectionHeading('Custom CSS Theme Editor', p, true),
+              TextInput
+                ? h(TextInput, {
+                    value: ctx.cssNameInput,
+                    onChangeText: ctx.onCssNameChange,
+                    placeholder: 'Theme name (optional if @name header present)',
+                    placeholderTextColor: p.textMuted,
+                    autoCapitalize: 'words',
+                    style: {
+                      backgroundColor: p.surfaceAlt,
+                      borderColor: p.border,
+                      borderWidth: 1,
+                      borderRadius: 8,
+                      paddingHorizontal: 12,
+                      height: 40,
+                      color: p.textPrimary,
+                      fontSize: 13,
+                      marginBottom: 10,
+                    },
+                  })
+                : null,
+              TextInput
+                ? h(TextInput, {
+                    value: ctx.cssCodeInput,
+                    onChangeText: ctx.onCssCodeChange,
+                    placeholder: ':root { --background-primary: #1a1826; --brand-500: #d982b5; }',
+                    placeholderTextColor: p.textMuted,
+                    multiline: true,
+                    textAlignVertical: 'top',
+                    autoCapitalize: 'none',
+                    autoCorrect: false,
+                    style: {
+                      backgroundColor: p.surfaceAlt,
+                      borderColor: p.border,
+                      borderWidth: 1,
+                      borderRadius: 8,
+                      padding: 11,
+                      minHeight: 130,
+                      color: p.textPrimary,
+                      fontSize: 12.5,
+                      fontFamily: 'monospace',
+                      marginBottom: 12,
+                    },
+                  })
+                : null,
+              h(
+                View,
+                { style: { flexDirection: 'row', justifyContent: 'space-between' } },
+                h(
+                  View,
+                  { style: { flex: 1, marginRight: 5 } },
+                  renderButton(
+                    {
+                      key: 'css-load-template',
+                      label: 'Template',
+                      tone: 'secondary',
+                      iconName: 'copy',
+                      onPress: ctx.onLoadCssTemplate,
+                    },
+                    p,
+                  ),
+                ),
+                h(
+                  View,
+                  { style: { flex: 1.5, marginLeft: 5 } },
+                  renderButton(
+                    {
+                      key: 'css-save-btn',
+                      label: 'Save CSS Theme',
+                      tone: 'brand',
+                      iconName: 'plus',
+                      onPress: ctx.onInstallCssTheme,
+                    },
+                    p,
+                  ),
+                ),
               ),
               ctx.themeMessage
                 ? h(
@@ -2454,6 +2715,453 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
                 : null,
             ),
           ),
+    );
+  }
+
+  function NotificationsTabView(ctx: {
+    p: Palette;
+    entries: NekocordNotificationEntry[];
+    filter: NotificationFilter;
+    onFilterChange: (f: NotificationFilter) => void;
+    onToggleSetting: (key: 'enabled' | 'showToasts' | 'captureMentions' | 'captureRelationships') => void;
+    onSendTest: () => void;
+    onDeleteEntry: (id: string) => void;
+    onClearAll: () => void;
+  }) {
+    const { p, entries, filter } = ctx;
+    const settings = getNotificationSettings();
+
+    const filtered = entries.filter((item) => {
+      if (filter === 'all') return true;
+      if (filter === 'discord') return item.kind === 'discord' || item.source === 'Discord';
+      if (filter === 'alerts') return item.kind === 'warning' || item.kind === 'error';
+      return item.kind !== 'discord';
+    });
+
+    const formatTime = (ts: number) => {
+      const d = new Date(ts);
+      const hh = d.getHours() < 10 ? `0${d.getHours()}` : String(d.getHours());
+      const mm = d.getMinutes() < 10 ? `0${d.getMinutes()}` : String(d.getMinutes());
+      const ss = d.getSeconds() < 10 ? `0${d.getSeconds()}` : String(d.getSeconds());
+      return `${hh}:${mm}:${ss}`;
+    };
+
+    const getAccent = (kind: NekocordNotificationEntry['kind']) => {
+      switch (kind) {
+        case 'success':
+          return p.success;
+        case 'warning':
+          return p.warning;
+        case 'error':
+          return p.danger;
+        case 'discord':
+          return '#c084fc';
+        default:
+          return p.brand;
+      }
+    };
+
+    const toggleItems: Array<{
+      key: 'enabled' | 'showToasts' | 'captureMentions' | 'captureRelationships';
+      label: string;
+      desc: string;
+      val: boolean;
+    }> = [
+      {
+        key: 'enabled',
+        label: 'Enable Notification Log',
+        desc: 'Record Nekocord events, alerts, and plugin logs locally.',
+        val: settings.enabled,
+      },
+      {
+        key: 'showToasts',
+        label: 'Show In-App Toast Banners',
+        desc: 'Display non-blocking floating toast banners inside Discord.',
+        val: settings.showToasts,
+      },
+      {
+        key: 'captureMentions',
+        label: 'Capture Mentions & DMs',
+        desc: 'Log incoming direct messages and pings mentioning your account.',
+        val: settings.captureMentions,
+      },
+      {
+        key: 'captureRelationships',
+        label: 'Capture Relationship Alerts',
+        desc: 'Record incoming friend requests and friend list removals.',
+        val: settings.captureRelationships,
+      },
+    ];
+
+    const filters: Array<{ id: NotificationFilter; label: string }> = [
+      { id: 'all', label: `All (${entries.length})` },
+      { id: 'nekocord', label: 'Nekocord' },
+      { id: 'discord', label: 'Discord' },
+      { id: 'alerts', label: 'Alerts' },
+    ];
+
+    return h(
+      React.Fragment,
+      null,
+      renderSectionHeading('Notification Settings', p, true),
+      renderGroupedCard(
+        toggleItems.map((item) =>
+          h(
+            View,
+            {
+              key: `nf-${item.key}`,
+              style: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: 14,
+                paddingVertical: 11,
+              },
+            },
+            h(
+              View,
+              { style: { flex: 1, paddingRight: 12 } },
+              h(Text, { style: { color: p.textPrimary, fontSize: 14.5, fontWeight: '600' } }, item.label),
+              h(Text, { style: { color: p.textMuted, fontSize: 12, marginTop: 2 } }, item.desc),
+            ),
+            h(DiscordSwitch, {
+              value: item.val,
+              p,
+              accessibilityLabel: item.label,
+              onValueChange: () => ctx.onToggleSetting(item.key),
+            }),
+          ),
+        ),
+        p,
+      ),
+      h(
+        View,
+        { style: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 } },
+        h(
+          View,
+          { style: { flex: 1, marginRight: 5 } },
+          renderButton(
+            {
+              key: 'nf-test',
+              label: 'Test Notification',
+              tone: 'brand',
+              iconName: 'log',
+              onPress: ctx.onSendTest,
+            },
+            p,
+          ),
+        ),
+        h(
+          View,
+          { style: { flex: 1, marginLeft: 5 } },
+          renderButton(
+            {
+              key: 'nf-clear',
+              label: 'Clear Log',
+              tone: 'danger',
+              iconName: 'delete',
+              disabled: entries.length === 0,
+              onPress: ctx.onClearAll,
+            },
+            p,
+          ),
+        ),
+      ),
+      h(
+        View,
+        { style: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 6, marginBottom: 10 } },
+        ...filters.map((f) => {
+          const active = filter === f.id;
+          return h(
+            Pressable,
+            {
+              key: `nf-flt-${f.id}`,
+              onPress: () => ctx.onFilterChange(f.id),
+              style: [
+                styles.filterChip,
+                {
+                  backgroundColor: active ? p.brand : p.surface,
+                  borderColor: active ? p.brand : p.border,
+                  marginTop: 6,
+                },
+              ],
+            },
+            h(
+              Text,
+              {
+                style: {
+                  color: active ? p.brandOnText : p.textSecondary,
+                  fontSize: 12,
+                  fontWeight: active ? '700' : '600',
+                },
+              },
+              f.label,
+            ),
+          );
+        }),
+      ),
+      filtered.length === 0
+        ? h(
+            View,
+            {
+              style: {
+                backgroundColor: p.surface,
+                borderColor: p.border,
+                borderWidth: 1,
+                borderRadius: 10,
+                padding: 22,
+                alignItems: 'center',
+              },
+            },
+            h(Text, { style: { color: p.textPrimary, fontSize: 15, fontWeight: '700' } }, 'No notifications yet.'),
+            h(
+              Text,
+              { style: { color: p.textMuted, fontSize: 13, textAlign: 'center', marginTop: 4 } },
+              'Plugin events, mentions, and alerts will appear here in chronological order.',
+            ),
+          )
+        : h(
+            React.Fragment,
+            null,
+            ...filtered.map((item) => {
+              const accent = getAccent(item.kind);
+              return h(
+                View,
+                {
+                  key: item.id,
+                  style: [
+                    styles.addonCard,
+                    {
+                      backgroundColor: p.surface,
+                      borderColor: p.border,
+                      borderLeftWidth: 3.5,
+                      borderLeftColor: accent,
+                    },
+                  ],
+                },
+                h(
+                  View,
+                  { style: styles.addonHeader },
+                  h(
+                    View,
+                    { style: styles.addonTitleWrap },
+                    h(
+                      Text,
+                      { numberOfLines: 1, style: { color: p.textPrimary, fontSize: 14.5, fontWeight: '700' } },
+                      item.title,
+                    ),
+                    h(
+                      View,
+                      { style: { flexDirection: 'row', alignItems: 'center', marginTop: 2 } },
+                      h(
+                        Text,
+                        { style: { color: accent, fontSize: 11, fontWeight: '700', marginRight: 8 } },
+                        item.source,
+                      ),
+                      h(
+                        Text,
+                        { style: { color: p.textMuted, fontSize: 11 } },
+                        formatTime(item.timestamp),
+                      ),
+                    ),
+                  ),
+                  h(
+                    Pressable,
+                    {
+                      onPress: () => ctx.onDeleteEntry(item.id),
+                      hitSlop: 8,
+                      style: [styles.iconButton, { backgroundColor: p.surfaceAlt, marginRight: 0 }],
+                    },
+                    icon('delete', 15, p.textMuted),
+                  ),
+                ),
+                h(
+                  Text,
+                  { style: { color: p.textSecondary, fontSize: 13, lineHeight: 18, marginTop: 6 } },
+                  item.body,
+                ),
+              );
+            }),
+          ),
+    );
+  }
+
+  function ImportPluginView(ctx: {
+    p: Palette;
+    urlInput: string;
+    nameInput: string;
+    codeInput: string;
+    busy: boolean;
+    message: { text: string; tone: 'success' | 'error' } | null;
+    onUrlChange: (v: string) => void;
+    onNameChange: (v: string) => void;
+    onCodeChange: (v: string) => void;
+    onLoadExample: () => void;
+    onImportUrl: () => void;
+    onImportCode: () => void;
+  }) {
+    const { p } = ctx;
+    return h(
+      React.Fragment,
+      null,
+      renderNoticeCard(
+        {
+          variant: 'normal',
+          title: 'Import Custom Plugin',
+          body: 'Install a Nekocord JavaScript plugin directly from an HTTPS URL or paste JS source using definePlugin / Nekocord APIs.',
+          iconName: 'plugins',
+        },
+        p,
+      ),
+      h(
+        View,
+        {
+          style: {
+            backgroundColor: p.surface,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: p.border,
+            padding: 14,
+            marginBottom: 12,
+          },
+        },
+        renderSectionHeading('Import From URL', p, true),
+        TextInput
+          ? h(TextInput, {
+              value: ctx.urlInput,
+              onChangeText: ctx.onUrlChange,
+              placeholder: 'https://raw.githubusercontent.com/.../plugin.js',
+              placeholderTextColor: p.textMuted,
+              autoCapitalize: 'none',
+              autoCorrect: false,
+              style: {
+                backgroundColor: p.surfaceAlt,
+                borderColor: p.border,
+                borderWidth: 1,
+                borderRadius: 8,
+                paddingHorizontal: 12,
+                height: 42,
+                color: p.textPrimary,
+                fontSize: 13,
+                marginBottom: 12,
+              },
+            })
+          : null,
+        renderButton(
+          {
+            key: 'pl-import-url',
+            label: ctx.busy ? 'Fetching Plugin...' : 'Download & Install Plugin',
+            tone: 'brand',
+            iconName: 'cloudDownload',
+            disabled: ctx.busy,
+            onPress: ctx.onImportUrl,
+          },
+          p,
+        ),
+      ),
+      h(
+        View,
+        {
+          style: {
+            backgroundColor: p.surface,
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: p.border,
+            padding: 14,
+          },
+        },
+        renderSectionHeading('Paste Plugin JavaScript', p, true),
+        TextInput
+          ? h(TextInput, {
+              value: ctx.nameInput,
+              onChangeText: ctx.onNameChange,
+              placeholder: 'Plugin name (optional if // @name present)',
+              placeholderTextColor: p.textMuted,
+              autoCapitalize: 'none',
+              autoCorrect: false,
+              style: {
+                backgroundColor: p.surfaceAlt,
+                borderColor: p.border,
+                borderWidth: 1,
+                borderRadius: 8,
+                paddingHorizontal: 12,
+                height: 40,
+                color: p.textPrimary,
+                fontSize: 13,
+                marginBottom: 10,
+              },
+            })
+          : null,
+        TextInput
+          ? h(TextInput, {
+              value: ctx.codeInput,
+              onChangeText: ctx.onCodeChange,
+              placeholder: '// @name MyPlugin\nexport default definePlugin({ start() {}, stop() {} });',
+              placeholderTextColor: p.textMuted,
+              multiline: true,
+              textAlignVertical: 'top',
+              autoCapitalize: 'none',
+              autoCorrect: false,
+              style: {
+                backgroundColor: p.surfaceAlt,
+                borderColor: p.border,
+                borderWidth: 1,
+                borderRadius: 8,
+                padding: 11,
+                minHeight: 150,
+                color: p.textPrimary,
+                fontSize: 12,
+                fontFamily: 'monospace',
+                marginBottom: 12,
+              },
+            })
+          : null,
+        h(
+          View,
+          { style: { flexDirection: 'row', justifyContent: 'space-between' } },
+          h(
+            View,
+            { style: { flex: 1, marginRight: 5 } },
+            renderButton(
+              {
+                key: 'pl-example',
+                label: 'Example',
+                tone: 'secondary',
+                iconName: 'copy',
+                onPress: ctx.onLoadExample,
+              },
+              p,
+            ),
+          ),
+          h(
+            View,
+            { style: { flex: 1.6, marginLeft: 5 } },
+            renderButton(
+              {
+                key: 'pl-install-code',
+                label: 'Install & Enable',
+                tone: 'brand',
+                iconName: 'plus',
+                onPress: ctx.onImportCode,
+              },
+              p,
+            ),
+          ),
+        ),
+        ctx.message
+          ? h(
+              Text,
+              {
+                style: {
+                  color: ctx.message.tone === 'success' ? p.success : p.warning,
+                  fontSize: 12.5,
+                  marginTop: 8,
+                },
+              },
+              ctx.message.text,
+            )
+          : null,
+      ),
     );
   }
 
@@ -2846,6 +3554,8 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
     );
   }
 
+  const ModalToastHost = createNekocordToastHost(React, ReactNative, { inModal: true });
+
   function NekocordOverlay() {
     const [isOpen, setIsOpen]: [boolean, (v: boolean) => void] = React.useState(modalVisible);
     const [navStack, setNavStack]: [
@@ -2862,10 +3572,20 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
     const [restartNotice, setRestartNotice] = React.useState(null as string | null);
     const [themeSubTab, setThemeSubTab] = React.useState('local' as ThemeSubTab);
     const [themeUrlInput, setThemeUrlInput] = React.useState('');
+    const [cssNameInput, setCssNameInput] = React.useState('');
+    const [cssCodeInput, setCssCodeInput] = React.useState('');
     const [themeBusy, setThemeBusy] = React.useState(false);
     const [themeMessage, setThemeMessage] = React.useState(
       null as { text: string; tone: 'success' | 'error' } | null,
     );
+    const [pluginImportUrl, setPluginImportUrl] = React.useState('');
+    const [pluginImportName, setPluginImportName] = React.useState('');
+    const [pluginImportCode, setPluginImportCode] = React.useState('');
+    const [pluginImportBusy, setPluginImportBusy] = React.useState(false);
+    const [pluginImportMessage, setPluginImportMessage] = React.useState(
+      null as { text: string; tone: 'success' | 'error' } | null,
+    );
+    const [notifFilter, setNotifFilter] = React.useState('all' as NotificationFilter);
     const [updateSourceInput, setUpdateSourceInput] = React.useState(() => getUpdateSource());
     const [updateBusy, setUpdateBusy] = React.useState(false);
     const [updateMessage, setUpdateMessage] = React.useState(null as string | null);
@@ -2877,6 +3597,8 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
     );
     const [confirmReset, setConfirmReset] = React.useState(false);
     const [settingsTick, setSettingsTick] = React.useState(0);
+    const [pluginTick, setPluginTick] = React.useState(0);
+    const [notifTick, setNotifTick] = React.useState(0);
 
     React.useEffect(() => {
       const onModalToggle = (nextOpen: boolean, nextTab: NekocordTab) => {
@@ -2890,9 +3612,17 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
       const unsubscribe = subscribeSettings(() => {
         setSettingsTick((n: number) => n + 1);
       });
+      const unsubscribeNotifs = subscribeNotifications(() => {
+        setNotifTick((n: number) => n + 1);
+      });
+      const unsubscribePlugins = globalThis.Nekocord?.subscribePlugins?.(() => {
+        setPluginTick((n: number) => n + 1);
+      });
       return () => {
         modalListeners.delete(onModalToggle);
         unsubscribe();
+        unsubscribeNotifs();
+        unsubscribePlugins?.();
       };
     }, []);
 
@@ -2902,6 +3632,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
       currentRoute.kind === 'page' ? currentRoute.tab : 'plugins';
     const selectedPluginName: string | null =
       currentRoute.kind === 'plugin' ? currentRoute.pluginName : null;
+    const isImportingPlugin = currentRoute.kind === 'import-plugin';
 
     const nekocord = globalThis.Nekocord;
     const isLight = getStore<{ theme?: string }>('ThemeStore')?.theme === 'light';
@@ -2910,7 +3641,12 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
 
     const visiblePlugins = React.useMemo(
       () => Array.from(nekocord?.plugins.values() ?? []).filter((pl) => !pl.core),
-      [nekocord],
+      [nekocord, pluginTick],
+    );
+
+    const notificationEntries = React.useMemo(
+      () => getNotificationLog(),
+      [notifTick, isOpen],
     );
 
     const activeSet: ReadonlySet<string> = React.useMemo(
@@ -2978,10 +3714,55 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
     }, []);
 
     const handleOpenPluginGithub = React.useCallback((plugin: NekocordPlugin) => {
+      if (plugin.imported && plugin.sourceUrl) {
+        openReleasePage(plugin.sourceUrl);
+        return;
+      }
       openReleasePage(
         `https://github.com/${DEFAULT_UPDATE_SOURCE}/tree/main/runtime/src/plugins/${plugin.slug}`,
       );
     }, []);
+
+    const handleOpenImportPlugin = React.useCallback(() => {
+      setPluginImportMessage(null);
+      setNavStack((prev) => [...prev, { kind: 'import-plugin' }]);
+    }, []);
+
+    const handleImportPluginUrl = React.useCallback(async () => {
+      if (!nekocord) return;
+      setPluginImportBusy(true);
+      setPluginImportMessage(null);
+      const res = await nekocord.importPluginFromUrl(pluginImportUrl);
+      setPluginImportBusy(false);
+      if (res.ok && res.plugin) {
+        setPluginImportUrl('');
+        setPluginImportMessage({ text: `${res.message} Enabled now.`, tone: 'success' });
+      } else {
+        setPluginImportMessage({ text: res.message, tone: 'error' });
+      }
+    }, [nekocord, pluginImportUrl]);
+
+    const handleImportPluginCode = React.useCallback(() => {
+      if (!nekocord) return;
+      const res = nekocord.importPluginFromCode(pluginImportCode, pluginImportName);
+      if (res.ok && res.plugin) {
+        setPluginImportName('');
+        setPluginImportMessage({ text: `${res.message} Enabled now.`, tone: 'success' });
+      } else {
+        setPluginImportMessage({ text: res.message, tone: 'error' });
+      }
+    }, [nekocord, pluginImportCode, pluginImportName]);
+
+    const handleUninstallPlugin = React.useCallback(
+      (plugin: NekocordPlugin) => {
+        if (!plugin.imported) return;
+        const ok = nekocord?.uninstallCustomPlugin(plugin.name);
+        if (ok) {
+          setNavStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
+        }
+      },
+      [nekocord],
+    );
 
     const handleOpenRepo = React.useCallback(() => {
       openReleasePage(`https://github.com/${DEFAULT_UPDATE_SOURCE}`);
@@ -3051,6 +3832,39 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
         });
       }
     }, [themeUrlInput]);
+
+    const handleInstallCssTheme = React.useCallback(() => {
+      setThemeMessage(null);
+      const result = installThemeFromCss(cssCodeInput, cssNameInput);
+      if (result.ok && result.theme) {
+        setCssNameInput('');
+        setThemeMessage({ text: `Saved CSS theme "${result.theme.name}".`, tone: 'success' });
+      } else {
+        setThemeMessage({
+          text: result.error ?? 'Could not save CSS theme.',
+          tone: 'error',
+        });
+      }
+    }, [cssCodeInput, cssNameInput]);
+
+    const handleToggleNotificationSetting = React.useCallback(
+      (key: 'enabled' | 'showToasts' | 'captureMentions' | 'captureRelationships') => {
+        const cur = getNotificationSettings();
+        updateNotificationSettings({ [key]: !cur[key] });
+        setNotifTick((n: number) => n + 1);
+      },
+      [],
+    );
+
+    const handleSendTestNotification = React.useCallback(() => {
+      pushNotification({
+        title: 'Nekocord Notification Log',
+        body: 'Notifications and floating toast banners are working.',
+        source: 'Nekocord',
+        kind: 'info',
+        showToast: true,
+      });
+    }, []);
 
     const handleDeleteTheme = React.useCallback((theme: NekocordTheme) => {
       deleteCustomTheme(theme.id);
@@ -3151,7 +3965,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
       return null;
     }
 
-    const version = nekocord?.version ?? '1.3.0';
+    const version = nekocord?.version ?? '1.4.0';
     const tagline = nekocord?.tagline ?? 'Your cutest Discord client on mobile';
     const selectedPlugin =
       selectedPluginName && !nekocord?.plugins.get(selectedPluginName)?.core
@@ -3164,10 +3978,15 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
       overview: 'Nekocord',
       plugins: 'Plugins',
       themes: 'Themes',
+      notifications: 'Notification Log',
       updater: 'Updater',
       backup: 'Backup & Restore',
     };
-    const headerTitle = selectedPlugin ? selectedPlugin.name : titleMap[activeTab];
+    const headerTitle = selectedPlugin
+      ? selectedPlugin.name
+      : isImportingPlugin
+        ? 'Import Plugin'
+        : titleMap[activeTab];
 
     return h(
       Modal,
@@ -3208,7 +4027,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
               headerTitle,
             ),
           ),
-          !selectedPlugin && activeTab === 'plugins'
+          !selectedPlugin && !isImportingPlugin && activeTab === 'plugins'
             ? h(
                 View,
                 { style: [styles.headerBadge, { backgroundColor: p.surface }] },
@@ -3228,7 +4047,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
                 ),
               ),
         ),
-        !selectedPlugin && activeTab === 'plugins'
+        !selectedPlugin && !isImportingPlugin && activeTab === 'plugins'
           ? h(PluginsTabView, {
               p,
               plugins: visiblePlugins,
@@ -3244,6 +4063,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
               onSelectPlugin: handleSelectPlugin,
               onTogglePlugin: handleTogglePlugin,
               onRestartNow: handleRestartNow,
+              onOpenImportPlugin: handleOpenImportPlugin,
             })
           : h(
               ScrollView,
@@ -3264,63 +4084,96 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
                     onSettingChanged: handleSettingChanged,
                     onResetPluginSettings: handleResetPluginSettings,
                     onClearHistory: handleClearHistory,
+                    onUninstallPlugin: handleUninstallPlugin,
                   })
-                : activeTab === 'themes'
-                  ? ThemesTabView({
+                : isImportingPlugin
+                  ? ImportPluginView({
                       p,
-                      subTab: themeSubTab,
-                      themes: allThemes,
-                      activeThemeId,
-                      themeUrlInput,
-                      themeBusy,
-                      themeMessage,
-                      onSubTabChange: setThemeSubTab,
-                      onThemeUrlChange: setThemeUrlInput,
-                      onInstallTheme: handleInstallTheme,
-                      onSelectTheme: handleSelectTheme,
-                      onResetTheme: handleResetTheme,
-                      onDeleteTheme: handleDeleteTheme,
+                      urlInput: pluginImportUrl,
+                      nameInput: pluginImportName,
+                      codeInput: pluginImportCode,
+                      busy: pluginImportBusy,
+                      message: pluginImportMessage,
+                      onUrlChange: setPluginImportUrl,
+                      onNameChange: setPluginImportName,
+                      onCodeChange: setPluginImportCode,
+                      onLoadExample: () => setPluginImportCode(EXAMPLE_CUSTOM_PLUGIN_CODE),
+                      onImportUrl: handleImportPluginUrl,
+                      onImportCode: handleImportPluginCode,
                     })
-                  : activeTab === 'updater'
-                    ? UpdaterTabView({
+                  : activeTab === 'themes'
+                    ? ThemesTabView({
                         p,
-                        version,
-                        updateSourceInput,
-                        updateBusy,
-                        updateMessage,
-                        updateResult,
-                        onUpdateSourceChange: handleUpdateSourceChange,
-                        onCheckUpdates: handleCheckUpdates,
-                        onInstallUpdate: handleInstallUpdate,
-                        onOpenRelease: handleOpenRelease,
-                        onOpenRepo: handleOpenRepo,
-                        onRestartApp: handleRestartNow,
+                        subTab: themeSubTab,
+                        themes: allThemes,
+                        activeThemeId,
+                        themeUrlInput,
+                        cssNameInput,
+                        cssCodeInput,
+                        themeBusy,
+                        themeMessage,
+                        onSubTabChange: setThemeSubTab,
+                        onThemeUrlChange: setThemeUrlInput,
+                        onCssNameChange: setCssNameInput,
+                        onCssCodeChange: setCssCodeInput,
+                        onLoadCssTemplate: () => setCssCodeInput(CUSTOM_CSS_TEMPLATE),
+                        onInstallCssTheme: handleInstallCssTheme,
+                        onInstallTheme: handleInstallTheme,
+                        onSelectTheme: handleSelectTheme,
+                        onResetTheme: handleResetTheme,
+                        onDeleteTheme: handleDeleteTheme,
                       })
-                    : activeTab === 'backup'
-                      ? BackupTabView({
+                    : activeTab === 'notifications'
+                      ? NotificationsTabView({
                           p,
-                          importInput,
-                          exportPreview,
-                          backupNotice,
-                          onImportInputChange: setImportInput,
-                          onExportSettings: handleExportSettings,
-                          onImportSettings: handleImportSettings,
-                          onRequestReset: () => setConfirmReset(true),
+                          entries: notificationEntries,
+                          filter: notifFilter,
+                          onFilterChange: setNotifFilter,
+                          onToggleSetting: handleToggleNotificationSetting,
+                          onSendTest: handleSendTestNotification,
+                          onDeleteEntry: deleteNotification,
+                          onClearAll: clearNotificationLog,
                         })
-                      : h(OverviewTab, {
-                          p,
-                          version,
-                          tagline,
-                          enabledPlugins: activeVisibleCount,
-                          totalPlugins: visiblePlugins.length,
-                          activeTheme,
-                          activeSet,
-                          onOpenTab: handlePushPage,
-                          onCheckUpdatesAndOpen: handleCheckUpdatesAndOpen,
-                          onReloadApp: handleRestartNow,
-                          onOpenRepo: handleOpenRepo,
-                          onToggleQuickSwitch: handleToggleQuickSwitch,
-                        }),
+                      : activeTab === 'updater'
+                        ? UpdaterTabView({
+                            p,
+                            version,
+                            updateSourceInput,
+                            updateBusy,
+                            updateMessage,
+                            updateResult,
+                            onUpdateSourceChange: handleUpdateSourceChange,
+                            onCheckUpdates: handleCheckUpdates,
+                            onInstallUpdate: handleInstallUpdate,
+                            onOpenRelease: handleOpenRelease,
+                            onOpenRepo: handleOpenRepo,
+                            onRestartApp: handleRestartNow,
+                          })
+                        : activeTab === 'backup'
+                          ? BackupTabView({
+                              p,
+                              importInput,
+                              exportPreview,
+                              backupNotice,
+                              onImportInputChange: setImportInput,
+                              onExportSettings: handleExportSettings,
+                              onImportSettings: handleImportSettings,
+                              onRequestReset: () => setConfirmReset(true),
+                            })
+                          : h(OverviewTab, {
+                              p,
+                              version,
+                              tagline,
+                              enabledPlugins: activeVisibleCount,
+                              totalPlugins: visiblePlugins.length,
+                              activeTheme,
+                              activeSet,
+                              onOpenTab: handlePushPage,
+                              onCheckUpdatesAndOpen: handleCheckUpdatesAndOpen,
+                              onReloadApp: handleRestartNow,
+                              onOpenRepo: handleOpenRepo,
+                              onToggleQuickSwitch: handleToggleQuickSwitch,
+                            }),
             ),
         restartPrompt
           ? h(
@@ -3490,9 +4343,126 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
               ),
             )
           : null,
+        h(ModalToastHost, null),
       ),
     );
   }
 
   return NekocordOverlay;
+}
+
+/**
+ * Creates a floating top toast banner host bound to Nekocord's Notification Log.
+ */
+export function createNekocordToastHost(
+  React: any,
+  ReactNative: any,
+  options?: { inModal?: boolean },
+): any {
+  const { Pressable, Text, View } = ReactNative;
+  const h = React.createElement;
+  const inModal = options?.inModal === true;
+
+  return function NekocordToastHost() {
+    const [activeToast, setActiveToast]: [
+      NekocordNotificationEntry | null,
+      (v: NekocordNotificationEntry | null) => void,
+    ] = React.useState(null as NekocordNotificationEntry | null);
+
+    React.useEffect(() => {
+      let timerId: any = null;
+      const unsubscribe = subscribeToasts((entry) => {
+        if (!inModal && modalVisible) {
+          return;
+        }
+        setActiveToast(entry);
+        if (timerId !== null) {
+          clearTimeout(timerId);
+        }
+        timerId = setTimeout(() => {
+          timerId = null;
+          setActiveToast(null);
+        }, 4000);
+      });
+      return () => {
+        if (timerId !== null) {
+          clearTimeout(timerId);
+        }
+        unsubscribe();
+      };
+    }, []);
+
+    if (!activeToast) {
+      return null;
+    }
+
+    const statusBarHeight = Number(ReactNative.StatusBar?.currentHeight ?? 0) || 0;
+    const topOffset = Math.max(52, statusBarHeight + 12);
+    const isLight = getStore<{ theme?: string }>('ThemeStore')?.theme === 'light';
+    const p = getActivePalette(isLight);
+    const accent =
+      activeToast.kind === 'success'
+        ? p.success
+        : activeToast.kind === 'warning'
+          ? p.warning
+          : activeToast.kind === 'error'
+            ? p.danger
+            : p.brand;
+
+    return h(
+      View,
+      {
+        pointerEvents: 'box-none',
+        style: {
+          position: 'absolute',
+          top: topOffset,
+          left: 14,
+          right: 14,
+          zIndex: 9999,
+          elevation: 24,
+        },
+      },
+      h(
+        Pressable,
+        {
+          onPress: () => {
+            setActiveToast(null);
+            openNekocordSettings('notifications');
+          },
+          style: {
+            backgroundColor: p.surface,
+            borderColor: p.border,
+            borderWidth: 1,
+            borderLeftWidth: 4,
+            borderLeftColor: accent,
+            borderRadius: 10,
+            paddingHorizontal: 14,
+            paddingVertical: 11,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            shadowColor: '#000000',
+            shadowOpacity: 0.35,
+            shadowRadius: 10,
+            elevation: 24,
+          },
+        },
+        h(
+          View,
+          { style: { flex: 1, paddingRight: 10 } },
+          h(
+            Text,
+            { numberOfLines: 1, style: { color: p.textPrimary, fontSize: 13.5, fontWeight: '700' } },
+            activeToast.title,
+          ),
+          h(
+            Text,
+            { numberOfLines: 2, style: { color: p.textSecondary, fontSize: 12, marginTop: 2 } },
+            activeToast.body,
+          ),
+        ),
+        renderVencordIcon(React, ReactNative, 'log', { size: 17, color: accent }),
+      ),
+    );
+  };
 }

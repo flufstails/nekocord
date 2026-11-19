@@ -1,7 +1,12 @@
 import { getReact, getThemeStore, onReactAndNative } from '../../metro/common.js';
 import { findByProps, waitFor } from '../../metro/index.js';
 import { after, instead, type Unpatch } from '../../patcher/index.js';
-import { createNekocordOverlay, openNekocordSettings, type NekocordTab } from '../../ui/NekocordModal.js';
+import {
+  createNekocordOverlay,
+  createNekocordToastHost,
+  openNekocordSettings,
+  type NekocordTab,
+} from '../../ui/NekocordModal.js';
 import { createSettingRowIcon } from '../../ui/VencordIcons.js';
 import { definePlugin } from '../types.js';
 
@@ -18,6 +23,7 @@ const NEKOCORD_KEYS = new Set([
   'NEKOCORD_SETTINGS',
   'NEKOCORD_PLUGINS',
   'NEKOCORD_THEMES',
+  'NEKOCORD_NOTIFICATIONS',
   'NEKOCORD_UPDATER',
   'NEKOCORD_BACKUP',
 ]);
@@ -30,7 +36,7 @@ function getPreloadState() {
   return globalThis.__NEKOCORD_PRELOAD__ ?? globalThis.__PURRCORD_PRELOAD__ ?? null;
 }
 
-function wrapRootComponent(React: any, Overlay: any, OriginalComponent: any) {
+function wrapRootComponent(React: any, Overlay: any, ToastHost: any, OriginalComponent: any) {
   return function NekocordRootWrapper(props: any) {
     if (!loggedRootRender) {
       loggedRootRender = true;
@@ -41,6 +47,7 @@ function wrapRootComponent(React: any, Overlay: any, OriginalComponent: any) {
       null,
       React.createElement(OriginalComponent, props),
       React.createElement(Overlay, null),
+      React.createElement(ToastHost, null),
     );
   };
 }
@@ -189,14 +196,29 @@ function buildSettingEntries(): NekocordSettingEntry[] {
         'theme',
         'appearance',
         'colors',
-        'amoled',
-        'catppuccin',
-        'rose pine',
-        'nordic',
-        'sakura',
-        'tokyo night',
+        'css',
+        'custom css',
+        'import',
+        'json',
       ],
       createIcon: () => createSettingRowIcon('paintbrush', getFallbackTint),
+    },
+    {
+      key: 'NEKOCORD_NOTIFICATIONS',
+      title: 'Notification Log',
+      tab: 'notifications',
+      breadcrumbs: ['Nekocord', 'Notification Log'],
+      searchTerms: [
+        'nekocord',
+        'notification',
+        'notifications',
+        'log',
+        'alerts',
+        'toasts',
+        'mentions',
+        'history',
+      ],
+      createIcon: () => createSettingRowIcon('log', getFallbackTint),
     },
     {
       key: 'NEKOCORD_UPDATER',
@@ -490,9 +512,11 @@ export default definePlugin({
   start() {
     cancelReactWait = onReactAndNative((React, ReactNative) => {
       const Overlay = createNekocordOverlay(React, ReactNative);
+      const ToastHost = createNekocordToastHost(React, ReactNative);
       const preload = getPreloadState();
       if (preload) {
-        preload.rootWrapper = (Original: any) => wrapRootComponent(React, Overlay, Original);
+        preload.rootWrapper = (Original: any) =>
+          wrapRootComponent(React, Overlay, ToastHost, Original);
       }
       console.log(
         `[Nekocord/SettingsUI] Registered rootWrapper (interceptedAppRegistry=${Boolean(preload?.interceptedAppRegistry)})`,
