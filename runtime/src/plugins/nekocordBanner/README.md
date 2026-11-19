@@ -2,7 +2,8 @@
 name: NekocordBanner
 description: Logs Nekocord startup diagnostics and verifies Metro module discovery.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: core
 core: true
 enabledByDefault: true

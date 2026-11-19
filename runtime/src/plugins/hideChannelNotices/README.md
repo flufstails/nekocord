@@ -2,7 +2,8 @@
 name: HideChannelNotices
 description: Dismisses noisy channel notice and dismissible server prompt banners.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: ui
 enabledByDefault: false
 tags:

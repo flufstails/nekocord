@@ -2,7 +2,8 @@
 name: MessageLogger
 description: Keeps deleted messages and previous edit revisions inline in chat.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: true
 requiresRestart: true

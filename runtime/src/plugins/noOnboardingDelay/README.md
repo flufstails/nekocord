@@ -2,7 +2,8 @@
 name: NoOnboardingDelay
 description: "Removes artificial prompt countdown delays during server onboarding screens."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: ui
 enabledByDefault: false
 tags:

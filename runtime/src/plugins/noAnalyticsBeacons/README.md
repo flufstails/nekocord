@@ -2,7 +2,8 @@
 name: NoAnalyticsBeacons
 description: Drops internal Discord impression, exposure, and heartbeat metric beacons.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: privacy
 enabledByDefault: false
 requiresRestart: true

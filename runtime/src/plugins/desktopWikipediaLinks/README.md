@@ -2,7 +2,8 @@
 name: DesktopWikipediaLinks
 description: Converts mobile en.m.wikipedia.org links into standard desktop Wikipedia URLs.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: utility
 enabledByDefault: false
 tags:

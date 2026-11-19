@@ -2,7 +2,8 @@
 name: PermissionFreeWill
 description: "Bypasses client-side UI lockouts when inspecting guild channel and member permission settings."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: utility
 enabledByDefault: false
 tags:

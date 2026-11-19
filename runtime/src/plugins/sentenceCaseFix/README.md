@@ -2,7 +2,8 @@
 name: SentenceCaseFix
 description: Automatically capitalizes the opening letter of each sentence.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

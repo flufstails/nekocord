@@ -2,7 +2,8 @@
 name: NoTypingAnimation
 description: "Disables animated bouncing typing dots to reduce UI motion and battery usage."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: ui
 enabledByDefault: false
 tags:

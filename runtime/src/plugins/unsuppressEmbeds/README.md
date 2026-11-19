@@ -2,7 +2,8 @@
 name: UnsuppressEmbeds
 description: "Clears client-side embed suppression flags so hidden message link previews stay visible."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

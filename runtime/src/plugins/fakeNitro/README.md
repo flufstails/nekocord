@@ -2,7 +2,8 @@
 name: FakeNitro
 description: Unlocks locked emojis, stickers, and client Nitro perks with native chat rendering.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: nitro
 enabledByDefault: true
 requiresRestart: true

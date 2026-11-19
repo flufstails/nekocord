@@ -2,7 +2,8 @@
 name: ColorSighted
 description: "Restores clean circular status dots instead of accessibility geometric shape overlays."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: ui
 enabledByDefault: false
 tags:

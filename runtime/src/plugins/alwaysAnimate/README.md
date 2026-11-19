@@ -2,7 +2,8 @@
 name: AlwaysAnimate
 description: Keeps GIFs, custom emojis, and stickers animating automatically.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: nitro
 enabledByDefault: false
 requiresRestart: true

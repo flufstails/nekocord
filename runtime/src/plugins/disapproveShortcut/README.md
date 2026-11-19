@@ -2,7 +2,8 @@
 name: DisapproveShortcut
 description: Expands /lod into the classic look of disapproval.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

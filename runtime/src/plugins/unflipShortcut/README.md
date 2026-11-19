@@ -2,7 +2,8 @@
 name: UnflipShortcut
 description: Expands /unflip into the upright table restore emoticon.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

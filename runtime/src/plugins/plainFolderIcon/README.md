@@ -2,7 +2,8 @@
 name: PlainFolderIcon
 description: "Replaces crowded server folder mini-icon previews with clean uniform folder icons."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: ui
 enabledByDefault: false
 tags:

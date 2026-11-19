@@ -2,7 +2,8 @@
 name: FixThreadsLinks
 description: Rewrites Threads post links to vxthreads.net so media embeds properly in chat.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

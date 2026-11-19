@@ -2,7 +2,8 @@
 name: FixImagesQuality
 description: "Rewrites Discord CDN image attachment and embed URLs to request lossless quality."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

@@ -2,7 +2,8 @@
 name: OnePingPerDM
 description: "Suppresses repeated push/sound ping notifications from the same DM channel within 10 seconds."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: privacy
 enabledByDefault: false
 tags:

@@ -2,7 +2,8 @@
 name: TextReplace
 description: "Expands classic text macros (`:shrug:`, `:tableflip:`, `:unflip:`, `:lenny:`, `:tm:`) on send."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

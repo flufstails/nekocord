@@ -2,7 +2,8 @@
 name: DeveloperMode
 description: Forces Discord internal developer options flag to enabled.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: developer
 enabledByDefault: true
 requiresRestart: true

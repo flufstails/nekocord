@@ -2,7 +2,8 @@
 name: SpaceLetters
 description: Inserts gentle spaces between characters of regular words for emphasis.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

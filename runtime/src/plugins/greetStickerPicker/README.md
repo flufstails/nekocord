@@ -2,7 +2,8 @@
 name: GreetStickerPicker
 description: "Hides the persistent \"Wave to say hi!\" welcome sticker button in empty DMs and channels."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: ui
 enabledByDefault: false
 tags:

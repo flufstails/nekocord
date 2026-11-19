@@ -2,7 +2,8 @@
 name: MonospaceNumbers
 description: Converts ASCII digits in outgoing text into Unicode monospace numerals.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: developer
 enabledByDefault: false
 tags:

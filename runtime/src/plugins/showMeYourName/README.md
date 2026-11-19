@@ -2,7 +2,8 @@
 name: ShowMeYourName
 description: "Displays each message author @username next to their display name in chat."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

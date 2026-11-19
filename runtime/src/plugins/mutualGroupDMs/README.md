@@ -2,7 +2,8 @@
 name: MutualGroupDMs
 description: "Indexes shared group DM channels per user from local ChannelStore state."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: privacy
 enabledByDefault: false
 tags:

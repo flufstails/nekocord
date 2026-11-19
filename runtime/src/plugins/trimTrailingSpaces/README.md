@@ -2,7 +2,8 @@
 name: TrimTrailingSpaces
 description: Trims leading/trailing whitespace and collapses excessive empty newlines.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: utility
 enabledByDefault: false
 tags:

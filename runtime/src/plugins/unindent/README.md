@@ -2,7 +2,8 @@
 name: Unindent
 description: "Strips redundant common leading indentation from multi-line fenced code blocks before send."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

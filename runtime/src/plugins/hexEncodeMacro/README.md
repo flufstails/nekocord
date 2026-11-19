@@ -2,7 +2,8 @@
 name: HexEncodeMacro
 description: "Converts /hex <text> payloads into space-separated hexadecimal bytes."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: developer
 enabledByDefault: false
 tags:

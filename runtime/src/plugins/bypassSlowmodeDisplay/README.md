@@ -2,7 +2,8 @@
 name: BypassSlowmodeDisplay
 description: Clears the client-side slowmode cooldown display lock in CooldownStore.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: developer
 enabledByDefault: false
 requiresRestart: true

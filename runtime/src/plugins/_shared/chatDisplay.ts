@@ -58,34 +58,50 @@ export function clearArrayProp(obj: Record<string, any>, key: string): boolean {
 }
 
 /**
- * Checks whether a chat message's content string or AST node array contains {@code needle}.
+ * Extracts readable plain text from either a string or Discord AST {@code msg.content} array.
  */
-export function messageContainsText(msg: Record<string, any>, needle: string): boolean {
-  if (!needle) return false;
+export function extractMessageText(msg: Record<string, any>): string {
   if (typeof msg.content === 'string') {
-    return msg.content.includes(needle);
+    return msg.content;
   }
   if (!Array.isArray(msg.content)) {
-    return false;
+    return '';
   }
-  const stack = [...msg.content];
+  const chunks: string[] = [];
+  const stack = msg.content.slice().reverse();
   while (stack.length > 0) {
     const node = stack.pop();
     if (!node) continue;
     if (typeof node === 'string') {
-      if (node.includes(needle)) return true;
+      chunks.push(node);
     } else if (typeof node === 'object') {
-      if (typeof node.content === 'string' && node.content.includes(needle)) {
-        return true;
-      }
-      if (Array.isArray(node.content)) {
-        for (let i = 0; i < node.content.length; i += 1) {
+      if (typeof node.content === 'string') {
+        chunks.push(node.content);
+      } else if (Array.isArray(node.content)) {
+        for (let i = node.content.length - 1; i >= 0; i -= 1) {
           stack.push(node.content[i]);
         }
       }
+      if (typeof node.target === 'string') {
+        chunks.push(node.target);
+      }
     }
   }
-  return false;
+  return chunks.join('');
+}
+
+/**
+ * Checks whether a chat message's content string or AST node array contains {@code needle}.
+ */
+export function messageContainsText(
+  msg: Record<string, any>,
+  needle: string,
+  caseSensitive = true,
+): boolean {
+  if (!needle) return false;
+  const text = extractMessageText(msg);
+  if (!text) return false;
+  return caseSensitive ? text.includes(needle) : text.toLowerCase().includes(needle.toLowerCase());
 }
 
 /**

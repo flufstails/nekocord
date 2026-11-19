@@ -6,7 +6,11 @@ import {
   OptionType,
   type PluginSettingDef,
 } from '../plugins/settings.js';
-import type { NekocordPlugin } from '../plugins/types.js';
+import {
+  normalizePluginAuthors,
+  type NekocordPlugin,
+  type PluginAuthor,
+} from '../plugins/types.js';
 import {
   DEFAULT_UPDATE_SOURCE,
   exportSettingsJson,
@@ -287,13 +291,13 @@ function hasPluginActions(plugin: NekocordPlugin): boolean {
  */
 export function createNekocordOverlay(React: any, ReactNative: any): any {
   const {
+    Animated,
     FlatList,
     Image,
     Modal,
     Pressable,
     ScrollView,
     StyleSheet,
-    Switch,
     Text,
     TextInput,
     View,
@@ -661,6 +665,156 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
     );
   }
 
+  const DiscordSwitch = React.memo(function DiscordSwitchView(props: {
+    value: boolean;
+    onValueChange: (next: boolean) => void;
+    p: Palette;
+    disabled?: boolean;
+    accessibilityLabel?: string;
+  }) {
+    const { value, onValueChange, p, disabled, accessibilityLabel } = props;
+    const canAnimate = Boolean(Animated && typeof Animated.Value === 'function' && Animated.View);
+    const animRef = React.useRef(canAnimate ? new Animated.Value(value ? 1 : 0) : null);
+
+    React.useEffect(() => {
+      if (!canAnimate || !animRef.current || typeof Animated.timing !== 'function') {
+        return;
+      }
+      Animated.timing(animRef.current, {
+        toValue: value ? 1 : 0,
+        duration: 150,
+        useNativeDriver: true,
+      }).start();
+    }, [canAnimate, value]);
+
+    const thumbTranslate =
+      canAnimate && animRef.current && typeof animRef.current.interpolate === 'function'
+        ? animRef.current.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, 18],
+          })
+        : value
+          ? 18
+          : 0;
+
+    const ThumbView = canAnimate ? Animated.View : View;
+
+    return h(
+      Pressable,
+      {
+        onPress: disabled ? undefined : () => onValueChange(!value),
+        hitSlop: 6,
+        disabled: Boolean(disabled),
+        accessible: true,
+        accessibilityRole: 'switch',
+        accessibilityLabel,
+        accessibilityState: { checked: Boolean(value), disabled: Boolean(disabled) },
+        style: {
+          width: 44,
+          height: 26,
+          borderRadius: 13,
+          padding: 3,
+          justifyContent: 'center',
+          backgroundColor: value ? p.brand : p.switchOff,
+          opacity: disabled ? 0.48 : 1,
+        },
+      },
+      h(
+        ThumbView,
+        {
+          style: {
+            width: 20,
+            height: 20,
+            borderRadius: 10,
+            backgroundColor: '#ffffff',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transform: [{ translateX: thumbTranslate }],
+          },
+        },
+        icon(
+          value ? 'switchCheck' : 'switchCross',
+          value ? 13 : 12,
+          value ? p.brand : p.switchOff,
+        ),
+      ),
+    );
+  });
+
+  const AuthorChip = React.memo(function AuthorChipView(props: {
+    author: PluginAuthor;
+    p: Palette;
+  }) {
+    const { author, p } = props;
+    const [imgFailed, setImgFailed]: [boolean, (v: boolean) => void] = React.useState(false);
+
+    React.useEffect(() => {
+      setImgFailed(false);
+    }, [author.icon]);
+
+    const iconUri = typeof author.icon === 'string' ? author.icon.trim() : '';
+    const hasIcon =
+      Boolean(Image) &&
+      !imgFailed &&
+      (iconUri.indexOf('https://') === 0 ||
+        iconUri.indexOf('http://') === 0 ||
+        iconUri.indexOf('data:') === 0);
+    const githubHandle = (author.github || author.name || '').trim();
+
+    return h(
+      Pressable,
+      {
+        onPress: githubHandle
+          ? () => openReleasePage(`https://github.com/${encodeURIComponent(githubHandle)}`)
+          : undefined,
+        style: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: p.surfaceAlt,
+          borderRadius: 999,
+          paddingVertical: 5,
+          paddingLeft: 6,
+          paddingRight: 11,
+          marginRight: 8,
+          marginBottom: 6,
+        },
+      },
+      hasIcon
+        ? h(Image, {
+            source: { uri: iconUri },
+            resizeMode: 'cover',
+            onError: () => setImgFailed(true),
+            style: {
+              width: 24,
+              height: 24,
+              borderRadius: 12,
+              backgroundColor: p.brand,
+              marginRight: 7,
+            },
+          })
+        : h(
+            View,
+            {
+              style: {
+                width: 24,
+                height: 24,
+                borderRadius: 12,
+                backgroundColor: p.brand,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: 7,
+              },
+            },
+            h(
+              Text,
+              { style: { color: p.brandOnText, fontSize: 12, fontWeight: '800' } },
+              author.name.charAt(0).toUpperCase(),
+            ),
+          ),
+      h(Text, { style: { color: p.textPrimary, fontSize: 13, fontWeight: '600' } }, author.name),
+    );
+  });
+
   const PluginCard = React.memo(function PluginCardView(props: {
     plugin: NekocordPlugin;
     enabled: boolean;
@@ -776,10 +930,10 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
             },
             icon(iconName, 17, p.textSecondary),
           ),
-          h(Switch, {
+          h(DiscordSwitch, {
             value: enabled,
-            trackColor: { false: p.switchOff, true: p.brand },
-            thumbColor: '#ffffff',
+            p,
+            accessibilityLabel: `Toggle ${plugin.name}`,
             onValueChange: () => onToggle(plugin),
           }),
         ),
@@ -923,10 +1077,10 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
                 icon('delete', 16, p.danger),
               )
             : null,
-          h(Switch, {
+          h(DiscordSwitch, {
             value: active,
-            trackColor: { false: p.switchOff, true: p.brand },
-            thumbColor: '#ffffff',
+            p,
+            accessibilityLabel: `Toggle ${theme.name} theme`,
             onValueChange: () => onSelect(theme),
           }),
         ),
@@ -1186,10 +1340,10 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
                 item.subtitle,
               ),
             ),
-            h(Switch, {
+            h(DiscordSwitch, {
               value: enabled,
-              trackColor: { false: p.switchOff, true: p.brand },
-              thumbColor: '#ffffff',
+              p,
+              accessibilityLabel: `Toggle ${item.title}`,
               onValueChange: () => ctx.onToggleQuickSwitch(item.name),
             }),
           );
@@ -1227,7 +1381,11 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
     const catStyle = getCategoryStyle(plugin.category, p);
     const readmeBlocks = React.useMemo(() => parseReadmeBlocks(plugin), [plugin]);
     const tags = plugin.tags?.filter((t) => t !== plugin.category).slice(0, 6) ?? [];
-    const authors = plugin.authors.length ? plugin.authors : ['flufstails'];
+    const rawAuthors = normalizePluginAuthors(plugin.authors, plugin.authorIcon);
+    const authors: PluginAuthor[] =
+      rawAuthors.length > 0
+        ? rawAuthors
+        : [{ name: 'flufstails', ...(plugin.authorIcon ? { icon: plugin.authorIcon } : {}) }];
     const settingEntries: Array<[string, PluginSettingDef]> = React.useMemo(() => {
       if (!plugin.settings?.def) return [];
       const defMap = plugin.settings.def as Record<string, PluginSettingDef>;
@@ -1261,10 +1419,10 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
               opt.description,
             ),
           ),
-          h(Switch, {
+          h(DiscordSwitch, {
             value: Boolean(currentVal),
-            trackColor: { false: p.switchOff, true: p.brand },
-            thumbColor: '#ffffff',
+            p,
+            accessibilityLabel: label,
             onValueChange: (val: boolean) => {
               plugin.settings!.set(key, val);
               ctx.onSettingChanged(plugin, key, opt.restartNeeded);
@@ -1582,48 +1740,19 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
             borderColor: p.border,
             borderWidth: 1,
             borderRadius: 10,
-            padding: 12,
+            paddingTop: 12,
+            paddingHorizontal: 12,
+            paddingBottom: 6,
             flexDirection: 'row',
             flexWrap: 'wrap',
           },
         },
-        ...authors.map((author) =>
-          h(
-            View,
-            {
-              key: `auth-${author}`,
-              style: {
-                flexDirection: 'row',
-                alignItems: 'center',
-                backgroundColor: p.surfaceAlt,
-                borderRadius: 999,
-                paddingVertical: 5,
-                paddingLeft: 6,
-                paddingRight: 11,
-                marginRight: 8,
-              },
-            },
-            h(
-              View,
-              {
-                style: {
-                  width: 24,
-                  height: 24,
-                  borderRadius: 12,
-                  backgroundColor: p.brand,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginRight: 7,
-                },
-              },
-              h(
-                Text,
-                { style: { color: p.brandOnText, fontSize: 12, fontWeight: '800' } },
-                author.charAt(0).toUpperCase(),
-              ),
-            ),
-            h(Text, { style: { color: p.textPrimary, fontSize: 13, fontWeight: '600' } }, author),
-          ),
+        ...authors.map((author, idx) =>
+          h(AuthorChip, {
+            key: `auth-${author.name}-${idx}`,
+            author,
+            p,
+          }),
         ),
       ),
 
@@ -1647,10 +1776,10 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
               { style: { color: p.textPrimary, fontSize: 15, fontWeight: '600', flex: 1 } },
               `Enable ${plugin.name}`,
             ),
-            h(Switch, {
+            h(DiscordSwitch, {
               value: ctx.enabled,
-              trackColor: { false: p.switchOff, true: p.brand },
-              thumbColor: '#ffffff',
+              p,
+              accessibilityLabel: `Enable ${plugin.name}`,
               onValueChange: () => ctx.onTogglePlugin(plugin),
             }),
           ),
@@ -2961,7 +3090,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
       setUpdateBusy(false);
       setUpdateMessage(res.message);
       if (res.ok) {
-        queueRestartPrompt(`Nekocord v${updateResult.latestVersion ?? '1.2.0'}`, 'downloaded');
+        queueRestartPrompt(`Nekocord v${updateResult.latestVersion ?? '1.3.0'}`, 'downloaded');
       }
     }, [updateResult, queueRestartPrompt]);
 
@@ -3022,7 +3151,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
       return null;
     }
 
-    const version = nekocord?.version ?? '1.2.0';
+    const version = nekocord?.version ?? '1.3.0';
     const tagline = nekocord?.tagline ?? 'Your cutest Discord client on mobile';
     const selectedPlugin =
       selectedPluginName && !nekocord?.plugins.get(selectedPluginName)?.core

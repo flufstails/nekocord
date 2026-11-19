@@ -2,7 +2,8 @@
 name: ReplaceGoogleSearch
 description: "Rewrites outgoing Google Search URLs to privacy-friendly DuckDuckGo links."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: utility
 enabledByDefault: false
 tags:

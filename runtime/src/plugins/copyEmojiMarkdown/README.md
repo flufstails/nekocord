@@ -2,7 +2,8 @@
 name: CopyEmojiMarkdown
 description: "Displays raw `<:name:id>` markup alongside custom emojis in chat for easy copying."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

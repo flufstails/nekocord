@@ -2,7 +2,8 @@
 name: VoiceMuteOnJoin
 description: Automatically mutes your microphone when joining or switching voice channels.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: voice
 enabledByDefault: false
 tags:

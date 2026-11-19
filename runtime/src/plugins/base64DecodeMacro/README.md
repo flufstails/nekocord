@@ -2,7 +2,8 @@
 name: Base64DecodeMacro
 description: "Decodes /unb64 <base64> text inline before sending."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: developer
 enabledByDefault: false
 tags:

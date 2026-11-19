@@ -2,7 +2,8 @@
 name: SuppressReadReceipts
 description: Blocks outgoing channel read receipt acknowledgements when browsing.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: privacy
 enabledByDefault: false
 requiresRestart: true

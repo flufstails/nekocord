@@ -2,7 +2,8 @@
 name: IrcColors
 description: "Applies deterministic IRC-style pastel colors to usernames without a custom role color."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

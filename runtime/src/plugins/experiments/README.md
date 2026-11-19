@@ -2,7 +2,8 @@
 name: Experiments
 description: Unlocks Discord internal Experiments and Staff developer settings tabs.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: developer
 enabledByDefault: false
 requiresRestart: true

@@ -2,7 +2,8 @@
 name: SpoilerEveryWord
 description: "Wraps every non-code word in ||spoiler|| tags individually."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

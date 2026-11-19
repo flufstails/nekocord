@@ -2,7 +2,8 @@
 name: UnlockBurstChecks
 description: Clears client cooldown and upsell gates on burst super-reaction checks.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: nitro
 enabledByDefault: false
 requiresRestart: true

@@ -2,7 +2,8 @@
 name: NoEditLabel
 description: Hides the (edited) tag while preserving MessageLogger deleted markers.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

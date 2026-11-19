@@ -2,7 +2,8 @@
 name: FixEmbeds
 description: Rewrites Twitter/X, TikTok, Instagram, Reddit, and Bluesky links to embed-friendly mirrors.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

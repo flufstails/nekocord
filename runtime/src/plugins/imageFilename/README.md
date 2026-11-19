@@ -2,7 +2,8 @@
 name: ImageFilename
 description: "Appends attachment filenames and sizes inline under chat messages with media."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

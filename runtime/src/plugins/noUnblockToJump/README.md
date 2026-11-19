@@ -2,7 +2,8 @@
 name: NoUnblockToJump
 description: "Skips the \"Unblock user to jump\" confirmation prompt when tapping replies from blocked users."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: ui
 enabledByDefault: false
 tags:

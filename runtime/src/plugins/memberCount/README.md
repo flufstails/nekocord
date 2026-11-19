@@ -2,7 +2,8 @@
 name: MemberCount
 description: "Tracks live online and total guild member counts across server list updates."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: ui
 enabledByDefault: false
 tags:

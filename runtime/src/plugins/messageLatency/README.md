@@ -2,7 +2,8 @@
 name: MessageLatency
 description: "Highlights delayed incoming messages by annotating delivery latency on chat rows."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

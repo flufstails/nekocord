@@ -2,7 +2,8 @@
 name: StreamerModeOnStream
 description: "Automatically toggles Discord Streamer Mode when starting or ending a stream."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: voice
 enabledByDefault: false
 tags:

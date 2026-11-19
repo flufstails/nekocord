@@ -2,7 +2,8 @@
 name: NoProfileThemes
 description: Strips custom Nitro profile theme colors so user profiles use your base Discord theme.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: ui
 enabledByDefault: false
 requiresRestart: true

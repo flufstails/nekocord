@@ -2,7 +2,8 @@
 name: ReactErrorDecoder
 description: "Appends readable explanations when Discord logs minified React error codes."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: developer
 enabledByDefault: false
 tags:

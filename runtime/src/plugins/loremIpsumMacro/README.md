@@ -2,7 +2,8 @@
 name: LoremIpsumMacro
 description: Expands /lorem into standard placeholder text for UI or chat layout tests.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: developer
 enabledByDefault: false
 tags:

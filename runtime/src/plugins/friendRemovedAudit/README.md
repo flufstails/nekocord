@@ -2,7 +2,8 @@
 name: FriendRemovedAudit
 description: Tracks friend and relationship removal events via Flux telemetry.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: privacy
 enabledByDefault: false
 tags:

@@ -2,7 +2,8 @@
 name: CleanAliExpressLinks
 description: Strips tracking query junk from outgoing AliExpress item links.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: privacy
 enabledByDefault: false
 tags:

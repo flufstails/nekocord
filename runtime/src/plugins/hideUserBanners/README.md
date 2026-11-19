@@ -2,7 +2,8 @@
 name: HideUserBanners
 description: Strips custom Nitro profile banners to preserve clean profile headers.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: ui
 enabledByDefault: false
 requiresRestart: true

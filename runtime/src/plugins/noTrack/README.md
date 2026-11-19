@@ -2,7 +2,8 @@
 name: NoTrack
 description: Drops Discord analytics and telemetry Flux dispatches before they are recorded.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: privacy
 enabledByDefault: true
 tags:

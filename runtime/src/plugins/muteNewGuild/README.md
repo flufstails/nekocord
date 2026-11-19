@@ -2,7 +2,8 @@
 name: MuteNewGuild
 description: "Automatically mutes notifications and @everyone/@here pings when joining new servers."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: privacy
 enabledByDefault: false
 tags:

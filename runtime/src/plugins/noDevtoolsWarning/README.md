@@ -2,7 +2,8 @@
 name: NoDevtoolsWarning
 description: "Suppresses Discord Hold Up / self-XSS developer console warning banners."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: privacy
 enabledByDefault: false
 tags:

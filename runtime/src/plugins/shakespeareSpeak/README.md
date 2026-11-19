@@ -2,7 +2,8 @@
 name: ShakespeareSpeak
 description: Lightly adapts pronouns and greetings into Early Modern English phrasing.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

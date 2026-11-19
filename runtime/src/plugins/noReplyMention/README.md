@@ -2,7 +2,8 @@
 name: NoReplyMention
 description: Automatically disables ping mentions when starting a message reply.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: true
 tags:

@@ -110,6 +110,20 @@ function parseFrontmatter(markdownText, label) {
     if (!line.trim() || line.trimStart().startsWith('#')) {
       continue;
     }
+    const objStartMatch = /^\s+-\s+([A-Za-z0-9_]+):\s*(.*)$/.exec(line);
+    if (objStartMatch && currentListKey && Array.isArray(data[currentListKey])) {
+      const entry = { [objStartMatch[1]]: parseScalar(objStartMatch[2]) };
+      data[currentListKey].push(entry);
+      continue;
+    }
+    const objContMatch = /^\s{4,}([A-Za-z0-9_]+):\s*(.*)$/.exec(line);
+    if (objContMatch && currentListKey && Array.isArray(data[currentListKey]) && data[currentListKey].length > 0) {
+      const last = data[currentListKey][data[currentListKey].length - 1];
+      if (last && typeof last === 'object' && !Array.isArray(last)) {
+        last[objContMatch[1]] = parseScalar(objContMatch[2]);
+        continue;
+      }
+    }
     const listMatch = /^\s+-\s+(.+)$/.exec(line);
     if (listMatch && currentListKey) {
       data[currentListKey].push(String(parseScalar(listMatch[1])));
@@ -131,6 +145,38 @@ function parseFrontmatter(markdownText, label) {
   }
 
   return { data, body };
+}
+
+function normalizeAuthors(rawAuthors, fallbackIcon) {
+  const iconFallback =
+    typeof fallbackIcon === 'string' && fallbackIcon.trim() ? fallbackIcon.trim() : '';
+  const list = Array.isArray(rawAuthors) ? rawAuthors : [];
+  const normalized = [];
+
+  for (const entry of list) {
+    if (typeof entry === 'string') {
+      const name = entry.trim();
+      if (!name) continue;
+      normalized.push({
+        name,
+        ...(iconFallback ? { icon: iconFallback } : {}),
+      });
+    } else if (entry && typeof entry === 'object' && typeof entry.name === 'string') {
+      const name = entry.name.trim();
+      if (!name) continue;
+      const icon =
+        typeof entry.icon === 'string' && entry.icon.trim() ? entry.icon.trim() : iconFallback;
+      const github =
+        typeof entry.github === 'string' && entry.github.trim() ? entry.github.trim() : '';
+      normalized.push({
+        name,
+        ...(icon ? { icon } : {}),
+        ...(github ? { github } : {}),
+      });
+    }
+  }
+
+  return normalized;
 }
 
 function escapeCell(text) {
@@ -167,9 +213,9 @@ export function generatePlugins() {
     const name = typeof data.name === 'string' ? data.name.trim() : '';
     const description = typeof data.description === 'string' ? data.description.trim() : '';
     const category = typeof data.category === 'string' ? data.category.trim() : '';
-    const authors = Array.isArray(data.authors)
-      ? data.authors.filter((a) => typeof a === 'string' && a.trim().length > 0)
-      : [];
+    const fallbackIcon = typeof data.authorIcon === 'string' ? data.authorIcon.trim() : '';
+    const authors = normalizeAuthors(data.authors, fallbackIcon);
+    const authorIcon = authors[0]?.icon || fallbackIcon;
 
     if (!name || !description || !VALID_CATEGORIES.has(category) || authors.length === 0) {
       throw new Error(
@@ -186,10 +232,12 @@ export function generatePlugins() {
       name,
       description,
       authors,
+      ...(authorIcon ? { authorIcon } : {}),
       category,
       core: Boolean(data.core),
       enabledByDefault: data.enabledByDefault === undefined ? false : Boolean(data.enabledByDefault),
       requiresRestart: Boolean(data.requiresRestart),
+      isNew: Boolean(data.isNew),
       tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
       readme: body || description,
     });
@@ -214,10 +262,12 @@ export function generatePlugins() {
       name: p.name,
       description: p.description,
       authors: p.authors,
+      ...(p.authorIcon ? { authorIcon: p.authorIcon } : {}),
       category: p.category,
       ...(p.core ? { core: true } : {}),
       enabledByDefault: p.enabledByDefault,
       ...(p.requiresRestart ? { requiresRestart: true } : {}),
+      ...(p.isNew ? { isNew: true } : {}),
       ...(p.tags.length > 0 ? { tags: p.tags } : {}),
       readme: p.readme,
     };

@@ -2,7 +2,8 @@
 name: ForceOwnerCrown
 description: "Marks guild owners clearly in chat rows even in servers that hide the owner crown."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: ui
 enabledByDefault: false
 tags:

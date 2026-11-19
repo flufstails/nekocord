@@ -2,7 +2,8 @@
 name: SpotifyCrack
 description: "Unlocks Spotify Listen Along and pauses-on-speak prevention without Spotify Premium."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: nitro
 enabledByDefault: false
 tags:

@@ -1,25 +1,30 @@
 # Nekocord Built-in Plugins
 
-Nekocord ships with **250** built-in plugins (**248** user-toggleable plugins and **2** core runtime plugins). Each plugin lives in its own directory under `runtime/src/plugins/<slug>/` with `index.ts` and `README.md` metadata.
+Nekocord ships with **300** built-in plugins (**298** user-toggleable plugins and **2** core runtime plugins). Each plugin lives in its own directory under `runtime/src/plugins/<slug>/` with `index.ts` and `README.md` metadata.
 
-## Chat (102)
+## Chat (120)
 
 | Plugin | Default | Restart | Description |
 | :--- | :--- | :--- | :--- |
 | [AlternatingWordCase](../runtime/src/plugins/alternatingWordCase/README.md) | Off | No | Alternates consecutive words between UPPERCASE and lowercase cadence. |
+| [ArrowShortcuts](../runtime/src/plugins/arrowShortcuts/README.md) | Off | No | Expands ASCII arrows (`->`, `<-`, `<->`, `=>`) into crisp Unicode arrows on send. |
 | [AsciiSmileys](../runtime/src/plugins/asciiSmileys/README.md) | Off | No | Escapes ASCII emoticons like :) and :D so Discord does not auto-convert them. |
+| [AutoCapitalizeFirst](../runtime/src/plugins/autoCapitalizeFirst/README.md) | Off | No | Capitalizes the first letter of outgoing plain-text sentences outside code blocks. |
 | [AutoQuoteBlock](../runtime/src/plugins/autoQuoteBlock/README.md) | Off | No | Prefixes outgoing lines with Discord quote block (> ) Markdown. |
 | [AutoSubtext](../runtime/src/plugins/autoSubtext/README.md) | Off | No | Prefixes outgoing lines with Discord small muted subtext (-# ) markup. |
 | [AutoWrapUrls](../runtime/src/plugins/autoWrapUrls/README.md) | Off | No | Wraps outgoing links in <...> angle brackets to suppress Discord link embeds. |
 | [BlurNsfw](../runtime/src/plugins/blurNsfw/README.md) | Off | No | Automatically wraps attachments in age-restricted (NSFW) channels behind spoiler overlays. |
 | [BoldMessages](../runtime/src/plugins/boldMessages/README.md) | Off | No | Automatically wraps outgoing chat text in **bold** Markdown formatting. |
 | [BoldSerifText](../runtime/src/plugins/boldSerifText/README.md) | Off | No | Renders ASCII letters in mathematical bold serif Unicode glyphs. |
+| [BulletListShortcut](../runtime/src/plugins/bulletListShortcut/README.md) | Off | No | Converts leading `- ` or `* ` list items into Unicode bullet points on send. |
 | [CatgirlSpeak](../runtime/src/plugins/catgirlSpeak/README.md) | Off | No | Sprinkles gentle nya and mrrp catgirl flair onto non-code messages. |
+| [ChatPrefixSuffix](../runtime/src/plugins/chatPrefixSuffix/README.md) | Off | No | Wraps outgoing chat messages with custom configurable prefix and suffix strings. |
 | [CircledText](../runtime/src/plugins/circledText/README.md) | Off | No | Stylizes outgoing ASCII letters into circled Unicode characters. |
 | [ClapBetweenWords](../runtime/src/plugins/clapBetweenWords/README.md) | Off | No | Places clap dividers between outgoing words outside mentions and links. |
 | [CoinFlipMacro](../runtime/src/plugins/coinFlipMacro/README.md) | Off | No | Expands /coin into a randomized Heads or Tails flip result before sending. |
 | [CompactTimestamps](../runtime/src/plugins/compactTimestamps/README.md) | Off | No | Formats message header timestamps to concise 24-hour HH:MM values. |
 | [CopyEmojiMarkdown](../runtime/src/plugins/copyEmojiMarkdown/README.md) | Off | No | Displays raw `<:name:id>` markup alongside custom emojis in chat for easy copying. |
+| [CustomTimestamps](../runtime/src/plugins/customTimestamps/README.md) | Off | No | Formats chat message timestamps using configurable ISO, 24-hour, or compact presets. |
 | [DdInstagramLinks](../runtime/src/plugins/ddInstagramLinks/README.md) | Off | No | Rewrites Instagram post and reel URLs to ddinstagram.com before sending. |
 | [DeletedTimestampAudit](../runtime/src/plugins/deletedTimestampAudit/README.md) | Off | No | Logs deleted message IDs and channel history events in telemetry. |
 | [DiceRollMacro](../runtime/src/plugins/diceRollMacro/README.md) | Off | No | Expands /roll NdM dice expressions (like /roll 2d6) into itemized rolls. |
@@ -29,6 +34,7 @@ Nekocord ships with **250** built-in plugins (**248** user-toggleable plugins an
 | [DoubleVowels](../runtime/src/plugins/doubleVowels/README.md) | Off | No | Stretches final vowels slightly inside expressive words before sending. |
 | [EmptyEditDeletes](../runtime/src/plugins/emptyEditDeletes/README.md) | Off | No | Deletes a message automatically if you edit its text down to nothing. |
 | [EnableDefaultReplyPing](../runtime/src/plugins/enableDefaultReplyPing/README.md) | Off | No | Forces initial reply mention toggle ON whenever replying to any user. |
+| [ExpandDiscordInvites](../runtime/src/plugins/expandDiscordInvites/README.md) | Off | No | Normalizes short `discord.gg/` invite links into full `https://discord.com/invite/` URLs. |
 | [FixBlueskyLinks](../runtime/src/plugins/fixBlueskyLinks/README.md) | Off | No | Rewrites Bluesky bsky.app post links to bskx.app for rich video embeds. |
 | [FixCodeblockGap](../runtime/src/plugins/fixCodeblockGap/README.md) | Off | No | Removes excessive blank lines around fenced Markdown code blocks when sending messages. |
 | [FixEmbeds](../runtime/src/plugins/fixEmbeds/README.md) | Off | No | Rewrites Twitter/X, TikTok, Instagram, Reddit, and Bluesky links to embed-friendly mirrors. |
@@ -45,14 +51,21 @@ Nekocord ships with **250** built-in plugins (**248** user-toggleable plugins an
 | [HideTyping](../runtime/src/plugins/hideTyping/README.md) | Off | No | Hides typing indicators from other users by dropping incoming TYPING_START events. |
 | [HighlightAttachmentRows](../runtime/src/plugins/highlightAttachmentRows/README.md) | Off | No | Adds a cool cyan gutter accent on messages with attached files or media. |
 | [HighlightBotMessages](../runtime/src/plugins/highlightBotMessages/README.md) | Off | No | Marks messages sent by bots or webhooks with a subtle blurple gutter. |
+| [HighlightCodeBlocks](../runtime/src/plugins/highlightCodeBlocks/README.md) | Off | No | Highlights messages containing fenced Markdown code blocks. |
 | [HighlightEditedMessages](../runtime/src/plugins/highlightEditedMessages/README.md) | Off | No | Adds a mint gutter stripe to edited messages for quick scanning. |
 | [HighlightEveryonePings](../runtime/src/plugins/highlightEveryonePings/README.md) | Off | No | Adds a clear amber accent highlight to messages pinging everyone. |
+| [HighlightLinks](../runtime/src/plugins/highlightLinks/README.md) | Off | No | Highlights incoming messages that contain external HTTP or HTTPS URLs. |
+| [HighlightLongMessages](../runtime/src/plugins/highlightLongMessages/README.md) | Off | No | Highlights messages longer than 350 characters with a cyan gutter accent. |
+| [HighlightReplies](../runtime/src/plugins/highlightReplies/README.md) | Off | No | Highlights messages that reply to another message with a subtle blurple accent. |
+| [HighlightVoiceMessages](../runtime/src/plugins/highlightVoiceMessages/README.md) | Off | No | Highlights voice note messages with a warm amber gutter accent. |
 | [ILoveSpam](../runtime/src/plugins/iLoveSpam/README.md) | Off | No | Prevents Discord from automatically collapsing or hiding messages flagged as likely spam. |
 | [ImageFilename](../runtime/src/plugins/imageFilename/README.md) | Off | No | Appends attachment filenames and sizes inline under chat messages with media. |
 | [IrcColors](../runtime/src/plugins/ircColors/README.md) | Off | No | Applies deterministic IRC-style pastel colors to usernames without a custom role color. |
 | [ItalicMessages](../runtime/src/plugins/italicMessages/README.md) | Off | No | Automatically wraps outgoing chat text in *italic* Markdown formatting. |
 | [LeetSpeak](../runtime/src/plugins/leetSpeak/README.md) | Off | No | Turns standard letters into classic 1337 digits before sending. |
 | [LennyShortcut](../runtime/src/plugins/lennyShortcut/README.md) | Off | No | Expands /lenny in outgoing chat messages. |
+| [MathSymbolsShortcut](../runtime/src/plugins/mathSymbolsShortcut/README.md) | Off | No | Replaces `!=`, `<=`, `>=`, `+-`, and `~=` with Unicode math operators on send. |
+| [MentionAlertHighlight](../runtime/src/plugins/mentionAlertHighlight/README.md) | Off | No | Highlights incoming messages matching custom comma-separated alert keywords. |
 | [MessageLatency](../runtime/src/plugins/messageLatency/README.md) | Off | No | Highlights delayed incoming messages by annotating delivery latency on chat rows. |
 | [MessageLogger](../runtime/src/plugins/messageLogger/README.md) | On | Yes | Keeps deleted messages and previous edit revisions inline in chat. |
 | [MirrorWords](../runtime/src/plugins/mirrorWords/README.md) | Off | No | Reverses word order inside outgoing text while keeping words readable. |
@@ -62,6 +75,7 @@ Nekocord ships with **250** built-in plugins (**248** user-toggleable plugins an
 | [NoDiscordAutoEmoji](../runtime/src/plugins/noDiscordAutoEmoji/README.md) | Off | No | Escapes colon :shortcode: tokens with a backslash to preserve literal text. |
 | [NoEditLabel](../runtime/src/plugins/noEditLabel/README.md) | Off | No | Hides the (edited) tag while preserving MessageLogger deleted markers. |
 | [NoMaskedUrlPaste](../runtime/src/plugins/noMaskedUrlPaste/README.md) | Off | No | Unwraps Markdown masked `[label](url)` links into explicit bare URLs before sending. |
+| [NoMassMentions](../runtime/src/plugins/noMassMentions/README.md) | Off | No | Safely disarms accidental `@everyone` and `@here` mentions on send. |
 | [NoMosaic](../runtime/src/plugins/noMosaic/README.md) | Off | No | Disables Discord multi-image mosaic cropping so attachments render cleanly. |
 | [NoReplyMention](../runtime/src/plugins/noReplyMention/README.md) | On | No | Automatically disables ping mentions when starting a message reply. |
 | [NormalizeUsernames](../runtime/src/plugins/normalizeUsernames/README.md) | Off | No | Strips zero-width control characters and excess spacing from usernames. |
@@ -80,6 +94,8 @@ Nekocord ships with **250** built-in plugins (**248** user-toggleable plugins an
 | [SentenceCaseFix](../runtime/src/plugins/sentenceCaseFix/README.md) | Off | No | Automatically capitalizes the opening letter of each sentence. |
 | [ShakespeareSpeak](../runtime/src/plugins/shakespeareSpeak/README.md) | Off | No | Lightly adapts pronouns and greetings into Early Modern English phrasing. |
 | [ShoutCase](../runtime/src/plugins/shoutCase/README.md) | Off | No | Converts outgoing chat words to UPPERCASE outside code and mentions. |
+| [ShowEditedTime](../runtime/src/plugins/showEditedTime/README.md) | Off | No | Displays the exact HH:MM edit time inline on edited chat messages. |
+| [ShowMessageLength](../runtime/src/plugins/showMessageLength/README.md) | Off | No | Shows character count badges next to timestamps on messages with 120+ characters. |
 | [ShowMeYourName](../runtime/src/plugins/showMeYourName/README.md) | Off | No | Displays each message author @username next to their display name in chat. |
 | [ShrugShortcut](../runtime/src/plugins/shrugShortcut/README.md) | Off | No | Expands /shrug into the classic shrug emoticon automatically. |
 | [SilentMessages](../runtime/src/plugins/silentMessages/README.md) | Off | No | Automatically prepends @silent to outgoing messages so recipients are not pinged. |
@@ -89,6 +105,7 @@ Nekocord ships with **250** built-in plugins (**248** user-toggleable plugins an
 | [SpoilerMessage](../runtime/src/plugins/spoilerMessage/README.md) | Off | No | Wraps your entire outgoing message in \|\|spoiler\|\| tags automatically. |
 | [SquareText](../runtime/src/plugins/squareText/README.md) | Off | No | Converts letters into enclosed squared Unicode block letters. |
 | [StrikethroughMessages](../runtime/src/plugins/strikethroughMessages/README.md) | Off | No | Wraps outgoing prose in ~~strikethrough~~ Markdown tags. |
+| [StripMarkdownOnSend](../runtime/src/plugins/stripMarkdownOnSend/README.md) | Off | No | Strips bold, italic, underline, strikethrough, and heading markers before sending. |
 | [StutterText](../runtime/src/plugins/stutterText/README.md) | Off | No | Adds subtle initial-letter stutter phrasing to opening words. |
 | [SuppressEmbedsOnSend](../runtime/src/plugins/suppressEmbedsOnSend/README.md) | Off | No | Marks outgoing messages containing URLs with the suppress-embeds flag. |
 | [TableflipShortcut](../runtime/src/plugins/tableflipShortcut/README.md) | Off | No | Expands /tableflip in outgoing messages into the classic flip emoticon. |
@@ -107,15 +124,17 @@ Nekocord ships with **250** built-in plugins (**248** user-toggleable plugins an
 | [VxTikTokLinks](../runtime/src/plugins/vxTikTokLinks/README.md) | Off | No | Rewrites outgoing tiktok.com links to vxtiktok.com for reliable video previews. |
 | [VxTwitterLinks](../runtime/src/plugins/vxTwitterLinks/README.md) | Off | No | Rewrites outgoing x.com and twitter.com links to vxtwitter.com embeds. |
 | [WhisperCase](../runtime/src/plugins/whisperCase/README.md) | Off | No | Converts outgoing chat words to lowercase outside code and mentions. |
+| [WordCounter](../runtime/src/plugins/wordCounter/README.md) | Off | No | Displays a word count badge on long messages or appends word counts on send. |
 | [ZalgoLite](../runtime/src/plugins/zalgoLite/README.md) | Off | No | Adds light glitch diacritics to regular words outside links and code. |
 
-## UI (50)
+## UI (58)
 
 | Plugin | Default | Restart | Description |
 | :--- | :--- | :--- | :--- |
 | [AlwaysExpandRoles](../runtime/src/plugins/alwaysExpandRoles/README.md) | Off | No | Expands all member role chips on user profiles without requiring "+N" taps. |
 | [BetterRoleDot](../runtime/src/plugins/betterRoleDot/README.md) | Off | No | Forces role color dots and username role colors to show on chat messages. |
 | [ColorSighted](../runtime/src/plugins/colorSighted/README.md) | Off | No | Restores clean circular status dots instead of accessibility geometric shape overlays. |
+| [CompactBotMessages](../runtime/src/plugins/compactBotMessages/README.md) | Off | No | Collapses extra blank lines inside verbose bot message payloads. |
 | [CompactReactionRow](../runtime/src/plugins/compactReactionRow/README.md) | Off | No | Caps visible reaction chips per message at six to stop reaction walls. |
 | [DefaultUserAvatars](../runtime/src/plugins/defaultUserAvatars/README.md) | Off | No | Replaces custom user avatars with Discord monochrome default icons in chat. |
 | [DimBotAttachments](../runtime/src/plugins/dimBotAttachments/README.md) | Off | No | Lowers media opacity slightly on automated bot and webhook attachments. |
@@ -124,10 +143,13 @@ Nekocord ships with **250** built-in plugins (**248** user-toggleable plugins an
 | [GreetStickerPicker](../runtime/src/plugins/greetStickerPicker/README.md) | Off | No | Hides the persistent "Wave to say hi!" welcome sticker button in empty DMs and channels. |
 | [HideActivityInvites](../runtime/src/plugins/hideActivityInvites/README.md) | Off | No | Hides Rich Presence game and Spotify party invite cards in chat. |
 | [HideAppsButton](../runtime/src/plugins/hideAppsButton/README.md) | Off | Yes | Hides the Apps and Commands launcher button from the chat composer. |
+| [HideBlockedReplies](../runtime/src/plugins/hideBlockedReplies/README.md) | Off | No | Clears inline reply preview banners when replying to blocked message placeholders. |
+| [HideBotCommandsHeader](../runtime/src/plugins/hideBotCommandsHeader/README.md) | Off | No | Hides slash-command usage headers above bot response messages. |
 | [HideChannelNotices](../runtime/src/plugins/hideChannelNotices/README.md) | Off | No | Dismisses noisy channel notice and dismissible server prompt banners. |
 | [HideChannelPrompts](../runtime/src/plugins/hideChannelPrompts/README.md) | Off | No | Suppresses wave-to-say-hi and conversation starter prompt cards. |
 | [HideEmbedAuthors](../runtime/src/plugins/hideEmbedAuthors/README.md) | Off | No | Removes redundant author headers and footer lines inside chat embeds. |
 | [HideEmbeds](../runtime/src/plugins/hideEmbeds/README.md) | Off | No | Hides all link and rich embed cards rendered beneath messages. |
+| [HideEmptyEmbeds](../runtime/src/plugins/hideEmptyEmbeds/README.md) | Off | No | Filters blank placeholder embeds from chat message rows. |
 | [HideForwardHeaders](../runtime/src/plugins/hideForwardHeaders/README.md) | Off | No | Removes the Forwarded message source header above forwarded content. |
 | [HideGiftButton](../runtime/src/plugins/hideGiftButton/README.md) | Off | Yes | Hides the Nitro gift button from the chat message composer. |
 | [HideGiftIntents](../runtime/src/plugins/hideGiftIntents/README.md) | Off | No | Removes birthday and Nitro gift prompt banners inside message rows. |
@@ -136,6 +158,8 @@ Nekocord ships with **250** built-in plugins (**248** user-toggleable plugins an
 | [HidePostPreviews](../runtime/src/plugins/hidePostPreviews/README.md) | Off | No | Removes forum post preview embeds inside message rows. |
 | [HidePronouns](../runtime/src/plugins/hidePronouns/README.md) | Off | Yes | Clears pronoun labels on opened user and member profiles. |
 | [HideReactions](../runtime/src/plugins/hideReactions/README.md) | Off | No | Hides all reaction chip rows underneath chat messages. |
+| [HideServerTagBadges](../runtime/src/plugins/hideServerTagBadges/README.md) | Off | No | Removes server identity tag pills next to author usernames in chat rows. |
+| [HideStickerLabels](../runtime/src/plugins/hideStickerLabels/README.md) | Off | No | Strips alt-text description labels attached to chat stickers. |
 | [HideThreadCards](../runtime/src/plugins/hideThreadCards/README.md) | Off | No | Removes inline thread embed summary cards from channel chat. |
 | [HideUserBanners](../runtime/src/plugins/hideUserBanners/README.md) | Off | Yes | Strips custom Nitro profile banners to preserve clean profile headers. |
 | [HideUserBios](../runtime/src/plugins/hideUserBios/README.md) | Off | Yes | Hides custom About Me bios on opened Discord profile sheets. |
@@ -156,25 +180,37 @@ Nekocord ships with **250** built-in plugins (**248** user-toggleable plugins an
 | [NoProfileEffects](../runtime/src/plugins/noProfileEffects/README.md) | Off | Yes | Strips animated Nitro profile effects from user profile cards. |
 | [NoProfileThemes](../runtime/src/plugins/noProfileThemes/README.md) | Off | Yes | Strips custom Nitro profile theme colors so user profiles use your base Discord theme. |
 | [NoRoleColors](../runtime/src/plugins/noRoleColors/README.md) | Off | No | Removes custom role username colours for a uniform neutral feed. |
+| [NoRoleGradient](../runtime/src/plugins/noRoleGradient/README.md) | Off | No | Flattens multi-stop role name gradients down to the primary solid role color. |
 | [NoRoleIcons](../runtime/src/plugins/noRoleIcons/README.md) | Off | No | Hides custom role icons beside author names in chat. |
 | [NoTypingAnimation](../runtime/src/plugins/noTypingAnimation/README.md) | Off | No | Disables animated bouncing typing dots to reduce UI motion and battery usage. |
 | [NoUnblockToJump](../runtime/src/plugins/noUnblockToJump/README.md) | Off | No | Skips the "Unblock user to jump" confirmation prompt when tapping replies from blocked users. |
 | [OnlyMyReactions](../runtime/src/plugins/onlyMyReactions/README.md) | Off | No | Shows only reactions that you have reacted with in chat rows. |
 | [PlainFolderIcon](../runtime/src/plugins/plainFolderIcon/README.md) | Off | No | Replaces crowded server folder mini-icon previews with clean uniform folder icons. |
 | [RoleColorEverywhere](../runtime/src/plugins/roleColorEverywhere/README.md) | Off | No | Resolves and applies a member highest colored role to usernames when missing in chat rows. |
+| [ShowFullSnowflakeDate](../runtime/src/plugins/showFullSnowflakeDate/README.md) | Off | No | Appends the decoded `(YYYY-MM-DD)` date beside short timestamps. |
 | [ShowTimeoutDuration](../runtime/src/plugins/showTimeoutDuration/README.md) | Off | No | Displays remaining communication timeout duration beside timed-out members in chat. |
 
-## Privacy (38)
+## Privacy (53)
 
 | Plugin | Default | Restart | Description |
 | :--- | :--- | :--- | :--- |
 | [AnonymiseFileNames](../runtime/src/plugins/anonymiseFileNames/README.md) | Off | No | Randomizes uploaded attachment filenames to 8-character hex names. |
+| [AnonymiseLinks](../runtime/src/plugins/anonymiseLinks/README.md) | Off | No | Strips URL query parameters and optionally prepends a privacy redirect prefix on send. |
+| [AutoSpoilerAttachments](../runtime/src/plugins/autoSpoilerAttachments/README.md) | Off | No | Automatically marks outgoing uploaded files as spoilers based on configurable media types. |
+| [BlockActivityStatus](../runtime/src/plugins/blockActivityStatus/README.md) | Off | No | Prevents local game and app activity updates from being broadcast. |
 | [BlockCallTelemetry](../runtime/src/plugins/blockCallTelemetry/README.md) | Off | No | Suppresses outgoing voice quality metrics and media connection stats dispatches. |
+| [BlockCrashReports](../runtime/src/plugins/blockCrashReports/README.md) | Off | No | Drops client crash telemetry and Sentry dispatch payloads locally. |
+| [BlockExperimentExposures](../runtime/src/plugins/blockExperimentExposures/README.md) | Off | No | Drops Discord experiment exposure tracking Flux events. |
 | [BlockTypingDispatch](../runtime/src/plugins/blockTypingDispatch/README.md) | Off | No | Blocks local TYPING_START_LOCAL and channel typing broadcast actions. |
 | [CleanAliExpressLinks](../runtime/src/plugins/cleanAliExpressLinks/README.md) | Off | No | Strips tracking query junk from outgoing AliExpress item links. |
 | [CleanAmazonLinks](../runtime/src/plugins/cleanAmazonLinks/README.md) | Off | No | Strips tracking slugs and referral queries down to canonical Amazon /dp/ASIN links. |
+| [CleanFacebookLinks](../runtime/src/plugins/cleanFacebookLinks/README.md) | Off | No | Strips `fbclid` and `mibextid` tracking query parameters from outgoing URLs. |
 | [CleanInstagramShare](../runtime/src/plugins/cleanInstagramShare/README.md) | Off | No | Strips igsh and tracking parameters from outgoing Instagram URLs. |
 | [CleanSpotifyLinks](../runtime/src/plugins/cleanSpotifyLinks/README.md) | Off | No | Removes ?si= and share-tracking parameters from outgoing Spotify links. |
+| [CleanSubstackLinks](../runtime/src/plugins/cleanSubstackLinks/README.md) | Off | No | Removes Substack share and publication tracking parameters on send. |
+| [CleanTiktokLinks](../runtime/src/plugins/cleanTiktokLinks/README.md) | Off | No | Removes share tracking query strings from TikTok URLs before sending. |
+| [CleanTwitterParams](../runtime/src/plugins/cleanTwitterParams/README.md) | Off | No | Strips `s=` and `t=` share tracking parameters from X/Twitter links on send. |
+| [CleanYoutubeTracking](../runtime/src/plugins/cleanYoutubeTracking/README.md) | Off | No | Removes `si`, `pp`, and `feature` tracking parameters from YouTube share links. |
 | [CleanZeroWidthSend](../runtime/src/plugins/cleanZeroWidthSend/README.md) | Off | No | Strips invisible zero-width joiners and BOM bytes from outgoing messages. |
 | [ClearURLs](../runtime/src/plugins/clearUrls/README.md) | On | No | Strips tracking query parameters such as utm_*, fbclid, igsh, and si from outgoing links. |
 | [CustomIdle](../runtime/src/plugins/customIdle/README.md) | Off | No | Prevents Discord from automatically flipping your online status to Idle due to inactivity. |
@@ -192,10 +228,14 @@ Nekocord ships with **250** built-in plugins (**248** user-toggleable plugins an
 | [NitterLinks](../runtime/src/plugins/nitterLinks/README.md) | Off | No | Rewrites Twitter and X links to an anonymous Nitter mirror before sending. |
 | [NoAnalyticsBeacons](../runtime/src/plugins/noAnalyticsBeacons/README.md) | Off | Yes | Drops internal Discord impression, exposure, and heartbeat metric beacons. |
 | [NoDevtoolsWarning](../runtime/src/plugins/noDevtoolsWarning/README.md) | Off | No | Suppresses Discord Hold Up / self-XSS developer console warning banners. |
+| [NoGiftSuggestions](../runtime/src/plugins/noGiftSuggestions/README.md) | Off | No | Hides proactive Nitro gift button and upsell prompts. |
 | [NoPresenceTelemetry](../runtime/src/plugins/noPresenceTelemetry/README.md) | Off | No | Drops rich presence tracking and activity launch metric actions. |
 | [NoTrack](../runtime/src/plugins/noTrack/README.md) | On | No | Drops Discord analytics and telemetry Flux dispatches before they are recorded. |
 | [OnePingPerDM](../runtime/src/plugins/onePingPerDM/README.md) | Off | No | Suppresses repeated push/sound ping notifications from the same DM channel within 10 seconds. |
 | [PauseInvitesForever](../runtime/src/plugins/pauseInvitesForever/README.md) | Off | No | Extends server invite pause actions beyond default temporary timeouts. |
+| [RedactApiKeys](../runtime/src/plugins/redactApiKeys/README.md) | Off | No | Redacts common API keys (`sk-...`, `ghp_...`, `AIza...`, `xoxb-...`) on send. |
+| [RedactCreditCards](../runtime/src/plugins/redactCreditCards/README.md) | Off | No | Masks 13 to 19 digit payment card number sequences before sending. |
+| [RedactDiscordTokens](../runtime/src/plugins/redactDiscordTokens/README.md) | Off | No | Redacts accidental Discord authentication tokens before sending messages. |
 | [RedactEmails](../runtime/src/plugins/redactEmails/README.md) | Off | No | Automatically redacts email addresses before outgoing messages are sent. |
 | [RedactIpv4Addresses](../runtime/src/plugins/redactIpv4Addresses/README.md) | Off | No | Masks public IPv4 addresses in outgoing chat text to prevent accidental leaks. |
 | [RedactJwtTokens](../runtime/src/plugins/redactJwtTokens/README.md) | Off | No | Intercepts and redacts leaked JWTs or token-like strings before upload. |
@@ -203,20 +243,24 @@ Nekocord ships with **250** built-in plugins (**248** user-toggleable plugins an
 | [SilentChannelSelect](../runtime/src/plugins/silentChannelSelect/README.md) | Off | No | Drops client channel navigation and thread view metric dispatches. |
 | [SilentTyping](../runtime/src/plugins/silentTyping/README.md) | Off | No | Prevents Discord from broadcasting your typing indicator to channels. |
 | [SortFriendRequests](../runtime/src/plugins/sortFriendRequests/README.md) | Off | No | Sorts incoming and outgoing pending friend requests newest-first by arrival order. |
+| [StripExifFileNames](../runtime/src/plugins/stripExifFileNames/README.md) | Off | No | Replaces camera date-stamped filenames (`IMG_`, `PXL_`, `DSC_`) with neutral names. |
 | [StripReferralUpsells](../runtime/src/plugins/stripReferralUpsells/README.md) | Off | No | Blocks Nitro referral upsell modal dispatches and marketing impressions. |
 | [SuppressReadReceipts](../runtime/src/plugins/suppressReadReceipts/README.md) | Off | Yes | Blocks outgoing channel read receipt acknowledgements when browsing. |
 | [YoutubeNoCookie](../runtime/src/plugins/youtubeNoCookie/README.md) | Off | No | Converts YouTube watch links into youtube-nocookie.com privacy embed URLs. |
 
-## Utility (24)
+## Utility (27)
 
 | Plugin | Default | Restart | Description |
 | :--- | :--- | :--- | :--- |
 | [AlwaysTrust](../runtime/src/plugins/alwaysTrust/README.md) | Off | Yes | Automatically trusts external links and skips untrusted domain warning prompts. |
 | [AutoPeriod](../runtime/src/plugins/autoPeriod/README.md) | Off | No | Appends a period when an outgoing sentence ends with an alphanumeric character. |
+| [BetterSteamLinks](../runtime/src/plugins/betterSteamLinks/README.md) | Off | No | Cleans storefront referral parameters (`?snr=`) from Steam store URLs. |
 | [BreezeWikiLinks](../runtime/src/plugins/breezeWikiLinks/README.md) | Off | No | Rewrites ad-heavy fandom.com wiki links to clean breezewiki.com reader URLs. |
+| [CleanEbayLinks](../runtime/src/plugins/cleanEbayLinks/README.md) | Off | No | Shortens eBay item URLs to canonical `/itm/<id>` links without tracking parameters. |
 | [CollapseSpaces](../runtime/src/plugins/collapseSpaces/README.md) | Off | No | Collapses multiple consecutive spaces inside sentences into single spaces. |
 | [DesktopWikipediaLinks](../runtime/src/plugins/desktopWikipediaLinks/README.md) | Off | No | Converts mobile en.m.wikipedia.org links into standard desktop Wikipedia URLs. |
 | [ExpandShortYoutuBe](../runtime/src/plugins/expandShortYoutuBe/README.md) | Off | No | Expands youtu.be shortlinks to full youtube.com/watch?v= URLs. |
+| [FxEmbedsBluesky](../runtime/src/plugins/fxEmbedsBluesky/README.md) | Off | No | Rewrites `bsky.app` links to `fxbsky.app` for enhanced rich post embeds. |
 | [IsoDateMacro](../runtime/src/plugins/isoDateMacro/README.md) | Off | No | Replaces /today with today's ISO YYYY-MM-DD date stamp. |
 | [KeepCurrentChannel](../runtime/src/plugins/keepCurrentChannel/README.md) | Off | No | Remembers your last opened guild and DM channels across navigation switches. |
 | [MorseCodeMacro](../runtime/src/plugins/morseCodeMacro/README.md) | Off | No | Translates /morse <text> into International Morse dots and dashes. |
@@ -236,7 +280,7 @@ Nekocord ships with **250** built-in plugins (**248** user-toggleable plugins an
 | [StripYoutubeShorts](../runtime/src/plugins/stripYoutubeShorts/README.md) | Off | No | Converts YouTube Shorts URLs to standard watch?v= links before sending. |
 | [TrimTrailingSpaces](../runtime/src/plugins/trimTrailingSpaces/README.md) | Off | No | Trims leading/trailing whitespace and collapses excessive empty newlines. |
 
-## Developer (16)
+## Developer (19)
 
 | Plugin | Default | Restart | Description |
 | :--- | :--- | :--- | :--- |
@@ -247,8 +291,11 @@ Nekocord ships with **250** built-in plugins (**248** user-toggleable plugins an
 | [BypassSlowmodeDisplay](../runtime/src/plugins/bypassSlowmodeDisplay/README.md) | Off | Yes | Clears the client-side slowmode cooldown display lock in CooldownStore. |
 | [CharacterCountTag](../runtime/src/plugins/characterCountTag/README.md) | Off | No | Appends a subtle character count footer to outgoing messages over 20 chars. |
 | [DeveloperMode](../runtime/src/plugins/developerMode/README.md) | On | Yes | Forces Discord internal developer options flag to enabled. |
+| [EpochDecodeMacro](../runtime/src/plugins/epochDecodeMacro/README.md) | Off | No | Expands `\\epoch:<unix>` macros into ISO-8601 UTC date strings on send. |
 | [Experiments](../runtime/src/plugins/experiments/README.md) | Off | Yes | Unlocks Discord internal Experiments and Staff developer settings tabs. |
+| [HexColorPreviewTag](../runtime/src/plugins/hexColorPreviewTag/README.md) | Off | No | Expands `\\hex:#RRGGBB` macros into hex + RGB color values on send. |
 | [HexEncodeMacro](../runtime/src/plugins/hexEncodeMacro/README.md) | Off | No | Converts /hex <text> payloads into space-separated hexadecimal bytes. |
+| [JsonFormatMacro](../runtime/src/plugins/jsonFormatMacro/README.md) | Off | No | Expands `\\json:{...}` macros into formatted JSON code blocks on send. |
 | [LoremIpsumMacro](../runtime/src/plugins/loremIpsumMacro/README.md) | Off | No | Expands /lorem into standard placeholder text for UI or chat layout tests. |
 | [MonospaceNumbers](../runtime/src/plugins/monospaceNumbers/README.md) | Off | No | Converts ASCII digits in outgoing text into Unicode monospace numerals. |
 | [ReactErrorDecoder](../runtime/src/plugins/reactErrorDecoder/README.md) | Off | No | Appends readable explanations when Discord logs minified React error codes. |
@@ -257,7 +304,7 @@ Nekocord ships with **250** built-in plugins (**248** user-toggleable plugins an
 | [UnixTimestamps](../runtime/src/plugins/unixTimestamps/README.md) | Off | No | Appends exact Unix epoch seconds to chat message timestamps. |
 | [UrlEncodeMacro](../runtime/src/plugins/urlEncodeMacro/README.md) | Off | No | Percent-encodes /urlencode <text> values safely before sending. |
 
-## Nitro (10)
+## Nitro (11)
 
 | Plugin | Default | Restart | Description |
 | :--- | :--- | :--- | :--- |
@@ -269,19 +316,22 @@ Nekocord ships with **250** built-in plugins (**248** user-toggleable plugins an
 | [HighlightStickersInChat](../runtime/src/plugins/highlightStickersInChat/README.md) | Off | No | Highlights messages containing custom or Nitro stickers with a purple gutter. |
 | [NoGifAutoplay](../runtime/src/plugins/noGifAutoplay/README.md) | Off | No | Stops animated GIFs in chat from auto-playing until tapped. |
 | [SpotifyCrack](../runtime/src/plugins/spotifyCrack/README.md) | Off | No | Unlocks Spotify Listen Along and pauses-on-speak prevention without Spotify Premium. |
+| [UnlockAppIcons](../runtime/src/plugins/unlockAppIcons/README.md) | Off | No | Unlocks custom client app icon selector checks without a Nitro subscription. |
 | [UnlockBurstChecks](../runtime/src/plugins/unlockBurstChecks/README.md) | Off | Yes | Clears client cooldown and upsell gates on burst super-reaction checks. |
 | [UnlockClientThemes](../runtime/src/plugins/unlockClientThemes/README.md) | Off | Yes | Unlocks preview access to Nitro client themes and custom background checks. |
 
-## Voice (9)
+## Voice (11)
 
 | Plugin | Default | Restart | Description |
 | :--- | :--- | :--- | :--- |
+| [BlockStreamPreview](../runtime/src/plugins/blockStreamPreview/README.md) | Off | No | Stops Discord from uploading live Go Live stream preview thumbnails. |
 | [CallTimer](../runtime/src/plugins/callTimer/README.md) | Off | No | Measures active voice call session duration and logs exact elapsed time on leave. |
 | [DisableCallIdle](../runtime/src/plugins/disableCallIdle/README.md) | Off | No | Prevents automatic idle disconnection timeouts while sitting in voice calls. |
 | [FakeDeafen](../runtime/src/plugins/fakeDeafen/README.md) | Off | No | Spoofs self-deafen and self-mute to Discord voice gateway while keeping audio active. |
 | [StreamerModeOnStream](../runtime/src/plugins/streamerModeOnStream/README.md) | Off | No | Automatically toggles Discord Streamer Mode when starting or ending a stream. |
 | [VoiceChannelAudit](../runtime/src/plugins/voiceChannelAudit/README.md) | Off | No | Counts and records voice channel join/leave updates for diagnostics. |
 | [VoiceDeafenOnJoin](../runtime/src/plugins/voiceDeafenOnJoin/README.md) | Off | No | Automatically self-deafens whenever you connect into a voice channel. |
+| [VoiceDeafenOnLeave](../runtime/src/plugins/voiceDeafenOnLeave/README.md) | Off | No | Automatically self-deafens whenever disconnecting from a voice channel. |
 | [VoiceMuteOnJoin](../runtime/src/plugins/voiceMuteOnJoin/README.md) | Off | No | Automatically mutes your microphone when joining or switching voice channels. |
 | [VoiceUnmuteOnLeave](../runtime/src/plugins/voiceUnmuteOnLeave/README.md) | Off | No | Clears local self-mute automatically when leaving a voice call. |
 | [VolumeBooster](../runtime/src/plugins/volumeBooster/README.md) | Off | No | Allows boosting voice participant volumes up to 400% beyond standard sliders. |

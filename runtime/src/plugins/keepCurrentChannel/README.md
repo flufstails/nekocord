@@ -2,7 +2,8 @@
 name: KeepCurrentChannel
 description: "Remembers your last opened guild and DM channels across navigation switches."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: utility
 enabledByDefault: false
 tags:

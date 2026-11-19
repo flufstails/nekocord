@@ -2,7 +2,8 @@
 name: HideUserBios
 description: Hides custom About Me bios on opened Discord profile sheets.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: ui
 enabledByDefault: false
 requiresRestart: true

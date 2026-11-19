@@ -2,7 +2,8 @@
 name: HighlightBotMessages
 description: Marks messages sent by bots or webhooks with a subtle blurple gutter.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

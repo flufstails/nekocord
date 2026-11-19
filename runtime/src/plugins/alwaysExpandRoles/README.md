@@ -2,7 +2,8 @@
 name: AlwaysExpandRoles
 description: "Expands all member role chips on user profiles without requiring \"+N\" taps."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: ui
 enabledByDefault: false
 tags:

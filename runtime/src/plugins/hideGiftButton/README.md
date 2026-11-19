@@ -2,7 +2,8 @@
 name: HideGiftButton
 description: Hides the Nitro gift button from the chat message composer.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: ui
 enabledByDefault: false
 requiresRestart: true

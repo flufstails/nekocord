@@ -2,7 +2,8 @@
 name: ShowTimeoutDuration
 description: "Displays remaining communication timeout duration beside timed-out members in chat."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: ui
 enabledByDefault: false
 tags:

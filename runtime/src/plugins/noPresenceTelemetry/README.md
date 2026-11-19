@@ -2,7 +2,8 @@
 name: NoPresenceTelemetry
 description: Drops rich presence tracking and activity launch metric actions.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: privacy
 enabledByDefault: false
 tags:

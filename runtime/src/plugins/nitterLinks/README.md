@@ -2,7 +2,8 @@
 name: NitterLinks
 description: Rewrites Twitter and X links to an anonymous Nitter mirror before sending.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: privacy
 enabledByDefault: false
 tags:

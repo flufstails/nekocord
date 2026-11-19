@@ -2,7 +2,8 @@
 name: ShowHiddenChannels
 description: "Reveals locked guild channels and categories in the server sidebar (read-only metadata)."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: utility
 enabledByDefault: false
 tags:

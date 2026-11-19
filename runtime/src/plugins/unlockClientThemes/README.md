@@ -2,7 +2,8 @@
 name: UnlockClientThemes
 description: Unlocks preview access to Nitro client themes and custom background checks.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: nitro
 enabledByDefault: false
 requiresRestart: true

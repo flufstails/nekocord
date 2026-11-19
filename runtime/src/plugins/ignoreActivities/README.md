@@ -2,7 +2,8 @@
 name: IgnoreActivities
 description: "Blocks local activity, running game, and rich presence broadcasts from leaving your device."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: privacy
 enabledByDefault: false
 tags:

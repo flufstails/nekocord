@@ -2,7 +2,8 @@
 name: DiceRollMacro
 description: Expands /roll NdM dice expressions (like /roll 2d6) into itemized rolls.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

@@ -2,7 +2,8 @@
 name: DontRoundMyTimestamps
 description: "Preserves exact minute and second precision on message timestamps instead of rounded phrasing."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

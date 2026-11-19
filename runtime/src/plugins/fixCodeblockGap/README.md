@@ -2,7 +2,8 @@
 name: FixCodeblockGap
 description: "Removes excessive blank lines around fenced Markdown code blocks when sending messages."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

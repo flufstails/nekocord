@@ -2,7 +2,8 @@
 name: NoBlockedMessages
 description: Completely hides incoming and loaded messages from blocked or ignored users.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 requiresRestart: true

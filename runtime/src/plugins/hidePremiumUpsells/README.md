@@ -2,7 +2,8 @@
 name: HidePremiumUpsells
 description: Suppresses client Nitro upsell prompts across pickers and settings menus.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: nitro
 enabledByDefault: false
 requiresRestart: true

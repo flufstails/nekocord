@@ -28,7 +28,9 @@ export type VencordIconName =
   | 'plus'
   | 'folder'
   | 'log'
-  | 'clock';
+  | 'clock'
+  | 'switchCheck'
+  | 'switchCross';
 
 interface SvgPathSpec {
   d: string;
@@ -278,6 +280,28 @@ const VENCORD_ICONS: Record<VencordIconName, SvgIconSpec> = {
       },
     ],
   },
+  switchCheck: {
+    viewBox: '0 0 20 20',
+    paths: [
+      {
+        d: 'M7.89561 14.8538L6.30462 13.2629L14.3099 5.25755L15.9009 6.84854L7.89561 14.8538Z',
+      },
+      {
+        d: 'M4.08643 11.0903L5.67742 9.49929L9.4485 13.2704L7.85751 14.8614L4.08643 11.0903Z',
+      },
+    ],
+  },
+  switchCross: {
+    viewBox: '0 0 20 20',
+    paths: [
+      {
+        d: 'M5.13231 6.72963L6.7233 5.13864L14.855 13.2704L13.264 14.8614L5.13231 6.72963Z',
+      },
+      {
+        d: 'M13.2704 5.13864L14.8614 6.72963L6.72963 14.8614L5.13864 13.2704L13.2704 5.13864Z',
+      },
+    ],
+  },
 };
 
 interface SvgLibrary {
@@ -405,6 +429,25 @@ function renderFallbackBadge(
           borderColor: color,
         },
       }),
+    );
+  }
+
+  if (name === 'switchCheck' || name === 'switchCross') {
+    return h(
+      View,
+      { style: { width: size, height: size, alignItems: 'center', justifyContent: 'center' } },
+      h(
+        Text,
+        {
+          style: {
+            color,
+            fontSize: Math.max(9, Math.round(size * 0.82)),
+            fontWeight: '900',
+            lineHeight: size,
+          },
+        },
+        name === 'switchCheck' ? '\u2713' : '\u00d7',
+      ),
     );
   }
 

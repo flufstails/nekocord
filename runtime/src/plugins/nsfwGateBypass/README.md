@@ -2,7 +2,8 @@
 name: NSFWGateBypass
 description: Bypasses client-side NSFW channel and age-gate prompts.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: utility
 enabledByDefault: false
 requiresRestart: true

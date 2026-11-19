@@ -2,7 +2,8 @@
 name: DeletedTimestampAudit
 description: Logs deleted message IDs and channel history events in telemetry.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

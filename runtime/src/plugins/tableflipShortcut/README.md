@@ -2,7 +2,8 @@
 name: TableflipShortcut
 description: Expands /tableflip in outgoing messages into the classic flip emoticon.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

@@ -2,7 +2,8 @@
 name: Rot13Macro
 description: "Transforms /rot13 <text> payloads using classic ROT13 letter rotation."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: utility
 enabledByDefault: false
 tags:

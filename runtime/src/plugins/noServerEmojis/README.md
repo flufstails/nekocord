@@ -2,7 +2,8 @@
 name: NoServerEmojis
 description: "Renders custom guild emojis as plain `:name:` shortcodes in incoming chat messages."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: chat
 enabledByDefault: false
 tags:

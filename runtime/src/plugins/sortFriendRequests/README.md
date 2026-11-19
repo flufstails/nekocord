@@ -2,7 +2,8 @@
 name: SortFriendRequests
 description: "Sorts incoming and outgoing pending friend requests newest-first by arrival order."
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: privacy
 enabledByDefault: false
 tags:

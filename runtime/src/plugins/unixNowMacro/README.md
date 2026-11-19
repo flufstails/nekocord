@@ -2,7 +2,8 @@
 name: UnixNowMacro
 description: Replaces /unixnow with Discord dynamic timestamp markup for the current time.
 authors:
-  - flufstails
+  - name: flufstails
+    icon: https://avatars.githubusercontent.com/u/244251958?v=4
 category: developer
 enabledByDefault: false
 tags:
