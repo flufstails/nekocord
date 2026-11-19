@@ -1,10 +1,26 @@
 import { registerMessageRowTransformer } from '../../chat/rows.js';
+import { definePluginSettings, OptionType } from '../settings.js';
 import { definePlugin } from '../types.js';
+
+const settings = definePluginSettings({
+  use24Hour: {
+    type: OptionType.BOOLEAN,
+    label: 'Use 24-Hour Format',
+    description: 'Display timestamps in 24-hour clock format instead of 12-hour AM/PM.',
+    default: true,
+  },
+  showSeconds: {
+    type: OptionType.BOOLEAN,
+    label: 'Include Seconds',
+    description: 'Include seconds precision in formatted chat timestamps.',
+    default: true,
+  },
+});
 
 const DISCORD_EPOCH = 1420070400000;
 const SNOWFLAKE_DIVISOR = 4194304; // 2^22
 const SNOWFLAKE_RE = /^\d{15,22}$/;
-const HAS_SECONDS_RE = /\d{1,2}:\d{2}:\d{2}/;
+const HAS_FULL_RE = /^\d{4}-\d{2}-\d{2} /;
 
 let unregisterRowTransformer: (() => void) | null = null;
 let formattedCount = 0;
@@ -38,13 +54,19 @@ function formatFullTimestamp(ms: number): string {
   const year = d.getFullYear();
   const month = pad2(d.getMonth() + 1);
   const day = pad2(d.getDate());
-  const hours = pad2(d.getHours());
+  const rawH = d.getHours();
   const minutes = pad2(d.getMinutes());
-  const seconds = pad2(d.getSeconds());
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  const secPart = settings.store.showSeconds ? `:${pad2(d.getSeconds())}` : '';
+  if (settings.store.use24Hour) {
+    return `${year}-${month}-${day} ${pad2(rawH)}:${minutes}${secPart}`;
+  }
+  const period = rawH >= 12 ? 'PM' : 'AM';
+  const h12 = rawH % 12 || 12;
+  return `${year}-${month}-${day} ${h12}:${minutes}${secPart} ${period}`;
 }
 
 export default definePlugin({
+  settings,
   start() {
     unregisterRowTransformer = registerMessageRowTransformer((row) => {
       const msg = row.message;
@@ -54,7 +76,7 @@ export default definePlugin({
         typeof msg.timestamp !== 'string' ||
         !msg.timestamp ||
         typeof msg.id !== 'string' ||
-        HAS_SECONDS_RE.test(msg.timestamp)
+        HAS_FULL_RE.test(msg.timestamp)
       ) {
         return false;
       }

@@ -16,7 +16,46 @@ import {
 import { after, before, instead, type Unpatch } from '../../patcher/index.js';
 import { registerMessageRowTransformer } from '../../chat/rows.js';
 import { transformOutsideCode, transformOutsideCodeAndTokens } from '../../utils/text.js';
+import { definePluginSettings, OptionType } from '../settings.js';
 import { definePlugin } from '../types.js';
+
+const settings = definePluginSettings({
+  enableEmojiBypass: {
+    type: OptionType.BOOLEAN,
+    label: 'Enable Emoji Bypass',
+    description: 'Unlock external and animated emojis in the picker and rewrite locked sends to CDN links.',
+    default: true,
+  },
+  enableStickerBypass: {
+    type: OptionType.BOOLEAN,
+    label: 'Enable Sticker Bypass',
+    description: 'Unlock Nitro stickers in the picker and convert locked sticker sends cleanly.',
+    default: true,
+  },
+  emojiSize: {
+    type: OptionType.SELECT,
+    label: 'Emoji Size',
+    description: 'Image size parameter appended to bypassed custom emoji URLs.',
+    default: 48,
+    options: [
+      { label: '32px', value: 32 },
+      { label: '48px (Default)', value: 48 },
+      { label: '64px', value: 64 },
+      { label: '128px', value: 128 },
+    ],
+  },
+  stickerSize: {
+    type: OptionType.SELECT,
+    label: 'Sticker Size',
+    description: 'Image dimension used when sending and rendering bypassed stickers.',
+    default: 160,
+    options: [
+      { label: '128px', value: 128 },
+      { label: '160px (Default)', value: 160 },
+      { label: '256px', value: 256 },
+    ],
+  },
+});
 
 const CAPABILITY_METHODS = new Set([
   'canUseEmojisEverywhere',
@@ -272,23 +311,25 @@ function isReactionIntention(args: any[]): boolean {
 
 function buildEmojiUrl(id: string, animated: boolean, name?: string): string {
   const ext = animated ? 'gif' : 'webp';
+  const size = Number(settings.store.emojiSize) || 48;
   const safeName =
     typeof name === 'string' && name.trim() ? `&name=${encodeURIComponent(name.trim())}` : '';
-  return `https://cdn.discordapp.com/emojis/${id}.${ext}?size=48&quality=lossless${safeName}`;
+  return `https://cdn.discordapp.com/emojis/${id}.${ext}?size=${size}&quality=lossless${safeName}`;
 }
 
 function buildStickerUrl(sticker: any): string {
+  const size = Number(settings.store.stickerSize) || 160;
   const safeName =
     typeof sticker?.name === 'string' && sticker.name.trim()
       ? `&name=${encodeURIComponent(sticker.name.trim())}`
       : '';
   if (sticker.format_type === 4) {
-    return `https://media.discordapp.net/stickers/${sticker.id}.gif?size=160${safeName}`;
+    return `https://media.discordapp.net/stickers/${sticker.id}.gif?size=${size}${safeName}`;
   }
   if (sticker.format_type === 2) {
-    return `https://media.discordapp.net/stickers/${sticker.id}.png?size=160&passthrough=true${safeName}`;
+    return `https://media.discordapp.net/stickers/${sticker.id}.png?size=${size}&passthrough=true${safeName}`;
   }
-  return `https://media.discordapp.net/stickers/${sticker.id}.png?size=160${safeName}`;
+  return `https://media.discordapp.net/stickers/${sticker.id}.png?size=${size}${safeName}`;
 }
 
 function extractQueryParam(query: string | undefined, key: string): string | null {
@@ -336,12 +377,13 @@ function parseFakeEmojiUrl(rawUrl: string): {
   const qName = extractQueryParam(query, 'name');
   const stored = findCustomEmojiById(id);
   const name = qName || (typeof stored?.name === 'string' && stored.name.trim()) || 'emoji';
+  const emojiSz = Number(settings.store.emojiSize) || 48;
   return {
     id,
     ext,
     name,
-    src: `https://cdn.discordapp.com/emojis/${id}.${ext}?size=48&quality=lossless`,
-    frozenSrc: `https://cdn.discordapp.com/emojis/${id}.webp?size=48&quality=lossless`,
+    src: `https://cdn.discordapp.com/emojis/${id}.${ext}?size=${emojiSz}&quality=lossless`,
+    frozenSrc: `https://cdn.discordapp.com/emojis/${id}.webp?size=${emojiSz}&quality=lossless`,
   };
 }
 
@@ -368,20 +410,21 @@ function parseFakeStickerUrl(rawUrl: string): {
   const name = qName || (typeof stored?.name === 'string' && stored.name.trim()) || 'sticker';
   const formatType: 1 | 2 | 4 =
     ext === 'gif' ? 4 : query.includes('passthrough=true') ? 2 : 1;
+  const stickerSz = Number(settings.store.stickerSize) || 160;
   const cleanUrl =
     formatType === 4
-      ? `https://media.discordapp.net/stickers/${id}.gif?size=160`
+      ? `https://media.discordapp.net/stickers/${id}.gif?size=${stickerSz}`
       : formatType === 2
-        ? `https://media.discordapp.net/stickers/${id}.png?size=160&passthrough=true`
-        : `https://media.discordapp.net/stickers/${id}.png?size=160`;
+        ? `https://media.discordapp.net/stickers/${id}.png?size=${stickerSz}&passthrough=true`
+        : `https://media.discordapp.net/stickers/${id}.png?size=${stickerSz}`;
   return {
     id,
     format_type: formatType,
     name,
     asset: '',
     url: cleanUrl,
-    width: 160,
-    height: 160,
+    width: stickerSz,
+    height: stickerSz,
     renderMode: 0,
     accessibilityLabel: `Sticker, ${name}`,
   };
@@ -741,6 +784,9 @@ function runWithBypass<T>(fn: (() => T) | null | undefined): T | undefined {
 }
 
 function needsFakeEmoji(emoji: any, channelId: string, animatedHint = false): boolean {
+  if (!settings.store.enableEmojiBypass) {
+    return false;
+  }
   const channel = channelId ? getChannelStore()?.getChannel?.(channelId) : undefined;
   if (emoji) {
     if (origGetEmojiUnavailableReason) {
@@ -778,7 +824,7 @@ function needsFakeEmoji(emoji: any, channelId: string, animatedHint = false): bo
 }
 
 function needsFakeSticker(sticker: any, channelId: string): boolean {
-  if (!sticker || !sticker.id) {
+  if (!settings.store.enableStickerBypass || !sticker || !sticker.id) {
     return false;
   }
   const user = getUserStore()?.getCurrentUser?.();
@@ -854,8 +900,9 @@ function extractStickerUrlsFromIds(stickerIds: unknown[], channelId: string): {
       continue;
     }
 
-    if (!userHasFullNitro() && rawId) {
-      urls.push(`https://media.discordapp.net/stickers/${rawId}.png?size=160`);
+    if (settings.store.enableStickerBypass && !userHasFullNitro() && rawId) {
+      const sz = Number(settings.store.stickerSize) || 160;
+      urls.push(`https://media.discordapp.net/stickers/${rawId}.png?size=${sz}`);
       convertedCount += 1;
     } else if (raw != null) {
       keepIds.push(raw);
@@ -1404,6 +1451,7 @@ export function getFakeNitroStats(): {
 }
 
 export default definePlugin({
+  settings,
   start() {
     cleanups.push(watchNamedExports(FAKENITRO_TARGET_NAMES, handleMatchedTarget));
     cleanups.push(

@@ -1,5 +1,11 @@
 import { getClipboardModule, getStore, restartDiscordApp } from '../metro/common.js';
 import { clearInlineMessageHistory } from '../plugins/messageLogger/index.js';
+import {
+  formatSettingLabel,
+  hasVisiblePluginSettings,
+  OptionType,
+  type PluginSettingDef,
+} from '../plugins/settings.js';
 import type { NekocordPlugin } from '../plugins/types.js';
 import {
   DEFAULT_UPDATE_SOURCE,
@@ -8,6 +14,7 @@ import {
   getFavoritePlugins,
   getUpdateSource,
   importSettingsJson,
+  resetPluginSettings,
   resetSettings,
   setUpdateSource,
   subscribeSettings,
@@ -28,6 +35,7 @@ import {
   openReleasePage,
   type UpdateCheckResult,
 } from '../updater/index.js';
+import { NEKOCORD_LOGO_DATA_URI } from './NekocordLogoAsset.js';
 import {
   renderNekocordMascotSvg,
   renderVencordIcon,
@@ -37,7 +45,11 @@ import {
 export type NekocordTab = 'overview' | 'plugins' | 'themes' | 'updater' | 'backup';
 export type PurrcordTab = NekocordTab;
 
-type PluginStatusFilter = 'all' | 'favorites' | 'enabled' | 'disabled';
+type NekocordRoute =
+  | { kind: 'page'; tab: NekocordTab }
+  | { kind: 'plugin'; pluginName: string };
+
+type PluginStatusFilter = 'all' | 'favorites' | 'configurable' | 'enabled' | 'disabled';
 type PluginCategoryFilter =
   | 'all'
   | 'chat'
@@ -274,8 +286,18 @@ function hasPluginActions(plugin: NekocordPlugin): boolean {
  * Creates the root Nekocord modal overlay component mounted above Discord's root view.
  */
 export function createNekocordOverlay(React: any, ReactNative: any): any {
-  const { FlatList, Modal, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } =
-    ReactNative;
+  const {
+    FlatList,
+    Image,
+    Modal,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Switch,
+    Text,
+    TextInput,
+    View,
+  } = ReactNative;
   const h = React.createElement;
 
   const icon = (name: VencordIconName, size: number, color: string) =>
@@ -649,7 +671,8 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
   }) {
     const { plugin, enabled, favorite, p, onSelect, onToggle } = props;
     const catStyle = getCategoryStyle(plugin.category, p);
-    const iconName: VencordIconName = hasPluginActions(plugin) ? 'cogWheel' : 'info';
+    const isConfigurable = hasVisiblePluginSettings(plugin) || hasPluginActions(plugin);
+    const iconName: VencordIconName = isConfigurable ? 'cogWheel' : 'info';
 
     return h(
       Pressable,
@@ -719,6 +742,21 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
                     },
                   },
                   h(Text, { style: { color: p.warning, fontSize: 9, fontWeight: '700' } }, 'RESTART'),
+                )
+              : null,
+            plugin.isNew
+              ? h(
+                  View,
+                  {
+                    style: {
+                      marginLeft: 5,
+                      backgroundColor: p.danger,
+                      borderRadius: 4,
+                      paddingHorizontal: 5,
+                      paddingVertical: 1.5,
+                    },
+                  },
+                  h(Text, { style: { color: '#ffffff', fontSize: 9, fontWeight: '800' } }, 'NEW'),
                 )
               : null,
           ),
@@ -1042,15 +1080,22 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
             View,
             {
               style: {
-                width: 62,
-                height: 62,
-                borderRadius: 31,
+                width: 68,
+                height: 68,
+                borderRadius: 34,
                 backgroundColor: '#ffffff',
                 alignItems: 'center',
                 justifyContent: 'center',
+                overflow: 'hidden',
               },
             },
-            renderNekocordMascotSvg(React, ReactNative, 46),
+            Image
+              ? h(Image, {
+                  source: { uri: NEKOCORD_LOGO_DATA_URI },
+                  style: { width: 58, height: 58 },
+                  resizeMode: 'contain',
+                })
+              : renderNekocordMascotSvg(React, ReactNative, 48),
           ),
         ),
         h(View, {
@@ -1170,9 +1215,12 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
     plugin: NekocordPlugin;
     enabled: boolean;
     favorite: boolean;
+    settingsTick: number;
     onTogglePlugin: (plugin: NekocordPlugin) => void;
     onToggleFavorite: (plugin: NekocordPlugin) => void;
     onOpenPluginGithub: (plugin: NekocordPlugin) => void;
+    onSettingChanged: (plugin: NekocordPlugin, key: string, restartNeeded?: boolean) => void;
+    onResetPluginSettings: (plugin: NekocordPlugin) => void;
     onClearHistory: () => void;
   }) {
     const { p, plugin, favorite } = ctx;
@@ -1180,6 +1228,226 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
     const readmeBlocks = React.useMemo(() => parseReadmeBlocks(plugin), [plugin]);
     const tags = plugin.tags?.filter((t) => t !== plugin.category).slice(0, 6) ?? [];
     const authors = plugin.authors.length ? plugin.authors : ['flufstails'];
+    const settingEntries: Array<[string, PluginSettingDef]> = React.useMemo(() => {
+      if (!plugin.settings?.def) return [];
+      const defMap = plugin.settings.def as Record<string, PluginSettingDef>;
+      return Object.entries(defMap).filter(([, opt]) => !opt.hidden);
+    }, [plugin]);
+
+    const renderSettingRow = (key: string, opt: PluginSettingDef) => {
+      const label = formatSettingLabel(key, opt.label);
+      const currentVal = plugin.settings!.get(key);
+
+      if (opt.type === OptionType.BOOLEAN) {
+        return h(
+          View,
+          {
+            key: `opt-${key}`,
+            style: {
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingHorizontal: 14,
+              paddingVertical: 12,
+            },
+          },
+          h(
+            View,
+            { style: { flex: 1, paddingRight: 12 } },
+            h(Text, { style: { color: p.textPrimary, fontSize: 14.5, fontWeight: '600' } }, label),
+            h(
+              Text,
+              { style: { color: p.textMuted, fontSize: 12, lineHeight: 16, marginTop: 2 } },
+              opt.description,
+            ),
+          ),
+          h(Switch, {
+            value: Boolean(currentVal),
+            trackColor: { false: p.switchOff, true: p.brand },
+            thumbColor: '#ffffff',
+            onValueChange: (val: boolean) => {
+              plugin.settings!.set(key, val);
+              ctx.onSettingChanged(plugin, key, opt.restartNeeded);
+            },
+          }),
+        );
+      }
+
+      if (opt.type === OptionType.STRING) {
+        return h(
+          View,
+          {
+            key: `opt-${key}`,
+            style: { paddingHorizontal: 14, paddingVertical: 12 },
+          },
+          h(Text, { style: { color: p.textPrimary, fontSize: 14.5, fontWeight: '600' } }, label),
+          h(
+            Text,
+            { style: { color: p.textMuted, fontSize: 12, lineHeight: 16, marginTop: 2, marginBottom: 8 } },
+            opt.description,
+          ),
+          TextInput
+            ? h(TextInput, {
+                value: String(currentVal ?? ''),
+                onChangeText: (text: string) => {
+                  plugin.settings!.set(key, text);
+                  ctx.onSettingChanged(plugin, key, opt.restartNeeded);
+                },
+                placeholder: opt.placeholder ?? '',
+                placeholderTextColor: p.textMuted,
+                autoCapitalize: 'none',
+                autoCorrect: false,
+                style: {
+                  backgroundColor: p.surfaceAlt,
+                  borderColor: p.border,
+                  borderWidth: 1,
+                  borderRadius: 8,
+                  paddingHorizontal: 11,
+                  height: 38,
+                  color: p.textPrimary,
+                  fontSize: 13,
+                },
+              })
+            : null,
+        );
+      }
+
+      if (opt.type === OptionType.NUMBER) {
+        const step = opt.step ?? 1;
+        const num = typeof currentVal === 'number' ? currentVal : opt.default;
+        const updateNum = (delta: number) => {
+          const next = Math.round((num + delta) * 1000) / 1000;
+          plugin.settings!.set(key, next);
+          ctx.onSettingChanged(plugin, key, opt.restartNeeded);
+        };
+        return h(
+          View,
+          {
+            key: `opt-${key}`,
+            style: {
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingHorizontal: 14,
+              paddingVertical: 12,
+            },
+          },
+          h(
+            View,
+            { style: { flex: 1, paddingRight: 10 } },
+            h(Text, { style: { color: p.textPrimary, fontSize: 14.5, fontWeight: '600' } }, label),
+            h(
+              Text,
+              { style: { color: p.textMuted, fontSize: 12, lineHeight: 16, marginTop: 2 } },
+              opt.description,
+            ),
+          ),
+          h(
+            View,
+            { style: { flexDirection: 'row', alignItems: 'center' } },
+            h(
+              Pressable,
+              {
+                onPress: () => updateNum(-step),
+                style: {
+                  width: 30,
+                  height: 30,
+                  borderRadius: 6,
+                  backgroundColor: p.surfaceAlt,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                },
+              },
+              h(Text, { style: { color: p.textPrimary, fontSize: 16, fontWeight: '700' } }, '-'),
+            ),
+            h(
+              Text,
+              {
+                style: {
+                  color: p.textPrimary,
+                  fontSize: 13.5,
+                  fontWeight: '700',
+                  minWidth: 38,
+                  textAlign: 'center',
+                },
+              },
+              String(num),
+            ),
+            h(
+              Pressable,
+              {
+                onPress: () => updateNum(step),
+                style: {
+                  width: 30,
+                  height: 30,
+                  borderRadius: 6,
+                  backgroundColor: p.surfaceAlt,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                },
+              },
+              h(Text, { style: { color: p.textPrimary, fontSize: 16, fontWeight: '700' } }, '+'),
+            ),
+          ),
+        );
+      }
+
+      if (opt.type === OptionType.SELECT) {
+        return h(
+          View,
+          {
+            key: `opt-${key}`,
+            style: { paddingHorizontal: 14, paddingVertical: 12 },
+          },
+          h(Text, { style: { color: p.textPrimary, fontSize: 14.5, fontWeight: '600' } }, label),
+          h(
+            Text,
+            { style: { color: p.textMuted, fontSize: 12, lineHeight: 16, marginTop: 2, marginBottom: 8 } },
+            opt.description,
+          ),
+          h(
+            View,
+            { style: { flexDirection: 'row', flexWrap: 'wrap' } },
+            ...opt.options.map((choice, cIdx) => {
+              const selected = currentVal === choice.value;
+              return h(
+                Pressable,
+                {
+                  key: `sel-${key}-${cIdx}`,
+                  onPress: () => {
+                    plugin.settings!.set(key, choice.value);
+                    ctx.onSettingChanged(plugin, key, opt.restartNeeded);
+                  },
+                  style: {
+                    backgroundColor: selected ? p.brand : p.surfaceAlt,
+                    borderColor: selected ? p.brand : p.border,
+                    borderWidth: 1,
+                    borderRadius: 7,
+                    paddingHorizontal: 10,
+                    paddingVertical: 6,
+                    marginRight: 6,
+                    marginBottom: 5,
+                  },
+                },
+                h(
+                  Text,
+                  {
+                    style: {
+                      color: selected ? p.brandOnText : p.textSecondary,
+                      fontSize: 12.5,
+                      fontWeight: selected ? '700' : '600',
+                    },
+                  },
+                  choice.label,
+                ),
+              );
+            }),
+          ),
+        );
+      }
+
+      return null;
+    };
 
     return h(
       React.Fragment,
@@ -1386,6 +1654,45 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
               onValueChange: () => ctx.onTogglePlugin(plugin),
             }),
           ),
+          ...settingEntries.map(([key, opt]) => renderSettingRow(key, opt)),
+          settingEntries.length === 0 && plugin.name !== 'MessageLogger'
+            ? h(
+                View,
+                { key: 'pd-none', style: { paddingHorizontal: 14, paddingVertical: 11 } },
+                h(
+                  Text,
+                  { style: { color: p.textMuted, fontSize: 13 } },
+                  'There are no additional settings for this plugin.',
+                ),
+              )
+            : null,
+          settingEntries.length > 0
+            ? h(
+                Pressable,
+                {
+                  key: 'pd-reset',
+                  onPress: () => ctx.onResetPluginSettings(plugin),
+                  style: {
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingHorizontal: 14,
+                    paddingVertical: 12,
+                  },
+                },
+                h(
+                  View,
+                  { style: { flexDirection: 'row', alignItems: 'center' } },
+                  icon('restart', 16, p.textSecondary),
+                  h(
+                    Text,
+                    { style: { color: p.textSecondary, fontSize: 14, fontWeight: '600', marginLeft: 8 } },
+                    'Reset Plugin Settings',
+                  ),
+                ),
+                icon('rightArrow', 16, p.textMuted),
+              )
+            : null,
           plugin.name === 'MessageLogger'
             ? h(
                 Pressable,
@@ -1548,13 +1855,26 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
       return total;
     }, [plugins, activeSet]);
 
+    const configurableCount = React.useMemo(() => {
+      let total = 0;
+      for (let i = 0; i < plugins.length; i += 1) {
+        const pl = plugins[i];
+        if (hasVisiblePluginSettings(pl) || hasPluginActions(pl)) {
+          total += 1;
+        }
+      }
+      return total;
+    }, [plugins]);
+
     const sortedAndFiltered = React.useMemo(() => {
       const normalized = searchQuery.trim().toLowerCase();
       const matched = plugins.filter((plugin) => {
         const enabled = activeSet.has(plugin.name);
         const fav = favoriteSet.has(plugin.name);
+        const configurable = hasVisiblePluginSettings(plugin) || hasPluginActions(plugin);
 
         if (statusFilter === 'favorites' && !fav) return false;
+        if (statusFilter === 'configurable' && !configurable) return false;
         if (statusFilter === 'enabled' && !enabled) return false;
         if (statusFilter === 'disabled' && enabled) return false;
         if (categoryFilter !== 'all' && plugin.category !== categoryFilter) return false;
@@ -1594,6 +1914,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
     const statusOptions: Array<{ id: PluginStatusFilter; label: string }> = [
       { id: 'all', label: `Show All (${plugins.length})` },
       { id: 'favorites', label: `Favorites (${favoriteSet.size})` },
+      { id: 'configurable', label: `Configurable (${configurableCount})` },
       { id: 'enabled', label: `Enabled (${visibleEnabledCount})` },
       { id: 'disabled', label: `Disabled (${Math.max(0, plugins.length - visibleEnabledCount)})` },
     ];
@@ -2398,8 +2719,10 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
 
   function NekocordOverlay() {
     const [isOpen, setIsOpen]: [boolean, (v: boolean) => void] = React.useState(modalVisible);
-    const [activeTab, setActiveTab]: [NekocordTab, (t: NekocordTab) => void] = React.useState(requestedTab);
-    const [selectedPluginName, setSelectedPluginName] = React.useState(null as string | null);
+    const [navStack, setNavStack]: [
+      NekocordRoute[],
+      (updater: NekocordRoute[] | ((prev: NekocordRoute[]) => NekocordRoute[])) => void,
+    ] = React.useState(() => [{ kind: 'page', tab: requestedTab }]);
     const [searchQuery, setSearchQuery] = React.useState('');
     const [statusFilter, setStatusFilter] = React.useState('all' as PluginStatusFilter);
     const [categoryFilter, setCategoryFilter] = React.useState('all' as PluginCategoryFilter);
@@ -2430,8 +2753,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
       const onModalToggle = (nextOpen: boolean, nextTab: NekocordTab) => {
         setIsOpen(nextOpen);
         if (nextOpen) {
-          setActiveTab(nextTab);
-          setSelectedPluginName(null);
+          setNavStack([{ kind: 'page', tab: nextTab }]);
           setUpdateSourceInput(getUpdateSource());
         }
       };
@@ -2444,6 +2766,13 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
         unsubscribe();
       };
     }, []);
+
+    const currentRoute: NekocordRoute =
+      navStack[navStack.length - 1] ?? { kind: 'page', tab: requestedTab };
+    const activeTab: NekocordTab =
+      currentRoute.kind === 'page' ? currentRoute.tab : 'plugins';
+    const selectedPluginName: string | null =
+      currentRoute.kind === 'plugin' ? currentRoute.pluginName : null;
 
     const nekocord = globalThis.Nekocord;
     const isLight = getStore<{ theme?: string }>('ThemeStore')?.theme === 'light';
@@ -2476,12 +2805,16 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
     }, [visiblePlugins, activeSet]);
 
     const handleBack = React.useCallback(() => {
-      if (selectedPluginName) {
-        setSelectedPluginName(null);
+      if (navStack.length > 1) {
+        setNavStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
         return;
       }
       closeNekocordSettings();
-    }, [selectedPluginName]);
+    }, [navStack.length]);
+
+    const handlePushPage = React.useCallback((tab: NekocordTab) => {
+      setNavStack((prev) => [...prev, { kind: 'page', tab }]);
+    }, []);
 
     const queueRestartPrompt = React.useCallback((label: string, nextState: string) => {
       setPendingRestartNames((prev: string[]) => (prev.includes(label) ? prev : [...prev, label]));
@@ -2526,7 +2859,21 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
     }, []);
 
     const handleSelectPlugin = React.useCallback((plugin: NekocordPlugin) => {
-      setSelectedPluginName(plugin.name);
+      setNavStack((prev) => [...prev, { kind: 'plugin', pluginName: plugin.name }]);
+    }, []);
+
+    const handleSettingChanged = React.useCallback(
+      (plugin: NekocordPlugin, _key: string, restartNeeded?: boolean) => {
+        if (restartNeeded || plugin.requiresRestart) {
+          queueRestartPrompt(plugin.name, 'updated');
+        }
+      },
+      [queueRestartPrompt],
+    );
+
+    const handleResetPluginSettings = React.useCallback((plugin: NekocordPlugin) => {
+      resetPluginSettings(plugin.name);
+      plugin.settings?.reset?.();
     }, []);
 
     const handleRestartNow = React.useCallback(() => {
@@ -2602,9 +2949,9 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
     }, [updateSourceInput]);
 
     const handleCheckUpdatesAndOpen = React.useCallback(() => {
-      setActiveTab('updater');
+      handlePushPage('updater');
       void handleCheckUpdates();
-    }, [handleCheckUpdates]);
+    }, [handlePushPage, handleCheckUpdates]);
 
     const handleInstallUpdate = React.useCallback(async () => {
       if (!updateResult) return;
@@ -2614,7 +2961,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
       setUpdateBusy(false);
       setUpdateMessage(res.message);
       if (res.ok) {
-        queueRestartPrompt(`Nekocord v${updateResult.latestVersion ?? '1.1.0'}`, 'downloaded');
+        queueRestartPrompt(`Nekocord v${updateResult.latestVersion ?? '1.2.0'}`, 'downloaded');
       }
     }, [updateResult, queueRestartPrompt]);
 
@@ -2675,7 +3022,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
       return null;
     }
 
-    const version = nekocord?.version ?? '1.1.0';
+    const version = nekocord?.version ?? '1.2.0';
     const tagline = nekocord?.tagline ?? 'Your cutest Discord client on mobile';
     const selectedPlugin =
       selectedPluginName && !nekocord?.plugins.get(selectedPluginName)?.core
@@ -2692,14 +3039,6 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
       backup: 'Backup & Restore',
     };
     const headerTitle = selectedPlugin ? selectedPlugin.name : titleMap[activeTab];
-
-    const tabs: Array<{ id: NekocordTab; label: string; icon: VencordIconName }> = [
-      { id: 'overview', label: 'Nekocord', icon: 'mainSettings' },
-      { id: 'plugins', label: `Plugins (${visiblePlugins.length})`, icon: 'plugins' },
-      { id: 'themes', label: 'Themes', icon: 'paintbrush' },
-      { id: 'updater', label: 'Updater', icon: 'updater' },
-      { id: 'backup', label: 'Backup', icon: 'backupRestore' },
-    ];
 
     return h(
       Modal,
@@ -2729,7 +3068,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
                 onPress: handleBack,
                 accessible: true,
                 accessibilityRole: 'button',
-                accessibilityLabel: selectedPlugin ? 'Back' : 'Close',
+                accessibilityLabel: navStack.length > 1 ? 'Back' : 'Close',
                 style: styles.backBtn,
               },
               icon('leftArrow', 21, p.textPrimary),
@@ -2760,51 +3099,6 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
                 ),
               ),
         ),
-        !selectedPlugin
-          ? h(
-              ScrollView,
-              {
-                horizontal: true,
-                showsHorizontalScrollIndicator: false,
-                style: [styles.tabScroll, { backgroundColor: p.headerBg, borderBottomColor: p.divider }],
-                contentContainerStyle: styles.tabScrollContent,
-              },
-              ...tabs.map((tab) => {
-                const active = activeTab === tab.id;
-                const tint = active ? p.textPrimary : p.textMuted;
-                return h(
-                  Pressable,
-                  {
-                    key: tab.id,
-                    onPress: () => {
-                      setActiveTab(tab.id);
-                      setSelectedPluginName(null);
-                    },
-                    style: [
-                      styles.tabPill,
-                      {
-                        borderBottomColor: active ? p.brand : 'transparent',
-                      },
-                    ],
-                  },
-                  icon(tab.icon, 16, active ? p.brand : tint),
-                  h(
-                    Text,
-                    {
-                      style: [
-                        styles.tabPillText,
-                        {
-                          color: tint,
-                          fontWeight: active ? '700' : '600',
-                        },
-                      ],
-                    },
-                    tab.label,
-                  ),
-                );
-              }),
-            )
-          : null,
         !selectedPlugin && activeTab === 'plugins'
           ? h(PluginsTabView, {
               p,
@@ -2834,9 +3128,12 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
                     plugin: selectedPlugin,
                     enabled: activeSet.has(selectedPlugin.name),
                     favorite: favoriteSet.has(selectedPlugin.name),
+                    settingsTick,
                     onTogglePlugin: handleTogglePlugin,
                     onToggleFavorite: handleToggleFavorite,
                     onOpenPluginGithub: handleOpenPluginGithub,
+                    onSettingChanged: handleSettingChanged,
+                    onResetPluginSettings: handleResetPluginSettings,
                     onClearHistory: handleClearHistory,
                   })
                 : activeTab === 'themes'
@@ -2889,7 +3186,7 @@ export function createNekocordOverlay(React: any, ReactNative: any): any {
                           totalPlugins: visiblePlugins.length,
                           activeTheme,
                           activeSet,
-                          onOpenTab: setActiveTab,
+                          onOpenTab: handlePushPage,
                           onCheckUpdatesAndOpen: handleCheckUpdatesAndOpen,
                           onReloadApp: handleRestartNow,
                           onOpenRepo: handleOpenRepo,

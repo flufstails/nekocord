@@ -11,7 +11,7 @@ import * as updater from './updater/index.js';
 
 import type { NekocordTab } from './ui/NekocordModal.js';
 
-export const NEKOCORD_VERSION = '1.1.0';
+export const NEKOCORD_VERSION = '1.2.0';
 export const NEKOCORD_TAGLINE = 'Your cutest Discord client on mobile';
 
 export interface NekocordApi {
@@ -51,10 +51,24 @@ function refreshActiveSnapshot(): void {
   activeSnapshot = new Set(activePlugins);
 }
 
-function startPlugin(name: string): boolean {
+function startPlugin(name: string, visiting?: Set<string>): boolean {
   const plugin = pluginRegistry.get(name);
   if (!plugin || activePlugins.has(name)) {
     return false;
+  }
+  const seen = visiting ?? new Set<string>();
+  if (seen.has(name)) {
+    return false;
+  }
+  seen.add(name);
+  if (Array.isArray(plugin.dependencies)) {
+    for (let i = 0; i < plugin.dependencies.length; i += 1) {
+      const depName = plugin.dependencies[i];
+      if (!activePlugins.has(depName)) {
+        startPlugin(depName, seen);
+        storage.setPluginEnabled(depName, true);
+      }
+    }
   }
   try {
     plugin.start?.();

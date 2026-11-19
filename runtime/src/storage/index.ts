@@ -49,6 +49,7 @@ export type StoredPurrcordTheme = StoredNekocordTheme;
 
 export interface NekocordSettings {
   plugins: Record<string, { enabled: boolean }>;
+  pluginSettings?: Record<string, Record<string, any>>;
   favoritePlugins?: string[];
   activeThemeId?: string | null;
   customThemes?: StoredNekocordTheme[];
@@ -59,6 +60,7 @@ export type PurrcordSettings = NekocordSettings;
 
 const state: NekocordSettings = {
   plugins: {},
+  pluginSettings: {},
   favoritePlugins: [],
   activeThemeId: null,
   customThemes: [],
@@ -66,6 +68,7 @@ const state: NekocordSettings = {
 };
 
 const dirtyPlugins = new Set<string>();
+const dirtyPluginSettings = new Set<string>();
 let dirtyFavorites = false;
 let dirtyActiveTheme = false;
 let dirtyCustomThemes = false;
@@ -108,6 +111,15 @@ function applyParsedSettings(
       const name = fromLegacy ? (LEGACY_PLUGIN_KEY_REMAP[rawName] ?? rawName) : rawName;
       if (!dirtyPlugins.has(name) && entry && typeof entry.enabled === 'boolean') {
         state.plugins[name] = { enabled: entry.enabled };
+      }
+    }
+  }
+  if (parsed.pluginSettings && typeof parsed.pluginSettings === 'object') {
+    state.pluginSettings ??= {};
+    for (const [rawName, cfg] of Object.entries(parsed.pluginSettings)) {
+      const name = fromLegacy ? (LEGACY_PLUGIN_KEY_REMAP[rawName] ?? rawName) : rawName;
+      if (!dirtyPluginSettings.has(name) && cfg && typeof cfg === 'object' && !Array.isArray(cfg)) {
+        state.pluginSettings[name] = { ...cfg };
       }
     }
   }
@@ -300,6 +312,32 @@ export function getUpdateSource(): string {
   return state.updateSource?.trim() ? state.updateSource : DEFAULT_UPDATE_SOURCE;
 }
 
+export function getPluginSettingValue<T>(pluginName: string, key: string, fallback: T): T {
+  const bucket = state.pluginSettings?.[pluginName];
+  if (!bucket || !(key in bucket)) {
+    return fallback;
+  }
+  return bucket[key] as T;
+}
+
+export function setPluginSettingValue(pluginName: string, key: string, value: any): void {
+  dirtyPluginSettings.add(pluginName);
+  state.pluginSettings ??= {};
+  state.pluginSettings[pluginName] ??= {};
+  state.pluginSettings[pluginName][key] = value;
+  persist();
+  notifyListeners();
+}
+
+export function resetPluginSettings(pluginName: string): void {
+  dirtyPluginSettings.add(pluginName);
+  if (state.pluginSettings && pluginName in state.pluginSettings) {
+    delete state.pluginSettings[pluginName];
+  }
+  persist();
+  notifyListeners();
+}
+
 export function setUpdateSource(source: string): void {
   dirtyUpdateSource = true;
   state.updateSource = source.trim() || DEFAULT_UPDATE_SOURCE;
@@ -340,10 +378,11 @@ export function updateSettings(partial: Partial<NekocordSettings>): void {
 export function exportSettingsJson(): string {
   return JSON.stringify(
     {
-      nekocordVersion: globalThis.Nekocord?.version ?? '1.1.0',
+      nekocordVersion: globalThis.Nekocord?.version ?? '1.2.0',
       exportedAt: new Date().toISOString(),
       settings: {
         plugins: state.plugins,
+        pluginSettings: state.pluginSettings ?? {},
         favoritePlugins: state.favoritePlugins ?? [],
         activeThemeId: state.activeThemeId ?? null,
         customThemes: state.customThemes ?? [],
@@ -391,6 +430,7 @@ export function importSettingsJson(rawJson: string): {
 
   const hasKnownKey =
     'plugins' in source ||
+    'pluginSettings' in source ||
     'favoritePlugins' in source ||
     'activeThemeId' in source ||
     'customThemes' in source ||
@@ -400,6 +440,7 @@ export function importSettingsJson(rawJson: string): {
   }
 
   const nextPlugins: Record<string, { enabled: boolean }> = {};
+  const nextPluginSettings: Record<string, Record<string, any>> = {};
   const changedSet = new Set<string>();
   const oldPlugins = state.plugins;
 
@@ -411,6 +452,14 @@ export function importSettingsJson(rawJson: string): {
         if (oldPlugins[name]?.enabled !== enabled) {
           changedSet.add(name);
         }
+      }
+    }
+  }
+  if (source.pluginSettings && typeof source.pluginSettings === 'object' && !Array.isArray(source.pluginSettings)) {
+    for (const [name, val] of Object.entries(source.pluginSettings)) {
+      if (val && typeof val === 'object' && !Array.isArray(val)) {
+        nextPluginSettings[name] = { ...(val as Record<string, any>) };
+        dirtyPluginSettings.add(name);
       }
     }
   }
@@ -459,6 +508,7 @@ export function importSettingsJson(rawJson: string): {
     dirtyPlugins.add(k);
   }
   state.plugins = nextPlugins;
+  state.pluginSettings = nextPluginSettings;
   state.favoritePlugins = nextFavorites;
   state.activeThemeId = nextThemeId;
   state.customThemes = nextCustomThemes;
@@ -481,13 +531,17 @@ export function importSettingsJson(rawJson: string): {
 }
 
 /**
- * Resets all plugin overrides, favorites, themes, and update source back to defaults.
+ * Resets all plugin overrides, per-plugin settings, favorites, themes, and update source back to defaults.
  */
 export function resetSettings(): void {
   for (const k of Object.keys(state.plugins)) {
     dirtyPlugins.add(k);
   }
+  for (const k of Object.keys(state.pluginSettings ?? {})) {
+    dirtyPluginSettings.add(k);
+  }
   state.plugins = {};
+  state.pluginSettings = {};
   state.favoritePlugins = [];
   state.activeThemeId = null;
   state.customThemes = [];

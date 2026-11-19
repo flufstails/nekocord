@@ -2,11 +2,40 @@ import { isChatRowHookReady, registerMessageRowTransformer, toAndroidColor } fro
 import {
   getMessageStore,
   getThemeStore,
+  getUserStore,
   onFluxDispatcher,
   type FluxDispatcher,
 } from '../../metro/common.js';
 import { instead, type Unpatch } from '../../patcher/index.js';
+import { definePluginSettings, OptionType } from '../settings.js';
 import { definePlugin } from '../types.js';
+
+const settings = definePluginSettings({
+  logDeletes: {
+    type: OptionType.BOOLEAN,
+    label: 'Log Deleted Messages',
+    description: 'Retain deleted messages inline with a deleted status badge.',
+    default: true,
+  },
+  logEdits: {
+    type: OptionType.BOOLEAN,
+    label: 'Log Edited Messages',
+    description: 'Preserve previous message content revisions above edited messages.',
+    default: true,
+  },
+  ignoreBots: {
+    type: OptionType.BOOLEAN,
+    label: 'Ignore Bots',
+    description: 'Do not track deletions or edits from bot and webhook accounts.',
+    default: false,
+  },
+  ignoreSelf: {
+    type: OptionType.BOOLEAN,
+    label: 'Ignore Own Messages',
+    description: 'Do not retain edits or deletions for messages sent by your own account.',
+    default: false,
+  },
+});
 
 interface DeletedRecord {
   channelId: string;
@@ -73,6 +102,16 @@ function shouldSkipMessage(msg: any): boolean {
   }
   if (typeof msg.flags === 'number' && (msg.flags & EPHEMERAL_FLAG) !== 0) {
     return true;
+  }
+  if (settings.store.ignoreBots && Boolean(msg.author?.bot || msg.webhook_id || msg.webhookId)) {
+    return true;
+  }
+  if (settings.store.ignoreSelf) {
+    const meId = getUserStore()?.getCurrentUser?.()?.id;
+    const authorId = msg.author?.id ?? msg.author_id;
+    if (meId && authorId && String(authorId) === String(meId)) {
+      return true;
+    }
   }
   return false;
 }
@@ -401,6 +440,7 @@ export function clearInlineMessageHistory(): void {
 }
 
 export default definePlugin({
+  settings,
   start() {
     if (!unregisterRowTransformer) {
       unregisterRowTransformer = registerMessageRowTransformer(transformMessageRow);
@@ -417,16 +457,20 @@ export default definePlugin({
         }
 
         if (action.type === 'MESSAGE_UPDATE') {
-          handleMessageUpdateDispatch(action);
+          if (settings.store.logEdits) {
+            handleMessageUpdateDispatch(action);
+          }
           return orig(...args);
         }
 
         if (action.type === 'MESSAGE_DELETE') {
-          return handleMessageDelete(action, orig, args);
+          return settings.store.logDeletes ? handleMessageDelete(action, orig, args) : orig(...args);
         }
 
         if (action.type === 'MESSAGE_DELETE_BULK') {
-          return handleMessageDeleteBulk(action, orig, args);
+          return settings.store.logDeletes
+            ? handleMessageDeleteBulk(action, orig, args)
+            : orig(...args);
         }
 
         return orig(...args);

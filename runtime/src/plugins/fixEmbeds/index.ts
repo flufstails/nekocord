@@ -1,8 +1,53 @@
 import { patchOutgoingMessageContent, transformOutsideCode } from '../../utils/text.js';
+import { definePluginSettings, OptionType } from '../settings.js';
 import { definePlugin } from '../types.js';
 
 const URL_RE = /https?:\/\/[^\s<>]+/gi;
 const TRAILING_PUNCT_RE = /[.,!?;:)\]}'"]+$/;
+
+const settings = definePluginSettings({
+  twitterHost: {
+    type: OptionType.SELECT,
+    label: 'Twitter / X Mirror',
+    description: 'Embed-friendly domain used to rewrite twitter.com and x.com status links.',
+    default: 'fxtwitter.com',
+    options: [
+      { label: 'fxtwitter.com', value: 'fxtwitter.com' },
+      { label: 'vxtwitter.com', value: 'vxtwitter.com' },
+      { label: 'fixupx.com', value: 'fixupx.com' },
+    ],
+  },
+  redditHost: {
+    type: OptionType.SELECT,
+    label: 'Reddit Mirror',
+    description: 'Embed-friendly domain used to rewrite Reddit post and short links.',
+    default: 'rxddit.com',
+    options: [
+      { label: 'rxddit.com', value: 'rxddit.com' },
+      { label: 'vxreddit.com', value: 'vxreddit.com' },
+    ],
+  },
+  tiktokHost: {
+    type: OptionType.SELECT,
+    label: 'TikTok Mirror',
+    description: 'Embed-friendly base domain used to rewrite TikTok links.',
+    default: 'vxtiktok.com',
+    options: [
+      { label: 'vxtiktok.com', value: 'vxtiktok.com' },
+      { label: 'tnktok.com', value: 'tnktok.com' },
+    ],
+  },
+  instagramHost: {
+    type: OptionType.SELECT,
+    label: 'Instagram Mirror',
+    description: 'Embed-friendly domain used to rewrite Instagram posts and reels.',
+    default: 'kkinstagram.com',
+    options: [
+      { label: 'kkinstagram.com', value: 'kkinstagram.com' },
+      { label: 'ddinstagram.com', value: 'ddinstagram.com' },
+    ],
+  },
+});
 
 let rewrittenCount = 0;
 let unpatchContent: (() => void) | null = null;
@@ -28,23 +73,23 @@ function rewriteEmbedHost(urlStr: string): string {
       host === 'mobile.x.com') &&
     pathOnly.includes('/status/')
   ) {
-    nextHost = 'fxtwitter.com';
+    nextHost = settings.store.twitterHost;
   } else if (host === 'vm.tiktok.com') {
-    nextHost = 'vm.vxtiktok.com';
+    nextHost = `vm.${settings.store.tiktokHost}`;
   } else if (host === 'vt.tiktok.com') {
-    nextHost = 'vt.vxtiktok.com';
+    nextHost = `vt.${settings.store.tiktokHost}`;
   } else if (host === 'tiktok.com' || host === 'www.tiktok.com') {
-    nextHost = 'vxtiktok.com';
+    nextHost = settings.store.tiktokHost;
   } else if (
     (host === 'instagram.com' || host === 'www.instagram.com') &&
     (/^\/(?:p|reel|reels)\//i.test(pathOnly) || pathOnly.includes('/reel/') || pathOnly.includes('/p/'))
   ) {
-    nextHost = 'kkinstagram.com';
+    nextHost = settings.store.instagramHost;
   } else if (
     (host === 'reddit.com' || host === 'www.reddit.com' || host === 'old.reddit.com') &&
     (pathOnly.includes('/comments/') || pathOnly.includes('/s/'))
   ) {
-    nextHost = 'rxddit.com';
+    nextHost = settings.store.redditHost;
   } else if (host === 'bsky.app' && /^\/profile\/[^/]+\/post\//i.test(pathOnly)) {
     nextHost = 'bskx.app';
   }
@@ -86,6 +131,7 @@ export function getRewrittenEmbedCount(): number {
 }
 
 export default definePlugin({
+  settings,
   start() {
     if (!unpatchContent) {
       unpatchContent = patchOutgoingMessageContent(rewriteEmbedsInContent);

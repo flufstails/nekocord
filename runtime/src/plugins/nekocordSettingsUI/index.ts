@@ -152,7 +152,7 @@ function buildSettingEntries(): NekocordSettingEntry[] {
       tab: 'overview',
       breadcrumbs: ['Nekocord'],
       searchTerms: ['nekocord', 'nekocord settings', 'about', 'quick actions'],
-      createIcon: () => createSettingRowIcon('mainSettings', getFallbackTint),
+      createIcon: () => createSettingRowIcon('nekocordLogo', getFallbackTint),
     },
     {
       key: 'NEKOCORD_PLUGINS',
